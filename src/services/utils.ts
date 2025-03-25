@@ -92,7 +92,7 @@ const isValidURL = (url: string) => {
 };
 
 const getMediaImage = (url: string) => {
-  return `${API_URL.MEDIA_API}/v1/file/download${url}`;
+  return `${API_URL.MEDIA_API}/v1/media/download/${url}`;
 };
 
 const getRoles = (authorities: string[]) => {

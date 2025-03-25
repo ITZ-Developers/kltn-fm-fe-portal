@@ -146,7 +146,7 @@ const ImageUploadField = ({
       setPreview(null);
       return;
     }
-    const res = await media.upload({ file, type: FILE_TYPES.AVATAR });
+    const res = await media.upload(file);
     const filePath = res.data.filePath;
     onChange(filePath);
     if (filePath) {

@@ -11,7 +11,7 @@ const VALID_PATTERN = {
 const API_URL = {
   MASTER_API: "https://finance-master-jmdi.onrender.com",
   TENANT_API: "https://finance-tenant.onrender.com",
-  MEDIA_API: "https://finance-media.onrender.com",
+  MEDIA_API: "https://finance-cache.onrender.com",
   SOCKET_URL: "wss://finance-socket.onrender.com/ws",
 };
 
