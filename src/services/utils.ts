@@ -112,11 +112,25 @@ const decrypt = (encryptedValue: any, secretKey: any) => {
 
 const decryptData = (secretKey: string, item: any, fields: string[]) => {
   const decryptedItem = { ...item };
+
   fields.forEach((field) => {
-    if (decryptedItem[field]) {
-      decryptedItem[field] = decryptAES(decryptedItem[field], secretKey);
+    const keys = field.split(".");
+    let current = decryptedItem;
+
+    for (let i = 0; i < keys.length - 1; i++) {
+      const key = keys[i];
+      if (!current[key] || typeof current[key] !== "object") {
+        current[key] = {};
+      }
+      current = current[key];
+    }
+
+    const finalKey = keys[keys.length - 1];
+    if (current[finalKey]) {
+      current[finalKey] = decryptAES(current[finalKey], secretKey);
     }
   });
+
   return decryptedItem;
 };
 

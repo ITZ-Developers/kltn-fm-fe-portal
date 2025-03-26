@@ -77,8 +77,11 @@ const TransactionGroup = () => {
   });
 
   useEffect(() => {
+    if (!sessionKey) {
+      return;
+    }
     handleRefresh();
-  }, []);
+  }, [sessionKey]);
 
   const columns = [
     {

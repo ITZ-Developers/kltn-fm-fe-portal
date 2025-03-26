@@ -122,12 +122,7 @@ const InputSessionKey = () => {
           <h2 className="text-lg font-semibold text-white">
             PHIÊN GIẢI MÃ HẾT HẠN
           </h2>
-          <button
-            onClick={handleOpenModal}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Nhập mã
-          </button>
+          <SubmitButton text={"Nhập mã"} onClick={handleOpenModal} />
         </div>
       </div>
     </>
