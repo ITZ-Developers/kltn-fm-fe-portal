@@ -44,6 +44,7 @@ const ENV = {
 const LOCAL_STORAGE = {
   ACCESS_TOKEN: "portal_access_token",
   COLLAPSED_GROUPS: "portal_collapsed_groups",
+  SESSION_KEY: "portal_session_key",
 };
 
 const METHOD = {
@@ -109,6 +110,7 @@ const ITEMS_PER_PAGE = 10;
 const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
 const PING_INTERVAL = 5000; // 5s
+const SESSION_KEY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
 
 const SOCKET_CMD = {
   CMD_LOCK_DEVICE: "CMD_LOCK_DEVICE",
@@ -176,4 +178,5 @@ export {
   API_HEADER,
   GRANT_TYPE_MAP,
   ERROR_CODE,
+  SESSION_KEY_TIMEOUT,
 };

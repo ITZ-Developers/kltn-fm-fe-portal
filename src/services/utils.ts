@@ -1,6 +1,49 @@
 import * as CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 import { API_URL } from "./constant";
+import forge from "node-forge";
+
+const extractPrivateKey = (keyString: string): string => {
+  const beginMarker = "-----BEGIN PRIVATE KEY-----";
+  const endMarker = "-----END PRIVATE KEY-----";
+  const trimmedKey = keyString.trim();
+
+  if (trimmedKey.startsWith(beginMarker) && trimmedKey.endsWith(endMarker)) {
+    const beginLength = beginMarker.length;
+    const endLength = endMarker.length;
+    const keyContent = trimmedKey
+      .substring(beginLength, trimmedKey.length - endLength)
+      .trim();
+    return keyContent;
+  }
+
+  return trimmedKey;
+};
+
+const decryptWithRSA = ({ encryptedData, privateKeyStr }: any) => {
+  try {
+    const privateKeyBytes = forge.util.decode64(
+      extractPrivateKey(privateKeyStr)
+    );
+
+    const privateKey = forge.pki.privateKeyFromAsn1(
+      forge.asn1.fromDer(forge.util.createBuffer(privateKeyBytes))
+    );
+
+    const encryptedBytes = forge.util.decode64(encryptedData);
+
+    const decryptedBytes = privateKey.decrypt(
+      encryptedBytes,
+      "RSAES-PKCS1-V1_5"
+    );
+
+    const decryptedData = forge.util.decodeUtf8(decryptedBytes);
+
+    return decryptedData;
+  } catch (error) {
+    return null;
+  }
+};
 
 const getCurrentDate = () => {
   const now = new Date();
@@ -65,6 +108,34 @@ const encrypt = (value: any, secretKey: any) => {
 const decrypt = (encryptedValue: any, secretKey: any) => {
   const decrypted = CryptoJS.AES.decrypt(encryptedValue, secretKey);
   return decrypted.toString(CryptoJS.enc.Utf8);
+};
+
+const decryptData = (secretKey: string, item: any, fields: string[]) => {
+  const decryptedItem = { ...item };
+  fields.forEach((field) => {
+    if (decryptedItem[field]) {
+      decryptedItem[field] = decryptAES(decryptedItem[field], secretKey);
+    }
+  });
+  return decryptedItem;
+};
+
+const decryptAES = (encryptedStr: string, secretKey: string): string | null => {
+  try {
+    let decrypted = CryptoJS.AES.decrypt(
+      encryptedStr,
+      CryptoJS.enc.Utf8.parse(secretKey),
+      {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    return decryptedText;
+  } catch (error) {
+    console.error(error);
+  }
+  return null;
 };
 
 const generateUniqueId = () => {
@@ -288,4 +359,7 @@ export {
   extractDatabaseName,
   extractHostAndPort,
   validateDateTime,
+  decryptWithRSA,
+  decryptAES,
+  decryptData,
 };

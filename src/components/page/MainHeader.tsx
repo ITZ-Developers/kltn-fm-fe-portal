@@ -3,16 +3,19 @@ import { UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import { useGlobalContext } from "../GlobalProvider";
-import { ConfirmationDialog, LoadingDialog } from "./Dialog";
+import { configModalForm, ConfirmationDialog, LoadingDialog } from "./Dialog";
 import useModal from "../../hooks/useModal";
 import { removeSessionCache } from "../../services/storages";
 import { getMediaImage } from "../../services/utils";
 import { PAGE_CONFIG } from "../PageConfig";
 import { OptionButton } from "../form/Button";
 import ChangeLocation from "../../pages/auth/ChangeLocation";
+import useApi from "../../hooks/useApi";
+import RequestKey from "../../pages/auth/RequestKey";
 
 const MainHeader = ({ breadcrumbs }: any) => {
-  const { isCustomer } = useGlobalContext();
+  const { auth, loading } = useApi();
+  const { isCustomer, setToast } = useGlobalContext();
   const { profile } = useGlobalContext();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -23,6 +26,12 @@ const MainHeader = ({ breadcrumbs }: any) => {
     showModal: showChangeTenantForm,
     hideModal: hideChangeTenantForm,
     formConfig: changeTenantFormConfig,
+  } = useModal();
+  const {
+    isModalVisible: requestKeyFormVisible,
+    showModal: showRequestKeyForm,
+    hideModal: hideRequestKeyForm,
+    formConfig: requestKeyFormConfig,
   } = useModal();
 
   useEffect(() => {
@@ -72,16 +81,36 @@ const MainHeader = ({ breadcrumbs }: any) => {
     });
   };
 
+  const handleRequestKey = () => {
+    setIsDropdownOpen(false);
+    showRequestKeyForm(
+      configModalForm({
+        label: "Gửi yêu cầu khóa",
+        fetchApi: auth.requestKey,
+        setToast,
+        hideModal: hideRequestKeyForm,
+        initForm: {
+          password: "",
+        },
+      })
+    );
+  };
+
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
   return (
     <>
+      <LoadingDialog isVisible={loading} />
       <ConfirmationDialog isVisible={isModalVisible} formConfig={formConfig} />
       <ChangeLocation
         isVisible={changeTenantFormVisible}
         formConfig={changeTenantFormConfig}
+      />
+      <RequestKey
+        isVisible={requestKeyFormVisible}
+        formConfig={requestKeyFormConfig}
       />
       <header className="flex items-center justify-between w-full text-white">
         <div className="flex-1 min-w-0">
@@ -118,6 +147,10 @@ const MainHeader = ({ breadcrumbs }: any) => {
                 onClick={() =>
                   handleClickButton(PAGE_CONFIG.CHANGE_PASSWORD.path)
                 }
+              />
+              <OptionButton
+                label={"Gửi yêu cầu khóa"}
+                onClick={handleRequestKey}
               />
               {isCustomer && (
                 <OptionButton

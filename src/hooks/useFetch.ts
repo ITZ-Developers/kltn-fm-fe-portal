@@ -20,7 +20,8 @@ interface FetchOptions {
 }
 
 const useFetch = () => {
-  const { setIsUnauthorized, setIsSystemNotReady } = useGlobalContext();
+  const { setIsUnauthorized, setIsSystemNotReady, refreshSessionTimeout } =
+    useGlobalContext();
   const [loading, setLoading] = useState(false);
 
   const handleFetch = useCallback(async (options: FetchOptions) => {
@@ -65,22 +66,55 @@ const useFetch = () => {
             : undefined,
       });
 
-      const contentType = response.headers.get("content-type");
-      const data = contentType?.includes("application/json")
-        ? await response.json()
-        : await response.text();
+      const contentDisposition = response.headers.get("content-disposition");
+      const isFileDownload = contentDisposition
+        ?.toLowerCase()
+        .includes("attachment");
 
-      if (response.status === 401) {
-        if (ERROR_CODE.SYSTEM_NOT_READY === data.code) {
-          setIsSystemNotReady(true);
-        } else {
-          setIsUnauthorized(true);
+      if (isFileDownload) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+
+        const filename = contentDisposition
+          ?.split("filename=")[1]
+          ?.replace(/"/g, "");
+
+        if (!filename) {
+          return {
+            result: false,
+            message: "File downloaded failed",
+          };
         }
-      } else {
-        setIsSystemNotReady(false);
-      }
 
-      return data;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        return { result: true, message: "File downloaded successfully" };
+      } else {
+        const contentType = response.headers.get("content-type")?.toLowerCase();
+        const data = contentType?.includes("application/json")
+          ? await response.json()
+          : await response.text();
+
+        if (response.status === 401) {
+          if (ERROR_CODE.SYSTEM_NOT_READY === data.code) {
+            setIsSystemNotReady(true);
+          } else {
+            removeSessionCache();
+            setIsUnauthorized(true);
+          }
+        } else {
+          setIsSystemNotReady(false);
+          refreshSessionTimeout();
+        }
+
+        return data;
+      }
     } catch (err: any) {
       return { message: err.message || BASIC_MESSAGES.FAILED };
     } finally {

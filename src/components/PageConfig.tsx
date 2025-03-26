@@ -12,6 +12,7 @@ import CreateEmployee from "../pages/employee/CreateEmployee";
 import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Department from "../pages/department/Department";
 import RedirecProfile from "./redirect/RedirectProfile";
+import TransactionGroup from "../pages/transactionGroup/TransactionGroup";
 
 const TRANSACTION_CONFIG = {
   TRANSACTION: {
@@ -23,19 +24,41 @@ const TRANSACTION_CONFIG = {
   },
   CREATE_TRANSACTION: {
     label: "Thêm mới giao dịch",
-    path: "/create/transaction",
+    path: "/transaction/create",
     role: "TR_C",
     element: <CreateTransaction />,
   },
   UPDATE_TRANSACTION: {
     label: "Cập nhật giao dịch",
-    path: "/update/transaction/:id",
+    path: "/transaction/update/:id",
     role: "TR_U",
     element: <UpdateTransaction />,
   },
   DELETE_TRANSACTION: {
     label: "Xóa giao dịch",
     role: "TR_D",
+  },
+};
+
+const TRANSACTION_GROUP_CONFIG = {
+  TRANSACTION_GROUP: {
+    name: "transaction_group",
+    label: "Nhóm giao dịch",
+    path: "/transaction-group",
+    role: "TR_G_L",
+    element: <TransactionGroup />,
+  },
+  CREATE_TRANSACTION_GROUP: {
+    label: "Thêm mới nhóm giao dịch",
+    role: "TR_G_C",
+  },
+  UPDATE_TRANSACTION_GROUP: {
+    label: "Cập nhật nhóm giao dịch",
+    role: "TR_G_U",
+  },
+  DELETE_TRANSACTION_GROUP: {
+    label: "Xóa nhóm giao dịch",
+    role: "TR_G_D",
   },
 };
 
@@ -132,13 +155,23 @@ const PAGE_CONFIG = {
   ...EMPLOYEE_CONFIG,
   ...PROFILE_CONFIG,
   ...DEPARTMENT_CONFIG,
+  ...TRANSACTION_GROUP_CONFIG,
+};
+
+const SESSION_KEY_PAGES: Set<string> = new Set([
+  PAGE_CONFIG.TRANSACTION.name,
+  PAGE_CONFIG.TRANSACTION_GROUP.name,
+]);
+
+const DECRYPT_FIELDS = {
+  TRANSACTION_GROUP: ["name", "description"],
 };
 
 const SIDEBAR_MENUS = [
   {
     name: "Quản lý giao dịch",
     icon: <ArrowLeftRightIcon size={20} />,
-    items: [PAGE_CONFIG.TRANSACTION],
+    items: [PAGE_CONFIG.TRANSACTION, PAGE_CONFIG.TRANSACTION_GROUP],
   },
   {
     name: "Quản lý người dùng",
@@ -147,4 +180,4 @@ const SIDEBAR_MENUS = [
   },
 ];
 
-export { PAGE_CONFIG, SIDEBAR_MENUS };
+export { PAGE_CONFIG, SIDEBAR_MENUS, SESSION_KEY_PAGES, DECRYPT_FIELDS };

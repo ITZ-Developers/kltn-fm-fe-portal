@@ -5,8 +5,13 @@ import {
   Dispatch,
   useState,
   useEffect,
+  useRef,
 } from "react";
-import { LOCAL_STORAGE, TOAST } from "../services/constant";
+import {
+  LOCAL_STORAGE,
+  SESSION_KEY_TIMEOUT,
+  TOAST,
+} from "../services/constant";
 import { getStorageData, setStorageData } from "../services/storages";
 import { PAGE_CONFIG, SIDEBAR_MENUS } from "./PageConfig";
 import { toast } from "react-toastify";
@@ -34,6 +39,9 @@ const GlobalContext = createContext<{
   setIsCustomer: Dispatch<SetStateAction<any>>;
   isSystemNotReady: any;
   setIsSystemNotReady: Dispatch<SetStateAction<any>>;
+  sessionKey: any;
+  setSessionKey: Dispatch<SetStateAction<any>>;
+  refreshSessionTimeout: () => void;
 }>({
   authorities: [],
   setAuthorities: () => {},
@@ -53,15 +61,18 @@ const GlobalContext = createContext<{
   tenantInfo: null,
   setTenantInfo: () => {},
   isCustomer: false,
-  setIsCustomer: () => { },
+  setIsCustomer: () => {},
   isSystemNotReady: false,
   setIsSystemNotReady: () => {},
+  sessionKey: null,
+  setSessionKey: () => {},
+  refreshSessionTimeout: () => {},
 });
 
 export const GlobalProvider = ({ children }: any) => {
   const { message, sendMessage } = useWebSocket();
   const [isUnauthorized, setIsUnauthorized] = useState(false);
-  const [isSystemNotReady, setIsSystemNotReady] = useState(false);
+  const [isSystemNotReady, setIsSystemNotReady] = useState(true);
   const [isCustomer, setIsCustomer] = useState<any>(null);
   const [authorities, setAuthorities] = useState<any>([]);
   const [collapsedGroups, setCollapsedGroups] = useState(
@@ -69,6 +80,80 @@ export const GlobalProvider = ({ children }: any) => {
   );
   const [profile, setProfile] = useState<any>(null);
   const [tenantInfo, setTenantInfo] = useState<any>(null);
+  const [sessionKey, setSessionKey] = useState<any>(() => {
+    const storedSession = getStorageData(LOCAL_STORAGE.SESSION_KEY, null);
+    if (storedSession) {
+      const { key, expirationTime } = storedSession;
+      const currentTime = Date.now();
+      if (currentTime < expirationTime) {
+        return key;
+      } else {
+        localStorage.removeItem(LOCAL_STORAGE.SESSION_KEY);
+        return null;
+      }
+    }
+    return null;
+  });
+  const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startSessionTimeout = (remainingTime: number = SESSION_KEY_TIMEOUT) => {
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+    }
+    timeoutIdRef.current = setTimeout(() => {
+      setSessionKey(null);
+      setToast("Phiên giải mã hết hạn", TOAST.WARN as any);
+      localStorage.removeItem(LOCAL_STORAGE.SESSION_KEY);
+      timeoutIdRef.current = null;
+    }, remainingTime);
+  };
+
+  const saveSessionToStorage = (key: any) => {
+    if (key) {
+      const expirationTime = Date.now() + SESSION_KEY_TIMEOUT;
+      setStorageData(LOCAL_STORAGE.SESSION_KEY, {
+        key,
+        expirationTime,
+      });
+      startSessionTimeout(SESSION_KEY_TIMEOUT);
+    } else {
+      localStorage.removeItem(LOCAL_STORAGE.SESSION_KEY);
+    }
+  };
+
+  useEffect(() => {
+    if (sessionKey) {
+      const storedSession = getStorageData(LOCAL_STORAGE.SESSION_KEY, null);
+      if (storedSession) {
+        const { expirationTime } = storedSession;
+        const currentTime = Date.now();
+        const remainingTime = Math.max(0, expirationTime - currentTime);
+        startSessionTimeout(remainingTime);
+      }
+    } else if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+      timeoutIdRef.current = null;
+    }
+
+    return () => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
+      }
+    };
+  }, [sessionKey]);
+
+  useEffect(() => {
+    saveSessionToStorage(sessionKey);
+  }, [sessionKey]);
+
+  const refreshSessionTimeout = () => {
+    if (!sessionKey) {
+      return;
+    }
+    startSessionTimeout(SESSION_KEY_TIMEOUT);
+    saveSessionToStorage(sessionKey);
+  };
 
   useEffect(() => {
     setStorageData(LOCAL_STORAGE.COLLAPSED_GROUPS, collapsedGroups);
@@ -148,6 +233,9 @@ export const GlobalProvider = ({ children }: any) => {
         setIsCustomer,
         isSystemNotReady,
         setIsSystemNotReady,
+        sessionKey,
+        setSessionKey,
+        refreshSessionTimeout,
       }}
     >
       {children}

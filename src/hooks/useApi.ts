@@ -5,6 +5,7 @@ import { roleController } from "../controllers/roleController.ts";
 import { transactionController } from "../controllers/transactionController.ts";
 import { departmentController } from "../controllers/departmentController.ts";
 import { employeeController } from "../controllers/employeeController.ts";
+import { transactionGroupController } from "../controllers/transactionGroupController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -15,6 +16,7 @@ const useApi = () => {
   const department = departmentController(fetchApi);
   const employee = employeeController(fetchApi);
   const transaction = transactionController(fetchApi);
+  const transactionGroup = transactionGroupController(fetchApi);
 
   return {
     auth,
@@ -23,6 +25,7 @@ const useApi = () => {
     role,
     location,
     transaction,
+    transactionGroup,
     employee,
     department,
   };

@@ -75,6 +75,7 @@ const getStorageData = (key: string, defaultValue: any = null) => {
 
 const setStorageData = (key: string, value: any) => {
   if (key === LOCAL_STORAGE.ACCESS_TOKEN) {
+    localStorage.removeItem(LOCAL_STORAGE.SESSION_KEY);
     const data = encrypt(value, ENV.STORAGE_KEY);
     localStorage.setItem(key, data);
   } else {
@@ -85,6 +86,7 @@ const setStorageData = (key: string, value: any) => {
 
 const removeSessionCache = () => {
   localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
+  localStorage.removeItem(LOCAL_STORAGE.SESSION_KEY);
 };
 
 export { getStorageData, setStorageData, removeSessionCache };

@@ -12,6 +12,8 @@ import MainHeader from "./MainHeader";
 import UnauthorizedDialog from "../../pages/auth/UnauthorizedDialog";
 import { getMediaImage } from "../../services/utils";
 import NotReadyDialog from "../../pages/auth/NotReadyDialog";
+import { SESSION_KEY_PAGES } from "../PageConfig";
+import InputSessionKey from "../../pages/auth/InputSessionKey";
 
 const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
   const {
@@ -21,6 +23,7 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
     getSidebarMenus,
     isSystemNotReady,
     setIsSystemNotReady,
+    sessionKey,
   } = useGlobalContext();
   const navigate = useNavigate();
   const menuGroups = getSidebarMenus();
@@ -47,6 +50,12 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
       getStorageData(LOCAL_STORAGE.COLLAPSED_GROUPS, updatedGroups);
       return updatedGroups;
     });
+  };
+
+  const isSessionKeyTimeout = () => {
+    return (
+      SESSION_KEY_PAGES.has(activeItem) && !sessionKey && !isSystemNotReady
+    );
   };
 
   return (
@@ -161,6 +170,8 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                   message="Vui lòng liên hệ với quản trị viên để kích hoạt hệ thống"
                   title="Hệ thống chưa sẵn sàng"
                 />
+              ) : isSessionKeyTimeout() ? (
+                <InputSessionKey />
               ) : (
                 renderContent
               )}
