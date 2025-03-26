@@ -54,7 +54,7 @@ const Department = () => {
     hideModal: hideDeleteDialog,
     formConfig: deleteDialogConfig,
   } = useModal();
-  const { department: apiList } = useApi();
+  const { department: apiList, loading: loadingList } = useApi();
   const { department, loading } = useApi();
   const {
     data,
@@ -185,6 +185,7 @@ const Department = () => {
             }
           />
           <GridView
+            isLoading={loadingList}
             data={data}
             columns={columns}
             currentPage={query.page}

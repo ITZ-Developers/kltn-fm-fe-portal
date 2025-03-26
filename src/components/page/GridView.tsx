@@ -28,6 +28,19 @@ const ActionButton = ({
   );
 };
 
+const GridViewLoading = ({ loading }: any) => {
+  if (!loading) return null;
+
+  return (
+    <div className="w-full min-h-[200px] flex items-center justify-center bg-gray-800 bg-opacity-70">
+      <div className="relative">
+        <div className="w-12 h-12 border-4 border-t-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+        <div className="absolute inset-0 -m-2 bg-blue-500 rounded-full opacity-20 animate-ping"></div>
+      </div>
+    </div>
+  );
+};
+
 const GridView = ({
   data,
   columns,
@@ -35,8 +48,13 @@ const GridView = ({
   totalPages,
   itemsPerPage,
   onPageChange,
+  isLoading = false,
 }: any) => {
   const filteredColumns = columns.filter(Boolean);
+
+  if (isLoading) {
+    return <GridViewLoading loading={isLoading} />;
+  }
 
   return (
     <div className="w-full">

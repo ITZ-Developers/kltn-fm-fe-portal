@@ -20,7 +20,7 @@ const Transaction = () => {
   const { state } = useLocation();
   const { isModalVisible, showModal, hideModal, formConfig } = useModal();
   const navigate = useNavigate();
-  const { transaction } = useApi();
+  const { transaction, loading } = useApi();
   const {
     data,
     query,
@@ -97,6 +97,7 @@ const Transaction = () => {
             }
           />
           <GridView
+            isLoading={loading}
             data={data}
             columns={columns}
             currentPage={query.page}

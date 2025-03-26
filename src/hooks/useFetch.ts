@@ -76,6 +76,8 @@ const useFetch = () => {
         } else {
           setIsUnauthorized(true);
         }
+      } else {
+        setIsSystemNotReady(false);
       }
 
       return data;

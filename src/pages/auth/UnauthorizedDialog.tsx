@@ -6,13 +6,7 @@ import { removeSessionCache } from "../../services/storages";
 import { SOCKET_CMD } from "../../services/constant";
 
 const UnauthorizedDialog = () => {
-  const {
-    isUnauthorized,
-    setIsUnauthorized,
-    isSystemNotReady,
-    setIsSystemNotReady,
-    message,
-  } = useGlobalContext();
+  const { isUnauthorized, setIsUnauthorized, message } = useGlobalContext();
   const { isModalVisible, showModal, hideModal, formConfig } = useModal();
 
   useEffect(() => {
@@ -37,22 +31,8 @@ const UnauthorizedDialog = () => {
           window.location.href = "/";
         },
       });
-    } else if (isSystemNotReady) {
-      setIsSystemNotReady(false);
-      showModal({
-        title: "Hệ thống hiện chưa sẵn sàng",
-        message: "Vui lòng liên hệ với quản trị viên để kích hoạt hệ thống",
-        confirmText: "Đã hiểu",
-        color: "goldenrod",
-        onConfirm: () => {
-          hideModal();
-        },
-        onCancel: () => {
-          hideModal();
-        },
-      });
     }
-  }, [isUnauthorized, isSystemNotReady]);
+  }, [isUnauthorized]);
 
   return (
     <ConfirmationDialog isVisible={isModalVisible} formConfig={formConfig} />

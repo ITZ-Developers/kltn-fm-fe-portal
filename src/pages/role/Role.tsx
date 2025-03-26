@@ -33,7 +33,7 @@ const Role = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { role, loading } = useApi();
-  const { role: roleForList } = useApi();
+  const { role: roleForList, loading: loadingList } = useApi();
   const {
     data,
     query,
@@ -141,6 +141,7 @@ const Role = () => {
             onClear={async () => await handleSubmitQuery(initQuery)}
           />
           <GridView
+            isLoading={loadingList}
             data={data}
             columns={columns}
             currentPage={query.page}

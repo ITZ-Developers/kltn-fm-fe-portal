@@ -11,10 +11,16 @@ import { getStorageData } from "../../services/storages";
 import MainHeader from "./MainHeader";
 import UnauthorizedDialog from "../../pages/auth/UnauthorizedDialog";
 import { getMediaImage } from "../../services/utils";
+import NotReadyDialog from "../../pages/auth/NotReadyDialog";
 
 const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
-  const { tenantInfo, collapsedGroups, setCollapsedGroups, getSidebarMenus } =
-    useGlobalContext();
+  const {
+    tenantInfo,
+    collapsedGroups,
+    setCollapsedGroups,
+    getSidebarMenus,
+    isSystemNotReady,
+  } = useGlobalContext();
   const navigate = useNavigate();
   const menuGroups = getSidebarMenus();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -147,7 +153,15 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
             </div>
 
             <div className={`p-4 flex-1 transition-all duration-300 md:ml-80`}>
-              {renderContent}
+              {isSystemNotReady ? (
+                <NotReadyDialog
+                  color="goldenrod"
+                  message="Vui lòng liên hệ với quản trị viên để kích hoạt hệ thống"
+                  title="Hệ thống chưa sẵn sàng"
+                />
+              ) : (
+                renderContent
+              )}
             </div>
           </div>
         </div>

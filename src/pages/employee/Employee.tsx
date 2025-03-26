@@ -50,7 +50,8 @@ const Employee = () => {
   const { isModalVisible, showModal, hideModal, formConfig } = useModal();
   const navigate = useNavigate();
   const { employee, loading } = useApi();
-  const { employee: apiList, role, department } = useApi();
+  const { employee: apiList, loading: loadingList } = useApi();
+  const { role, department } = useApi();
   const {
     data,
     query,
@@ -185,6 +186,7 @@ const Employee = () => {
             }
           />
           <GridView
+            isLoading={loadingList}
             data={data}
             columns={columns}
             currentPage={query.page}
