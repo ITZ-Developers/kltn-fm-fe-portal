@@ -116,7 +116,7 @@ const useFetch = () => {
         return data;
       }
     } catch (err: any) {
-      return { message: err.message || BASIC_MESSAGES.FAILED };
+      return { result: false, message: err.message || BASIC_MESSAGES.FAILED };
     } finally {
       setLoading(false);
     }

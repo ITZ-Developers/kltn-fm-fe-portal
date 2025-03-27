@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { ITEMS_PER_PAGE } from "../services/constant";
+import { ITEMS_PER_PAGE, TOAST } from "../services/constant";
 import { decryptData } from "../services/utils";
+import { useGlobalContext } from "../components/GlobalProvider";
 
 const useGridViewLocal = ({
-  initialData = [],
+  fetchListApi,
   initQuery = {},
   filterData = (data: any[]) => data,
   decryptFields,
   secretKey,
 }: any) => {
-  const [allData, setAllData] = useState<any[]>(initialData);
+  const { sessionKey, setToast } = useGlobalContext();
+  const [allData, setAllData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [query, setQuery] = useState({
     page: 0,
@@ -18,6 +20,10 @@ const useGridViewLocal = ({
   });
 
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    handleRefreshData();
+  }, [sessionKey]);
 
   useEffect(() => {
     const filtered = filterData(allData, query);
@@ -59,11 +65,26 @@ const useGridViewLocal = ({
     }));
   };
 
-  const deleteItem = (itemId: any) => {
+  const handleDeleteItem = (itemId: any) => {
     setAllData((prevData) => {
       const newData = prevData.filter((item) => item.id !== itemId);
       return newData;
     });
+  };
+
+  const handleRefreshData = async () => {
+    if (!sessionKey) {
+      updateData([]);
+      return;
+    }
+    const res = await fetchListApi({ isPaged: 0 });
+    if (res.result) {
+      const data = res.data;
+      updateData(data.content);
+    } else {
+      setToast(res.message, TOAST.ERROR);
+      updateData([]);
+    }
   };
 
   const updateData = (newData: any[]) => {
@@ -79,8 +100,8 @@ const useGridViewLocal = ({
     setQuery,
     handlePageChange,
     handleSubmitQuery,
-    updateData,
-    deleteItem,
+    handleDeleteItem,
+    handleRefreshData,
   };
 };
 

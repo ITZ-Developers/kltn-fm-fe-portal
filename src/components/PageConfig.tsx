@@ -5,7 +5,6 @@ import UpdateTransaction from "../pages/transaction/UpdateTransaction";
 import UpdateRole from "../pages/role/UpdateRole";
 import CreateRole from "../pages/role/CreateRole";
 import Role from "../pages/role/Role";
-import Profile from "../pages/profile/Profile";
 import ChangePassword from "../pages/profile/ChangePassword";
 import Employee from "../pages/employee/Employee";
 import CreateEmployee from "../pages/employee/CreateEmployee";
@@ -13,6 +12,7 @@ import UpdateEmployee from "../pages/employee/UpdateEmployee";
 import Department from "../pages/department/Department";
 import RedirecProfile from "./redirect/RedirectProfile";
 import TransactionGroup from "../pages/transactionGroup/TransactionGroup";
+import TransactionPermission from "../pages/transactionPermission/TransactionPermission";
 
 const TRANSACTION_CONFIG = {
   TRANSACTION: {
@@ -59,6 +59,23 @@ const TRANSACTION_GROUP_CONFIG = {
   DELETE_TRANSACTION_GROUP: {
     label: "Xóa nhóm giao dịch",
     role: "TR_G_D",
+  },
+};
+
+const TRANSACTION_PERMISSION_CONFIG = {
+  TRANSACTION_PERMISSION: {
+    label: "Phân quyền nhóm giao dịch",
+    path: "/transaction-group/permission/:transactionGroupId",
+    role: "TR_P_L",
+    element: <TransactionPermission />,
+  },
+  CREATE_TRANSACTION_PERMISSION: {
+    label: "Thêm quyền nhóm giao dịch",
+    role: "TR_P_C",
+  },
+  DELETE_TRANSACTION_PERMISSION: {
+    label: "Xóa quyền nhóm giao dịch",
+    role: "TR_P_D",
   },
 };
 
@@ -156,6 +173,7 @@ const PAGE_CONFIG = {
   ...PROFILE_CONFIG,
   ...DEPARTMENT_CONFIG,
   ...TRANSACTION_GROUP_CONFIG,
+  ...TRANSACTION_PERMISSION_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([

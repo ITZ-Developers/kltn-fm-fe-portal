@@ -1,6 +1,7 @@
 import {
   ActionDeleteButton,
   ActionEditButton,
+  ActionPermissionButton,
 } from "../../components/form/Button";
 import {
   configDeleteDialog,
@@ -22,16 +23,19 @@ import { CreateButton, ToolBar } from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import { GridView } from "../../components/page/GridView";
 import { basicRender, renderActionButton } from "../../components/ItemRender";
-import { decrypt, truncateString } from "../../services/utils";
+import { truncateString } from "../../services/utils";
 import { useGlobalContext } from "../../components/GlobalProvider";
 import CreateTransactionGroup from "./CreateTransactionGroup";
 import UpdateTransactionGroup from "./UpdateTransactionGroup";
 import useGridViewLocal from "../../hooks/useGridViewLocal";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const initQuery = { name: "" };
 
 const TransactionGroup = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
   const customFilterData = useCallback((allData: any[], query: any) => {
     return allData.filter((item) => {
       return (
@@ -67,21 +71,15 @@ const TransactionGroup = () => {
     totalPages,
     handlePageChange,
     handleSubmitQuery,
-    updateData,
-    deleteItem,
+    handleDeleteItem,
+    handleRefreshData,
   } = useGridViewLocal({
-    initQuery,
+    initQuery: state?.query || initQuery,
     filterData: customFilterData,
     decryptFields: DECRYPT_FIELDS.TRANSACTION_GROUP,
     secretKey: sessionKey,
+    fetchListApi: apiList.list,
   });
-
-  useEffect(() => {
-    if (!sessionKey) {
-      return;
-    }
-    handleRefresh();
-  }, [sessionKey]);
 
   const columns = [
     {
@@ -104,9 +102,14 @@ const TransactionGroup = () => {
       role: [
         PAGE_CONFIG.CREATE_TRANSACTION_GROUP.role,
         PAGE_CONFIG.UPDATE_TRANSACTION_GROUP.role,
+        PAGE_CONFIG.TRANSACTION_PERMISSION.role,
       ],
       renderChildren: (item: any) => (
         <>
+          <ActionPermissionButton
+            role={PAGE_CONFIG.TRANSACTION_PERMISSION.role}
+            onClick={() => onPermissionButtonClick(item.id)}
+          />
           <ActionEditButton
             role={PAGE_CONFIG.UPDATE_TRANSACTION_GROUP.role}
             onClick={() => onUpdateButtonClick(item.id)}
@@ -120,14 +123,8 @@ const TransactionGroup = () => {
     }),
   ];
 
-  const handleRefresh = async () => {
-    const res = await apiList.list({ isPaged: 0 });
-    if (res.result) {
-      const data = res.data;
-      updateData(data.content);
-    } else {
-      updateData([]);
-    }
+  const onPermissionButtonClick = (id: any) => {
+    navigate(`/transaction-group/permission/${id}`, { state: { query } });
   };
 
   const onDeleteButtonClick = (id: any) => {
@@ -135,7 +132,7 @@ const TransactionGroup = () => {
       configDeleteDialog({
         label: PAGE_CONFIG.DELETE_TRANSACTION_GROUP.label,
         deleteApi: () => transactionGroup.del(id),
-        refreshData: () => deleteItem(id),
+        refreshData: () => handleDeleteItem(id),
         hideModal: hideDeleteDialog,
         setToast,
       })
@@ -147,7 +144,7 @@ const TransactionGroup = () => {
       configModalForm({
         label: PAGE_CONFIG.CREATE_TRANSACTION_GROUP.label,
         fetchApi: transactionGroup.create,
-        refreshData: handleRefresh,
+        refreshData: handleRefreshData,
         hideModal: hideCreateForm,
         setToast,
         successMessage: BASIC_MESSAGES.CREATED,
@@ -164,7 +161,7 @@ const TransactionGroup = () => {
       configModalForm({
         label: PAGE_CONFIG.UPDATE_TRANSACTION_GROUP.label,
         fetchApi: transactionGroup.update,
-        refreshData: handleRefresh,
+        refreshData: handleRefreshData,
         hideModal: hideUpdateForm,
         setToast,
         successMessage: BASIC_MESSAGES.UPDATED,
@@ -201,7 +198,7 @@ const TransactionGroup = () => {
               </>
             }
             onClear={() => handleSubmitQuery(initQuery)}
-            onRefresh={handleRefresh}
+            onRefresh={handleRefreshData}
             actionButtons={
               <CreateButton
                 role={PAGE_CONFIG.CREATE_TRANSACTION_GROUP.role}

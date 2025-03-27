@@ -116,6 +116,11 @@ const SOCKET_CMD = {
   CMD_LOCK_DEVICE: "CMD_LOCK_DEVICE",
 };
 
+const PERMISSION_KIND = {
+  ITEM: 1,
+  GROUP: 2,
+};
+
 const FILE_TYPES = {
   AVATAR: "AVATAR",
   DOCUMENT: "DOCUMENT",
@@ -147,8 +152,9 @@ const BUTTON_TEXT = {
   LOGIN: "Đăng nhập",
   TWO_FACTOR: "Xác thực hai bước",
   RESET_MFA: "Đặt lại MFA",
+  PERMISSION: "Phân quyền",
   SEARCH: "Tìm kiếm",
-  REFRESH: "Tải lại",
+  REFRESH: "Làm mới",
   CREATE: "Thêm mới",
   UPDATE: "Cập nhật",
   DELETE: "Xóa",
@@ -179,4 +185,5 @@ export {
   GRANT_TYPE_MAP,
   ERROR_CODE,
   SESSION_KEY_TIMEOUT,
+  PERMISSION_KIND,
 };

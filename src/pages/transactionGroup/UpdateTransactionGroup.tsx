@@ -29,6 +29,9 @@ const UpdateTransactionGroup = ({ isVisible, formConfig }: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!sessionKey) {
+        formConfig?.hideModal();
+      }
       resetForm();
       const res = await transactionGroup.get(formConfig.initForm.id);
       if (res.result) {
