@@ -22,8 +22,8 @@ import { useParams } from "react-router-dom";
 import useQueryState from "../../hooks/useQueryState";
 import { SelectBox } from "../../components/page/SelectBox";
 import { useEffect, useState } from "react";
-import { basicRender, renderActionButton } from "../../components/ItemRender";
-import { decryptData, truncateString } from "../../services/utils";
+import { renderActionButton } from "../../components/ItemRender";
+import { decryptData } from "../../services/utils";
 import { useGlobalContext } from "../../components/GlobalProvider";
 import CreateTransactionPermission from "./CreateAccountBranch";
 
