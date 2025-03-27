@@ -17,6 +17,7 @@ import useApi from "../../hooks/useApi";
 import useForm from "../../hooks/useForm";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { StaticSelectField } from "../../components/form/SelectField";
+import { truncateToDDMMYYYY } from "../../services/utils";
 
 const UpdateLocationByCustomer = () => {
   const { setTenantInfo, setToast, hasRoles } = useGlobalContext();
@@ -140,13 +141,13 @@ const UpdateLocationByCustomer = () => {
                     title="Ngày bắt đầu"
                     isRequired={true}
                     disabled={true}
-                    value={form.startDate}
+                    value={truncateToDDMMYYYY(form.startDate)}
                   />
                   <InputField
                     title="Ngày hết hạn"
                     isRequired={true}
                     disabled={true}
-                    value={form.expiredDate}
+                    value={truncateToDDMMYYYY(form.expiredDate)}
                   />
                 </div>
                 {canUpdate && (
