@@ -12,7 +12,7 @@ import MainHeader from "./MainHeader";
 import UnauthorizedDialog from "../../pages/auth/UnauthorizedDialog";
 import { getMediaImage } from "../../services/utils";
 import NotReadyDialog from "../../pages/auth/NotReadyDialog";
-import { SESSION_KEY_PAGES } from "../config/PageConfig";
+import { PAGE_CONFIG, SESSION_KEY_PAGES } from "../config/PageConfig";
 import InputSessionKey from "../../pages/auth/InputSessionKey";
 
 const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
@@ -22,7 +22,6 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
     setCollapsedGroups,
     getSidebarMenus,
     isSystemNotReady,
-    setIsSystemNotReady,
     sessionKey,
   } = useGlobalContext();
   const navigate = useNavigate();
@@ -37,6 +36,11 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
       navigate(selectedItem.path);
       setIsSidebarOpen(false);
     }
+  };
+
+  const handleMyLocationClick = () => {
+    navigate(PAGE_CONFIG.LOCATION.path);
+    setIsSidebarOpen(false);
   };
 
   useEffect(() => {
@@ -73,7 +77,10 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
         `}
         >
           <div className="h-full flex flex-col">
-            <div className="flex items-center m-2 space-x-3">
+            <div
+              className="flex items-center m-2 space-x-3 cursor-pointer transition-all duration-200 hover:bg-gray-800 rounded-lg p-2"
+              onClick={handleMyLocationClick}
+            >
               <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16">
                 {tenantInfo?.logoPath ? (
                   <img
@@ -82,7 +89,7 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                     alt="Logo"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-700 rounded-lg flex items-center justify-center">
+                  <div className="w-full h-full bg-gray-700 rounded-lg flex items-center justify-center transition-colors duration-200 hover:bg-gray-600">
                     <MousePointer2Icon size={20} className="text-white" />
                   </div>
                 )}

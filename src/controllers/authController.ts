@@ -78,6 +78,15 @@ export const authController = (fetchApi: any) => {
       authType: AUTH_TYPE.BEARER,
     });
 
+  const updateLocationByCustomer = (payload: any) =>
+    fetchApi({
+      apiUrl: API_URL.MASTER_API,
+      endpoint: "/v1/location/update-by-customer",
+      method: METHOD.PUT,
+      payload,
+      authType: AUTH_TYPE.BEARER,
+    });
+
   const updateProfileEmployee = (payload: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
@@ -215,5 +224,6 @@ export const authController = (fetchApi: any) => {
     updateProfileEmployee,
     requestKey,
     getMyKey,
+    updateLocationByCustomer,
   };
 };

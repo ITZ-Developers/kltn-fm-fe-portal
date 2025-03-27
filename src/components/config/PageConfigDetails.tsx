@@ -4,6 +4,7 @@ import Employee from "../../pages/employee/Employee";
 import UpdateEmployee from "../../pages/employee/UpdateEmployee";
 import KeyInformationGroup from "../../pages/keyInformationGroup/KeyInformationGroup";
 import KeyInformationGroupPermission from "../../pages/keyInformationGroupPermission/KeyInformationGroupPermission";
+import UpdateLocationByCustomer from "../../pages/location/UpdateLocationByCustomer";
 import Organization from "../../pages/organization/Organization";
 import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
 import ChangePassword from "../../pages/profile/ChangePassword";
@@ -237,6 +238,11 @@ const DEPARTMENT_CONFIG = {
 };
 
 const PROFILE_CONFIG = {
+  LOCATION: {
+    label: "Khu vực của tôi",
+    path: "/location",
+    element: <UpdateLocationByCustomer />,
+  },
   PROFILE: {
     label: "Hồ sơ",
     path: "/profile",

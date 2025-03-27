@@ -121,12 +121,8 @@ const ImageUploadField = ({
   value,
   onChange,
   accept = "image/*",
-}: {
-  title?: string;
-  value?: string;
-  onChange: (file: File | null) => void;
-  accept?: string;
-}) => {
+  disabled = false,
+}: any) => {
   const { media } = useApi();
   const [preview, setPreview] = useState<string | null>(value || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -140,6 +136,7 @@ const ImageUploadField = ({
   }, [value]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
     const file = e.target.files?.[0] || null;
     if (!file) {
       onChange(null);
@@ -157,6 +154,7 @@ const ImageUploadField = ({
   };
 
   const handleClick = () => {
+    if (disabled) return;
     fileInputRef.current?.click();
   };
 
@@ -173,10 +171,15 @@ const ImageUploadField = ({
           accept={accept}
           onChange={handleFileChange}
           ref={fileInputRef}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+          disabled={disabled}
+          className={`absolute inset-0 w-full h-full opacity-0 z-10 ${
+            disabled ? "cursor-not-allowed" : "cursor-pointer"
+          }`}
         />
         <div
-          className="w-full h-full flex items-center justify-center border border-gray-600 rounded-md bg-gray-800 overflow-hidden"
+          className={`w-full h-full flex items-center justify-center border border-gray-600 rounded-md bg-gray-800 overflow-hidden ${
+            disabled ? "opacity-50" : ""
+          }`}
           onClick={handleClick}
         >
           {preview ? (
