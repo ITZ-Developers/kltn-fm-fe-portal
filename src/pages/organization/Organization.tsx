@@ -19,27 +19,26 @@ import {
   ALIGNMENT,
   BASIC_MESSAGES,
   ITEMS_PER_PAGE,
-  TRUNCATE_LENGTH,
 } from "../../services/constant";
 import Sidebar from "../../components/page/Sidebar";
 import { CreateButton, ToolBar } from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import { GridView } from "../../components/page/GridView";
 import {
-  basicRender,
   renderActionButton,
+  renderImage,
 } from "../../components/config/ItemRender";
-import { truncateString } from "../../services/utils";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import useGridViewLocal from "../../hooks/useGridViewLocal";
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import CreateKeyInformationGroup from "./CreateKeyInformationGroup";
-import UpdateKeyInformationGroup from "./UpdateKeyInformationGroup";
+import CreateOrganization from "./CreateOrganization";
+import UpdateOrganization from "./UpdateOrganization";
+import { BoxIcon } from "lucide-react";
 
 const initQuery = { name: "" };
 
-const KeyInformationGroup = () => {
+const Organization = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const customFilterData = useCallback((allData: any[], query: any) => {
@@ -69,8 +68,8 @@ const KeyInformationGroup = () => {
     hideModal: hideDeleteDialog,
     formConfig: deleteDialogConfig,
   } = useModal();
-  const { keyInformationGroup: apiList, loading: loadingList } = useApi();
-  const { keyInformationGroup, loading } = useApi();
+  const { organization: apiList, loading: loadingList } = useApi();
+  const { organization, loading } = useApi();
   const {
     data,
     query,
@@ -82,46 +81,36 @@ const KeyInformationGroup = () => {
   } = useGridViewLocal({
     initQuery: state?.query || initQuery,
     filterData: customFilterData,
-    decryptFields: DECRYPT_FIELDS.KEY_INFORMATION_GROUP,
+    decryptFields: DECRYPT_FIELDS.ORGANIZATION,
     secretKey: sessionKey,
     fetchListApi: apiList.list,
   });
 
   const columns = [
+    renderImage({ label: "Logo", accessor: "logo", Icon: BoxIcon }),
     {
-      label: "Tên nhóm",
+      label: "Tên công ty",
       accessor: "name",
       align: ALIGNMENT.LEFT,
     },
-    {
-      label: "Mô tả",
-      accessor: "description",
-      align: ALIGNMENT.LEFT,
-      render: (item: any) => {
-        return basicRender({
-          align: ALIGNMENT.LEFT,
-          content: truncateString(item.description, TRUNCATE_LENGTH),
-        });
-      },
-    },
     renderActionButton({
       role: [
-        PAGE_CONFIG.DELETE_KEY_INFORMATION_GROUP.role,
-        PAGE_CONFIG.UPDATE_KEY_INFORMATION_GROUP.role,
-        PAGE_CONFIG.KEY_INFORMATION_GROUP_PERMISSION.role,
+        PAGE_CONFIG.DELETE_ORGANIZATION.role,
+        PAGE_CONFIG.UPDATE_ORGANIZATION.role,
+        PAGE_CONFIG.ORGANIZATION_PERMISSION.role,
       ],
       renderChildren: (item: any) => (
         <>
           <ActionPermissionButton
-            role={PAGE_CONFIG.KEY_INFORMATION_GROUP_PERMISSION.role}
+            role={PAGE_CONFIG.ORGANIZATION_PERMISSION.role}
             onClick={() => onPermissionButtonClick(item.id)}
           />
           <ActionEditButton
-            role={PAGE_CONFIG.UPDATE_KEY_INFORMATION_GROUP.role}
+            role={PAGE_CONFIG.UPDATE_ORGANIZATION.role}
             onClick={() => onUpdateButtonClick(item.id)}
           />
           <ActionDeleteButton
-            role={PAGE_CONFIG.DELETE_KEY_INFORMATION_GROUP.role}
+            role={PAGE_CONFIG.DELETE_ORGANIZATION.role}
             onClick={() => onDeleteButtonClick(item.id)}
           />
         </>
@@ -130,14 +119,14 @@ const KeyInformationGroup = () => {
   ];
 
   const onPermissionButtonClick = (id: any) => {
-    navigate(`/key-information-group/permission/${id}`, { state: { query } });
+    navigate(`/organization/permission/${id}`, { state: { query } });
   };
 
   const onDeleteButtonClick = (id: any) => {
     showDeleteDialog(
       configDeleteDialog({
-        label: PAGE_CONFIG.DELETE_KEY_INFORMATION_GROUP.label,
-        deleteApi: () => keyInformationGroup.del(id),
+        label: PAGE_CONFIG.DELETE_ORGANIZATION.label,
+        deleteApi: () => organization.del(id),
         refreshData: () => handleDeleteItem(id),
         hideModal: hideDeleteDialog,
         setToast,
@@ -148,15 +137,15 @@ const KeyInformationGroup = () => {
   const onCreateButtonClick = () => {
     showCreateForm(
       configModalForm({
-        label: PAGE_CONFIG.CREATE_KEY_INFORMATION_GROUP.label,
-        fetchApi: keyInformationGroup.create,
+        label: PAGE_CONFIG.CREATE_ORGANIZATION.label,
+        fetchApi: organization.create,
         refreshData: handleRefreshData,
         hideModal: hideCreateForm,
         setToast,
         successMessage: BASIC_MESSAGES.CREATED,
         initForm: {
           name: "",
-          description: "",
+          logo: "",
         },
       })
     );
@@ -165,8 +154,8 @@ const KeyInformationGroup = () => {
   const onUpdateButtonClick = (id: any) => {
     showUpdateForm(
       configModalForm({
-        label: PAGE_CONFIG.UPDATE_KEY_INFORMATION_GROUP.label,
-        fetchApi: keyInformationGroup.update,
+        label: PAGE_CONFIG.UPDATE_ORGANIZATION.label,
+        fetchApi: organization.update,
         refreshData: handleRefreshData,
         hideModal: hideUpdateForm,
         setToast,
@@ -174,7 +163,7 @@ const KeyInformationGroup = () => {
         initForm: {
           id,
           name: "",
-          description: "",
+          logo: "",
         },
       })
     );
@@ -184,10 +173,10 @@ const KeyInformationGroup = () => {
     <Sidebar
       breadcrumbs={[
         {
-          label: PAGE_CONFIG.KEY_INFORMATION_GROUP.label,
+          label: PAGE_CONFIG.ORGANIZATION.label,
         },
       ]}
-      activeItem={PAGE_CONFIG.KEY_INFORMATION_GROUP.name}
+      activeItem={PAGE_CONFIG.ORGANIZATION.name}
       renderContent={
         <>
           <LoadingDialog isVisible={loading} />
@@ -199,7 +188,7 @@ const KeyInformationGroup = () => {
                   onChangeText={(value: any) =>
                     handleSubmitQuery({ ...query, name: value })
                   }
-                  placeholder="Tên nhóm..."
+                  placeholder="Tên công ty..."
                 />
               </>
             }
@@ -207,7 +196,7 @@ const KeyInformationGroup = () => {
             onRefresh={handleRefreshData}
             actionButtons={
               <CreateButton
-                role={PAGE_CONFIG.CREATE_KEY_INFORMATION_GROUP.role}
+                role={PAGE_CONFIG.CREATE_ORGANIZATION.role}
                 onClick={onCreateButtonClick}
               />
             }
@@ -221,11 +210,11 @@ const KeyInformationGroup = () => {
             onPageChange={handlePageChange}
             totalPages={totalPages}
           />
-          <CreateKeyInformationGroup
+          <CreateOrganization
             isVisible={createFormVisible}
             formConfig={createFormConfig}
           />
-          <UpdateKeyInformationGroup
+          <UpdateOrganization
             isVisible={updateFormVisible}
             formConfig={updateFormConfig}
           />
@@ -238,4 +227,4 @@ const KeyInformationGroup = () => {
     ></Sidebar>
   );
 };
-export default KeyInformationGroup;
+export default Organization;

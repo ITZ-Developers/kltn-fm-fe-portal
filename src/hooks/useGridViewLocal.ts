@@ -89,7 +89,7 @@ const useGridViewLocal = ({
 
   const updateData = (newData: any[]) => {
     setAllData(
-      newData.map((item) => decryptData(secretKey, item, decryptFields))
+      newData?.map((item) => decryptData(secretKey, item, decryptFields))
     );
   };
 

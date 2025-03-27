@@ -106,7 +106,7 @@ const ServiceGroup = () => {
     },
     renderActionButton({
       role: [
-        PAGE_CONFIG.CREATE_SERVICE_GROUP.role,
+        PAGE_CONFIG.DELETE_SERVICE_GROUP.role,
         PAGE_CONFIG.UPDATE_SERVICE_GROUP.role,
         PAGE_CONFIG.SERVICE_GROUP_PERMISSION.role,
       ],

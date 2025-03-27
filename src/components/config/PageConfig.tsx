@@ -2,6 +2,8 @@ import {
   ArrowLeftRightIcon,
   HeadsetIcon,
   KeyIcon,
+  NotebookPenIcon,
+  SquareCheckBigIcon,
   UserIcon,
 } from "lucide-react";
 import {
@@ -9,6 +11,8 @@ import {
   EMPLOYEE_CONFIG,
   KEY_INFORMATION_GROUP_CONFIG,
   KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
+  ORGANIZATION_CONFIG,
+  ORGANIZATION_PERMISSION_CONFIG,
   PROFILE_CONFIG,
   ROLE_CONFIG,
   SERVICE_GROUP_CONFIG,
@@ -30,18 +34,22 @@ const PAGE_CONFIG = {
   ...SERVICE_GROUP_PERMISSION_CONFIG,
   ...KEY_INFORMATION_GROUP_CONFIG,
   ...KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
+  ...ORGANIZATION_CONFIG,
+  ...ORGANIZATION_PERMISSION_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.TRANSACTION.name,
   PAGE_CONFIG.TRANSACTION_GROUP.name,
   PAGE_CONFIG.SERVICE_GROUP.name,
+  PAGE_CONFIG.ORGANIZATION.name,
 ]);
 
 const DECRYPT_FIELDS = {
   TRANSACTION_GROUP: ["name", "description"],
   SERVICE_GROUP: ["name", "description"],
   KEY_INFORMATION_GROUP: ["name", "description"],
+  ORGANIZATION: ["logo", "name"],
 };
 
 const SIDEBAR_MENUS = [
@@ -59,6 +67,11 @@ const SIDEBAR_MENUS = [
     name: "Quản lý key",
     icon: <KeyIcon size={20} />,
     items: [PAGE_CONFIG.KEY_INFORMATION_GROUP],
+  },
+  {
+    name: "Quản lý ghi chú",
+    icon: <SquareCheckBigIcon size={20} />,
+    items: [PAGE_CONFIG.ORGANIZATION],
   },
   {
     name: "Quản lý người dùng",

@@ -28,20 +28,19 @@ import { useEffect, useState } from "react";
 import { renderActionButton } from "../../components/config/ItemRender";
 import { decryptData } from "../../services/utils";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
-import CreateTransactionGroupPermission from "./CreateTransactionGroupPermission";
+import CreateTransactionGroupPermission from "./CreateOrganizationPermission";
 
-const TransactionGroupPermission = () => {
+const OrganizationPermission = () => {
   const { setToast, sessionKey } = useGlobalContext();
-  const { transactionGroupId } = useParams();
+  const { organizationId } = useParams();
   const initQuery = {
-    transactionGroupId,
+    organizationId,
     accountId: "",
-    permissionKind: PERMISSION_KIND.GROUP,
     page: 0,
     size: ITEMS_PER_PAGE,
   };
   const { handleNavigateBack } = useQueryState({
-    path: PAGE_CONFIG.TRANSACTION_GROUP.path,
+    path: PAGE_CONFIG.ORGANIZATION.path,
   });
   const {
     isModalVisible: createFormVisible,
@@ -55,9 +54,9 @@ const TransactionGroupPermission = () => {
     hideModal: hideDeleteDialog,
     formConfig: deleteDialogConfig,
   } = useModal();
-  const { transactionPermission: apiList, loading: loadingList } = useApi();
-  const { employee, transactionGroup } = useApi();
-  const { transactionPermission, loading } = useApi();
+  const { organizationPermission: apiList, loading: loadingList } = useApi();
+  const { employee, organization } = useApi();
+  const { organizationPermission, loading } = useApi();
   const {
     data,
     query,
@@ -72,17 +71,17 @@ const TransactionGroupPermission = () => {
   const [groupData, setGroupData] = useState<any>(null);
 
   useEffect(() => {
-    if (!transactionGroupId) {
+    if (!organizationId) {
       handleNavigateBack();
       return;
     }
 
     const fetchData = async () => {
-      const res = await transactionGroup.get(transactionGroupId);
+      const res = await organization.get(organizationId);
       if (res.result) {
         const data = res.data;
         setGroupData(
-          decryptData(sessionKey, data, DECRYPT_FIELDS.TRANSACTION_GROUP)
+          decryptData(sessionKey, data, DECRYPT_FIELDS.ORGANIZATION)
         );
       } else {
         handleNavigateBack();
@@ -90,7 +89,7 @@ const TransactionGroupPermission = () => {
     };
 
     fetchData();
-  }, [transactionGroupId]);
+  }, [organizationId]);
 
   const columns = [
     {
@@ -114,11 +113,11 @@ const TransactionGroupPermission = () => {
       align: ALIGNMENT.LEFT,
     },
     renderActionButton({
-      role: [PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.role],
+      role: [PAGE_CONFIG.DELETE_ORGANIZATION_PERMISSION.role],
       renderChildren: (item: any) => (
         <>
           <ActionDeleteButton
-            role={PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.role}
+            role={PAGE_CONFIG.DELETE_ORGANIZATION_PERMISSION.role}
             onClick={() => onDeleteButtonClick(item.id)}
           />
         </>
@@ -129,8 +128,8 @@ const TransactionGroupPermission = () => {
   const onDeleteButtonClick = (id: any) => {
     showDeleteDialog(
       configDeleteDialog({
-        label: PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.label,
-        deleteApi: () => transactionPermission.del(id),
+        label: PAGE_CONFIG.DELETE_ORGANIZATION_PERMISSION.label,
+        deleteApi: () => organizationPermission.del(id),
         refreshData: () => handleSubmitQuery(query),
         hideModal: hideDeleteDialog,
         setToast,
@@ -141,16 +140,15 @@ const TransactionGroupPermission = () => {
   const onCreateButtonClick = () => {
     showCreateForm(
       configModalForm({
-        label: PAGE_CONFIG.CREATE_TRANSACTION_GROUP_PERMISSION.label,
-        fetchApi: transactionPermission.create,
+        label: PAGE_CONFIG.CREATE_ORGANIZATION_PERMISSION.label,
+        fetchApi: organizationPermission.create,
         refreshData: () => handleSubmitQuery(query),
         hideModal: hideCreateForm,
         setToast,
         successMessage: BASIC_MESSAGES.CREATED,
         initForm: {
           accountId: "",
-          permissionKind: PERMISSION_KIND.GROUP,
-          transactionGroupId,
+          organizationId,
         },
       })
     );
@@ -164,10 +162,10 @@ const TransactionGroupPermission = () => {
           onClick: handleNavigateBack,
         },
         {
-          label: PAGE_CONFIG.TRANSACTION_GROUP_PERMISSION.label,
+          label: PAGE_CONFIG.ORGANIZATION_PERMISSION.label,
         },
       ]}
-      activeItem={PAGE_CONFIG.TRANSACTION_GROUP.name}
+      activeItem={PAGE_CONFIG.ORGANIZATION.name}
       renderContent={
         <>
           <LoadingDialog isVisible={loading} />
@@ -189,7 +187,7 @@ const TransactionGroupPermission = () => {
             onClear={async () => await handleSubmitQuery(initQuery)}
             actionButtons={
               <CreateButton
-                role={PAGE_CONFIG.CREATE_TRANSACTION_GROUP_PERMISSION.role}
+                role={PAGE_CONFIG.CREATE_ORGANIZATION_PERMISSION.role}
                 onClick={onCreateButtonClick}
               />
             }
@@ -216,4 +214,4 @@ const TransactionGroupPermission = () => {
     ></Sidebar>
   );
 };
-export default TransactionGroupPermission;
+export default OrganizationPermission;

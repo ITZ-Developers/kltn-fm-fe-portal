@@ -106,7 +106,7 @@ const TransactionGroup = () => {
     },
     renderActionButton({
       role: [
-        PAGE_CONFIG.CREATE_TRANSACTION_GROUP.role,
+        PAGE_CONFIG.DELETE_TRANSACTION_GROUP.role,
         PAGE_CONFIG.UPDATE_TRANSACTION_GROUP.role,
         PAGE_CONFIG.TRANSACTION_GROUP_PERMISSION.role,
       ],

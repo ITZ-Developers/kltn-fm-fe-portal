@@ -4,6 +4,8 @@ import Employee from "../../pages/employee/Employee";
 import UpdateEmployee from "../../pages/employee/UpdateEmployee";
 import KeyInformationGroup from "../../pages/keyInformationGroup/KeyInformationGroup";
 import KeyInformationGroupPermission from "../../pages/keyInformationGroupPermission/KeyInformationGroupPermission";
+import Organization from "../../pages/organization/Organization";
+import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
 import ChangePassword from "../../pages/profile/ChangePassword";
 import CreateRole from "../../pages/role/CreateRole";
 import Role from "../../pages/role/Role";
@@ -247,6 +249,45 @@ const PROFILE_CONFIG = {
   },
 };
 
+const ORGANIZATION_CONFIG = {
+  ORGANIZATION: {
+    name: "organization",
+    label: "Công ty",
+    path: "/organization",
+    role: "OR_L",
+    element: <Organization />,
+  },
+  CREATE_ORGANIZATION: {
+    label: "Thêm mới công ty",
+    role: "OR_C",
+  },
+  UPDATE_ORGANIZATION: {
+    label: "Cập nhật công ty",
+    role: "OR_U",
+  },
+  DELETE_ORGANIZATION: {
+    label: "Xóa công ty",
+    role: "OR_D",
+  },
+};
+
+const ORGANIZATION_PERMISSION_CONFIG = {
+  ORGANIZATION_PERMISSION: {
+    label: "Phân quyền công ty",
+    path: "/organization/permission/:organizationId",
+    role: "OR_P_L",
+    element: <OrganizationPermission />,
+  },
+  CREATE_ORGANIZATION_PERMISSION: {
+    label: "Thêm quyền công ty",
+    role: "OR_P_C",
+  },
+  DELETE_ORGANIZATION_PERMISSION: {
+    label: "Xóa quyền công ty",
+    role: "OR_P_D",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -259,4 +300,6 @@ export {
   SERVICE_GROUP_PERMISSION_CONFIG,
   KEY_INFORMATION_GROUP_CONFIG,
   KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
+  ORGANIZATION_CONFIG,
+  ORGANIZATION_PERMISSION_CONFIG,
 };
