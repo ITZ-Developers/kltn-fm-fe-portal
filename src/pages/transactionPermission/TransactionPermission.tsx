@@ -25,7 +25,7 @@ import { useEffect, useState } from "react";
 import { renderActionButton } from "../../components/ItemRender";
 import { decryptData } from "../../services/utils";
 import { useGlobalContext } from "../../components/GlobalProvider";
-import CreateTransactionPermission from "./CreateAccountBranch";
+import CreateTransactionPermission from "./CreateTransactionPermission";
 
 const TransactionPermission = () => {
   const { setToast, sessionKey } = useGlobalContext();
