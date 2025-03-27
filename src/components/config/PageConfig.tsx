@@ -7,6 +7,7 @@ import {
   UserIcon,
 } from "lucide-react";
 import {
+  CATEGORY_CONFIG,
   DEPARTMENT_CONFIG,
   EMPLOYEE_CONFIG,
   KEY_INFORMATION_GROUP_CONFIG,
@@ -36,13 +37,16 @@ const PAGE_CONFIG = {
   ...KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
   ...ORGANIZATION_CONFIG,
   ...ORGANIZATION_PERMISSION_CONFIG,
+  ...CATEGORY_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.TRANSACTION.name,
   PAGE_CONFIG.TRANSACTION_GROUP.name,
   PAGE_CONFIG.SERVICE_GROUP.name,
+  PAGE_CONFIG.KEY_INFORMATION_GROUP.name,
   PAGE_CONFIG.ORGANIZATION.name,
+  PAGE_CONFIG.CATEGORY.name,
 ]);
 
 const DECRYPT_FIELDS = {
@@ -50,13 +54,18 @@ const DECRYPT_FIELDS = {
   SERVICE_GROUP: ["name", "description"],
   KEY_INFORMATION_GROUP: ["name", "description"],
   ORGANIZATION: ["logo", "name"],
+  CATEGORY: ["description", "name"],
 };
 
 const SIDEBAR_MENUS = [
   {
     name: "Quản lý giao dịch",
     icon: <ArrowLeftRightIcon size={20} />,
-    items: [PAGE_CONFIG.TRANSACTION, PAGE_CONFIG.TRANSACTION_GROUP],
+    items: [
+      PAGE_CONFIG.TRANSACTION,
+      PAGE_CONFIG.TRANSACTION_GROUP,
+      PAGE_CONFIG.CATEGORY,
+    ],
   },
   {
     name: "Quản lý dịch vụ",

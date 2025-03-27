@@ -106,6 +106,19 @@ const GROUP_KIND_MAP = {
   },
 };
 
+const TRANSACTION_KIND_MAP = {
+  INCOME: {
+    value: 1,
+    label: "Thu",
+    className: "bg-green-900 text-green-300",
+  },
+  EXPENSE: {
+    value: 2,
+    label: "Chi",
+    className: "bg-red-900 text-red-300",
+  },
+};
+
 const ITEMS_PER_PAGE = 10;
 const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
@@ -186,4 +199,5 @@ export {
   ERROR_CODE,
   SESSION_KEY_TIMEOUT,
   PERMISSION_KIND,
+  TRANSACTION_KIND_MAP,
 };

@@ -1,3 +1,4 @@
+import Category from "../../pages/category/Category";
 import Department from "../../pages/department/Department";
 import CreateEmployee from "../../pages/employee/CreateEmployee";
 import Employee from "../../pages/employee/Employee";
@@ -294,6 +295,28 @@ const ORGANIZATION_PERMISSION_CONFIG = {
   },
 };
 
+const CATEGORY_CONFIG = {
+  CATEGORY: {
+    name: "category",
+    label: "Danh mục",
+    path: "/category",
+    role: "CA_L",
+    element: <Category />,
+  },
+  CREATE_CATEGORY: {
+    label: "Thêm mới danh mục",
+    role: "CA_C",
+  },
+  UPDATE_CATEGORY: {
+    label: "Cập nhật danh mục",
+    role: "CA_U",
+  },
+  DELETE_CATEGORY: {
+    label: "Xóa danh mục",
+    role: "CA_D",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -308,4 +331,5 @@ export {
   KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
   ORGANIZATION_CONFIG,
   ORGANIZATION_PERMISSION_CONFIG,
+  CATEGORY_CONFIG,
 };

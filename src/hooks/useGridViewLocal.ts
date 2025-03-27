@@ -80,7 +80,7 @@ const useGridViewLocal = ({
     const res = await fetchListApi({ isPaged: 0 });
     if (res.result) {
       const data = res.data;
-      updateData(data.content);
+      updateData(data?.content || []);
     } else {
       setToast(res.message, TOAST.ERROR);
       updateData([]);
