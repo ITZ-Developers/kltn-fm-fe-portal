@@ -11,11 +11,11 @@ import {
   LOCAL_STORAGE,
   SESSION_KEY_TIMEOUT,
   TOAST,
-} from "../services/constant";
-import { getStorageData, setStorageData } from "../services/storages";
-import { PAGE_CONFIG, SIDEBAR_MENUS } from "./PageConfig";
+} from "../../services/constant";
+import { getStorageData, setStorageData } from "../../services/storages";
 import { toast } from "react-toastify";
-import useWebSocket from "../hooks/useWebSocket";
+import useWebSocket from "../../hooks/useWebSocket";
+import { PAGE_CONFIG, SIDEBAR_MENUS } from "./PageConfig";
 
 const GlobalContext = createContext<{
   authorities: any;
@@ -169,10 +169,10 @@ export const GlobalProvider = ({ children }: any) => {
 
   const getSidebarMenus = () => {
     const allowedRoutes = new Set(getRouters().map((route: any) => route.name));
-    return SIDEBAR_MENUS.map((group) => ({
+    return SIDEBAR_MENUS.map((group: any) => ({
       ...group,
       items: group.items.filter((item: any) => allowedRoutes.has(item.name)),
-    })).filter((group) => group.items.length > 0);
+    })).filter((group: any) => group.items.length > 0);
   };
 
   const hasRoles = (roles: string | string[]) => {

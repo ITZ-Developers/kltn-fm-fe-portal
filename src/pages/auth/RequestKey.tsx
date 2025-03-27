@@ -9,7 +9,7 @@ import {
   TOAST,
   VALID_PATTERN,
 } from "../../services/constant";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const RequestKey = ({ isVisible, formConfig }: any) => {
   const { setToast } = useGlobalContext();

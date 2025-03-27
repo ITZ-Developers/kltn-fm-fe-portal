@@ -1,10 +1,5 @@
-import {
-  EraserIcon,
-  PlusIcon,
-  RefreshCcwIcon,
-  SearchIcon,
-} from "lucide-react";
-import { useGlobalContext } from "../GlobalProvider";
+import { EraserIcon, PlusIcon, RefreshCcwIcon, SearchIcon } from "lucide-react";
+import { useGlobalContext } from "../config/GlobalProvider";
 import { BUTTON_TEXT } from "../../services/constant";
 
 const CreateButton = ({ role, onClick }: any) => {

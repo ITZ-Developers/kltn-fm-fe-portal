@@ -4,8 +4,8 @@ import {
   getEnumItem,
   getMediaImage,
   getNestedValue,
-} from "../services/utils";
-import { ALIGNMENT, STATUS_MAP } from "../services/constant";
+} from "../../services/utils";
+import { ALIGNMENT, STATUS_MAP } from "../../services/constant";
 import { useGlobalContext } from "./GlobalProvider";
 import { parse } from "date-fns";
 

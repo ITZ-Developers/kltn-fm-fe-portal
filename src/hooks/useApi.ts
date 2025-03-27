@@ -7,6 +7,10 @@ import { departmentController } from "../controllers/departmentController.ts";
 import { employeeController } from "../controllers/employeeController.ts";
 import { transactionGroupController } from "../controllers/transactionGroupController.ts";
 import { transactionPermissionController } from "../controllers/transactionPermissionController.ts";
+import { serviceGroupController } from "../controllers/serviceGroupController.ts";
+import { servicePermissionController } from "../controllers/servicePermissionController.ts";
+import { keyInformationPermissionController } from "../controllers/keyInformationPermissionController.ts";
+import { keyInformationGroupController } from "../controllers/keyInformationGroupController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -19,6 +23,10 @@ const useApi = () => {
   const transaction = transactionController(fetchApi);
   const transactionGroup = transactionGroupController(fetchApi);
   const transactionPermission = transactionPermissionController(fetchApi);
+  const serviceGroup = serviceGroupController(fetchApi);
+  const servicePermission = servicePermissionController(fetchApi);
+  const keyInformationGroup = keyInformationGroupController(fetchApi);
+  const keyInformationPermission = keyInformationPermissionController(fetchApi);
 
   return {
     auth,
@@ -31,6 +39,10 @@ const useApi = () => {
     transactionPermission,
     employee,
     department,
+    serviceGroup,
+    servicePermission,
+    keyInformationGroup,
+    keyInformationPermission,
   };
 };
 

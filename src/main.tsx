@@ -5,7 +5,7 @@ import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "codemirror/lib/codemirror.css";
-import { GlobalProvider } from "./components/GlobalProvider.tsx";
+import { GlobalProvider } from "./components/config/GlobalProvider.tsx";
 import MyToastContainer from "./components/page/MyToastContainer.tsx";
 
 createRoot(document.getElementById("root")!).render(

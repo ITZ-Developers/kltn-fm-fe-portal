@@ -9,7 +9,7 @@ import {
   VALID_PATTERN,
 } from "../../services/constant";
 import useForm from "../../hooks/useForm";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import Sidebar from "../../components/page/Sidebar";
 import { ActionSection, FormCard } from "../../components/form/FormCard";
 import {
@@ -25,7 +25,7 @@ import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { LoadingDialog } from "../../components/page/Dialog";
 import { useEffect, useState } from "react";
 import useQueryState from "../../hooks/useQueryState";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { parseDate, validateDateTime } from "../../services/utils";
 
 const UpdateEmployee = () => {

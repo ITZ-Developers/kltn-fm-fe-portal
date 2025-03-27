@@ -8,8 +8,8 @@ import {
   renderHrefLink,
   renderImage,
   renderLastLogin,
-} from "../../components/ItemRender";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+} from "../../components/config/ItemRender";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import { CreateButton, ToolBar } from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ import {
   LoadingDialog,
 } from "../../components/page/Dialog";
 import useModal from "../../hooks/useModal";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { SelectBox, StaticSelectBox } from "../../components/page/SelectBox";
 import {
   ActionDeleteButton,

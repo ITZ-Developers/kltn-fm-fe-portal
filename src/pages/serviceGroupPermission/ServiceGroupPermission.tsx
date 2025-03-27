@@ -28,21 +28,20 @@ import { useEffect, useState } from "react";
 import { renderActionButton } from "../../components/config/ItemRender";
 import { decryptData } from "../../services/utils";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
-import CreateTransactionPermission from "./CreateTransactionGroupPermission";
-import CreateTransactionGroupPermission from "./CreateTransactionGroupPermission";
+import CreateServiceGroupPermission from "./CreateServiceGroupPermission";
 
-const TransactionGroupPermission = () => {
+const ServiceGroupPermission = () => {
   const { setToast, sessionKey } = useGlobalContext();
-  const { transactionGroupId } = useParams();
+  const { serviceGroupId } = useParams();
   const initQuery = {
-    transactionGroupId,
+    serviceGroupId,
     accountId: "",
     permissionKind: PERMISSION_KIND.GROUP,
     page: 0,
     size: ITEMS_PER_PAGE,
   };
   const { handleNavigateBack } = useQueryState({
-    path: PAGE_CONFIG.TRANSACTION_GROUP.path,
+    path: PAGE_CONFIG.SERVICE_GROUP.path,
   });
   const {
     isModalVisible: createFormVisible,
@@ -56,9 +55,9 @@ const TransactionGroupPermission = () => {
     hideModal: hideDeleteDialog,
     formConfig: deleteDialogConfig,
   } = useModal();
-  const { transactionPermission: apiList, loading: loadingList } = useApi();
-  const { employee, transactionGroup } = useApi();
-  const { transactionPermission, loading } = useApi();
+  const { servicePermission: apiList, loading: loadingList } = useApi();
+  const { employee, serviceGroup } = useApi();
+  const { servicePermission, loading } = useApi();
   const {
     data,
     query,
@@ -73,17 +72,17 @@ const TransactionGroupPermission = () => {
   const [groupData, setGroupData] = useState<any>(null);
 
   useEffect(() => {
-    if (!transactionGroupId) {
+    if (!serviceGroupId) {
       handleNavigateBack();
       return;
     }
 
     const fetchData = async () => {
-      const res = await transactionGroup.get(transactionGroupId);
+      const res = await serviceGroup.get(serviceGroupId);
       if (res.result) {
         const data = res.data;
         setGroupData(
-          decryptData(sessionKey, data, DECRYPT_FIELDS.TRANSACTION_GROUP)
+          decryptData(sessionKey, data, DECRYPT_FIELDS.SERVICE_GROUP)
         );
       } else {
         handleNavigateBack();
@@ -91,7 +90,7 @@ const TransactionGroupPermission = () => {
     };
 
     fetchData();
-  }, [transactionGroupId]);
+  }, [serviceGroupId]);
 
   const columns = [
     {
@@ -115,11 +114,11 @@ const TransactionGroupPermission = () => {
       align: ALIGNMENT.LEFT,
     },
     renderActionButton({
-      role: [PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.role],
+      role: [PAGE_CONFIG.DELETE_SERVICE_GROUP_PERMISSION.role],
       renderChildren: (item: any) => (
         <>
           <ActionDeleteButton
-            role={PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.role}
+            role={PAGE_CONFIG.DELETE_SERVICE_GROUP_PERMISSION.role}
             onClick={() => onDeleteButtonClick(item.id)}
           />
         </>
@@ -130,8 +129,8 @@ const TransactionGroupPermission = () => {
   const onDeleteButtonClick = (id: any) => {
     showDeleteDialog(
       configDeleteDialog({
-        label: PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.label,
-        deleteApi: () => transactionPermission.del(id),
+        label: PAGE_CONFIG.DELETE_SERVICE_GROUP_PERMISSION.label,
+        deleteApi: () => servicePermission.del(id),
         refreshData: () => handleSubmitQuery(query),
         hideModal: hideDeleteDialog,
         setToast,
@@ -142,8 +141,8 @@ const TransactionGroupPermission = () => {
   const onCreateButtonClick = () => {
     showCreateForm(
       configModalForm({
-        label: PAGE_CONFIG.CREATE_TRANSACTION_GROUP_PERMISSION.label,
-        fetchApi: transactionPermission.create,
+        label: PAGE_CONFIG.CREATE_SERVICE_GROUP_PERMISSION.label,
+        fetchApi: servicePermission.create,
         refreshData: () => handleSubmitQuery(query),
         hideModal: hideCreateForm,
         setToast,
@@ -151,7 +150,7 @@ const TransactionGroupPermission = () => {
         initForm: {
           accountId: "",
           permissionKind: PERMISSION_KIND.GROUP,
-          transactionGroupId,
+          serviceGroupId,
         },
       })
     );
@@ -165,10 +164,10 @@ const TransactionGroupPermission = () => {
           onClick: handleNavigateBack,
         },
         {
-          label: PAGE_CONFIG.TRANSACTION_GROUP_PERMISSION.label,
+          label: PAGE_CONFIG.SERVICE_GROUP_PERMISSION.label,
         },
       ]}
-      activeItem={PAGE_CONFIG.TRANSACTION_GROUP.name}
+      activeItem={PAGE_CONFIG.SERVICE_GROUP.name}
       renderContent={
         <>
           <LoadingDialog isVisible={loading} />
@@ -190,7 +189,7 @@ const TransactionGroupPermission = () => {
             onClear={async () => await handleSubmitQuery(initQuery)}
             actionButtons={
               <CreateButton
-                role={PAGE_CONFIG.CREATE_TRANSACTION_GROUP_PERMISSION.role}
+                role={PAGE_CONFIG.CREATE_SERVICE_GROUP_PERMISSION.role}
                 onClick={onCreateButtonClick}
               />
             }
@@ -204,7 +203,7 @@ const TransactionGroupPermission = () => {
             onPageChange={handlePageChange}
             totalPages={totalPages}
           />
-          <CreateTransactionGroupPermission
+          <CreateServiceGroupPermission
             isVisible={createFormVisible}
             formConfig={createFormConfig}
           />
@@ -217,4 +216,4 @@ const TransactionGroupPermission = () => {
     ></Sidebar>
   );
 };
-export default TransactionGroupPermission;
+export default ServiceGroupPermission;

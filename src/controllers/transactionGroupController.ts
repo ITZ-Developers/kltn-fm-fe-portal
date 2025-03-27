@@ -1,4 +1,4 @@
-import { useGlobalContext } from "../components/GlobalProvider.tsx";
+import { useGlobalContext } from "../components/config/GlobalProvider.tsx";
 import {
   API_HEADER,
   API_URL,

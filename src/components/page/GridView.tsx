@@ -1,5 +1,5 @@
 import { getNestedValue } from "../../services/utils";
-import { useGlobalContext } from "../GlobalProvider";
+import { useGlobalContext } from "../config/GlobalProvider";
 import NoData from "./NoData";
 import Pagination from "./Pagination";
 

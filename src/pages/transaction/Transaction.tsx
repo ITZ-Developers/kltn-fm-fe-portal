@@ -1,7 +1,7 @@
 import { GridView } from "../../components/page/GridView";
 import Sidebar from "../../components/page/Sidebar";
 import useApi from "../../hooks/useApi";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import { CreateButton, ToolBar } from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import { useLocation, useNavigate } from "react-router-dom";

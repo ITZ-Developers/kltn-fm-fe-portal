@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { API_URL, LOCAL_STORAGE, PING_INTERVAL } from "../services/constant";
 import { getStorageData } from "../services/storages";
-import { useGlobalContext } from "../components/GlobalProvider";
+import { useGlobalContext } from "../components/config/GlobalProvider";
 
 const useWebSocket = () => {
   const { isUnauthorized } = useGlobalContext();

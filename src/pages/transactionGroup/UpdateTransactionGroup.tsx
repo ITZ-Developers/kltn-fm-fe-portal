@@ -6,9 +6,9 @@ import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
 import useApi from "../../hooks/useApi";
 import { LoadingDialog } from "../../components/page/Dialog";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { decryptData } from "../../services/utils";
-import { DECRYPT_FIELDS } from "../../components/PageConfig";
+import { DECRYPT_FIELDS } from "../../components/config/PageConfig";
 
 const UpdateTransactionGroup = ({ isVisible, formConfig }: any) => {
   const { setToast, sessionKey } = useGlobalContext();

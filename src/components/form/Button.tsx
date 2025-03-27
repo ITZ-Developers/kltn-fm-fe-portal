@@ -1,7 +1,7 @@
 import { PenLineIcon, RotateCcwIcon, TrashIcon, UsersIcon } from "lucide-react";
 import { ActionButton } from "../page/GridView";
 import { BUTTON_TEXT } from "../../services/constant";
-import { useGlobalContext } from "../GlobalProvider";
+import { useGlobalContext } from "../config/GlobalProvider";
 
 const SubmitButton = ({ text, onClick, color = "royalblue" }: any) => {
   return (

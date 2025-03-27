@@ -1,20 +1,22 @@
 import { ActionSection, ModalForm } from "../../components/form/FormCard";
 import useForm from "../../hooks/useForm";
 import { useEffect } from "react";
-import { InputField, TextAreaField } from "../../components/form/InputField";
 import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
+import { SelectField } from "../../components/form/SelectField";
+import useApi from "../../hooks/useApi";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 
-const CreateTransactionGroup = ({ isVisible, formConfig }: any) => {
+const CreateKeyInformationGroupPermission = ({
+  isVisible,
+  formConfig,
+}: any) => {
   const { setToast } = useGlobalContext();
+  const { employee } = useApi();
   const validate = (form: any) => {
     const newErrors: any = {};
-    if (!form.name.trim()) {
-      newErrors.name = "Tên nhóm không hợp lệ";
-    }
-    if (!form.description.trim()) {
-      newErrors.description = "Mô tả không hợp lệ";
+    if (!form.accountId) {
+      newErrors.accountId = "Nhân viên không hợp lệ";
     }
     return newErrors;
   };
@@ -45,21 +47,18 @@ const CreateTransactionGroup = ({ isVisible, formConfig }: any) => {
       children={
         <>
           <div className="flex flex-col space-y-4">
-            <InputField
-              title="Tên nhóm"
+            <SelectField
+              title="Nhân viên"
               isRequired={true}
-              placeholder="Nhập tên nhóm"
-              value={form?.name}
-              onChangeText={(value: any) => handleChange("name", value)}
-              error={errors?.name}
-            />
-            <TextAreaField
-              title="Mô tả"
-              isRequired={true}
-              placeholder="Nhập mô tả"
-              value={form?.description}
-              onChangeText={(value: any) => handleChange("description", value)}
-              error={errors?.description}
+              fetchListApi={employee.autoComplete}
+              placeholder="Chọn nhân viên"
+              queryParams={{
+                ignoreTransactionGroupId: form?.transactionGroupId,
+              }}
+              labelKey="fullName"
+              value={form?.accountId}
+              onChange={(value: any) => handleChange("accountId", value)}
+              error={errors?.accountId}
             />
             <ActionSection
               children={
@@ -79,4 +78,4 @@ const CreateTransactionGroup = ({ isVisible, formConfig }: any) => {
   );
 };
 
-export default CreateTransactionGroup;
+export default CreateKeyInformationGroupPermission;

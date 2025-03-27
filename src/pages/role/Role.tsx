@@ -1,8 +1,11 @@
 import { GridView } from "../../components/page/GridView";
 import Sidebar from "../../components/page/Sidebar";
 import useApi from "../../hooks/useApi";
-import { basicRender, renderActionButton } from "../../components/ItemRender";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import {
+  basicRender,
+  renderActionButton,
+} from "../../components/config/ItemRender";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import { CreateButton, ToolBar } from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import {
@@ -23,7 +26,7 @@ import {
   ConfirmationDialog,
   LoadingDialog,
 } from "../../components/page/Dialog";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const initQuery = { name: "", page: 0, size: ITEMS_PER_PAGE };
 

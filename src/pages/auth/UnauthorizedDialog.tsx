@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { ConfirmationDialog } from "../../components/page/Dialog";
 import useModal from "../../hooks/useModal";
 import { SOCKET_CMD } from "../../services/constant";

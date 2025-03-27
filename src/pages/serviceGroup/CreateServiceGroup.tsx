@@ -6,7 +6,7 @@ import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 
-const CreateTransactionGroup = ({ isVisible, formConfig }: any) => {
+const CreateServiceGroup = ({ isVisible, formConfig }: any) => {
   const { setToast } = useGlobalContext();
   const validate = (form: any) => {
     const newErrors: any = {};
@@ -79,4 +79,4 @@ const CreateTransactionGroup = ({ isVisible, formConfig }: any) => {
   );
 };
 
-export default CreateTransactionGroup;
+export default CreateServiceGroup;

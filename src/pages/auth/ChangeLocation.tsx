@@ -15,7 +15,7 @@ import {
   TOAST,
   VALID_PATTERN,
 } from "../../services/constant";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import useApi from "../../hooks/useApi";
 import { LoadingDialog } from "../../components/page/Dialog";
 import { setStorageData } from "../../services/storages";

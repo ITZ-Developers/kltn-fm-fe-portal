@@ -6,7 +6,7 @@ import Loading from "./pages/Loading";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
-import { useGlobalContext } from "./components/GlobalProvider";
+import { useGlobalContext } from "./components/config/GlobalProvider";
 import useApi from "./hooks/useApi";
 import { getStorageData } from "./services/storages";
 import { GRANT_TYPE, LOCAL_STORAGE } from "./services/constant";

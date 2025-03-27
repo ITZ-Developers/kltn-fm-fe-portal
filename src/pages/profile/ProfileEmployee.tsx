@@ -7,7 +7,7 @@ import {
 } from "../../components/form/OtherField";
 import { LoadingDialog } from "../../components/page/Dialog";
 import Sidebar from "../../components/page/Sidebar";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import {
   BASIC_MESSAGES,
   BUTTON_TEXT,
@@ -17,7 +17,7 @@ import {
 import { useEffect } from "react";
 import useApi from "../../hooks/useApi";
 import useForm from "../../hooks/useForm";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { parseDate } from "../../services/utils";
 
 const ProfileEmployee = () => {

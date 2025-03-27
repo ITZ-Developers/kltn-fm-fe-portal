@@ -21,7 +21,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import useModal from "../../hooks/useModal";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const ResetPassword = () => {
   const { setToast } = useGlobalContext();

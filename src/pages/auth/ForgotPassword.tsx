@@ -13,7 +13,7 @@ import {
 import useApi from "../../hooks/useApi";
 import { ActionSection, BasicCardForm } from "../../components/form/FormCard";
 import { useNavigate } from "react-router-dom";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { StaticSelectField } from "../../components/form/SelectField";
 
 const ForgotPassword = () => {

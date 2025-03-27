@@ -11,7 +11,7 @@ import {
 import useApi from "../../hooks/useApi";
 import useForm from "../../hooks/useForm";
 import { useEffect, useState } from "react";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import useQueryState from "../../hooks/useQueryState";
 import Sidebar from "../../components/page/Sidebar";
 import {
@@ -19,7 +19,7 @@ import {
   InputField,
   TextAreaField,
 } from "../../components/form/InputField";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const UpdateRole = () => {
   const { setToast } = useGlobalContext();

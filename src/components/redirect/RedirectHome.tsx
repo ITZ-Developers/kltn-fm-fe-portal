@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGlobalContext } from "../GlobalProvider";
+import { useGlobalContext } from "../config/GlobalProvider";
 
 const RedirectHome = () => {
   const { getSidebarMenus } = useGlobalContext();

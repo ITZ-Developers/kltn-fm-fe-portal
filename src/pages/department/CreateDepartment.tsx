@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { InputField, TextAreaField } from "../../components/form/InputField";
 import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const CreateDepartment = ({ isVisible, formConfig }: any) => {
   const { setToast } = useGlobalContext();

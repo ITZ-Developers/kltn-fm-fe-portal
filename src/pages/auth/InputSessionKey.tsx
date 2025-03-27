@@ -1,5 +1,5 @@
 import { TimerResetIcon } from "lucide-react";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import useForm from "../../hooks/useForm";
 import { useEffect, useState } from "react";
 import { ActionSection, ModalForm } from "../../components/form/FormCard";

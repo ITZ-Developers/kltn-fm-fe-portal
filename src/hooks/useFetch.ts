@@ -8,7 +8,7 @@ import {
   METHOD,
 } from "../services/constant";
 import { getStorageData, removeSessionCache } from "../services/storages";
-import { useGlobalContext } from "../components/GlobalProvider";
+import { useGlobalContext } from "../components/config/GlobalProvider";
 
 interface FetchOptions {
   apiUrl: string;

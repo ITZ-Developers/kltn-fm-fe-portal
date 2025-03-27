@@ -5,7 +5,7 @@ import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
 import { SelectField } from "../../components/form/SelectField";
 import useApi from "../../hooks/useApi";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const CreateTransactionGroupPermission = ({ isVisible, formConfig }: any) => {
   const { setToast } = useGlobalContext();

@@ -9,7 +9,10 @@ import {
   ConfirmationDialog,
   LoadingDialog,
 } from "../../components/page/Dialog";
-import { DECRYPT_FIELDS, PAGE_CONFIG } from "../../components/PageConfig";
+import {
+  DECRYPT_FIELDS,
+  PAGE_CONFIG,
+} from "../../components/config/PageConfig";
 import useApi from "../../hooks/useApi";
 import useModal from "../../hooks/useModal";
 import {
@@ -22,9 +25,12 @@ import Sidebar from "../../components/page/Sidebar";
 import { CreateButton, ToolBar } from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import { GridView } from "../../components/page/GridView";
-import { basicRender, renderActionButton } from "../../components/ItemRender";
+import {
+  basicRender,
+  renderActionButton,
+} from "../../components/config/ItemRender";
 import { truncateString } from "../../services/utils";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import CreateTransactionGroup from "./CreateTransactionGroup";
 import UpdateTransactionGroup from "./UpdateTransactionGroup";
 import useGridViewLocal from "../../hooks/useGridViewLocal";

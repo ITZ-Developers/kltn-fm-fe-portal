@@ -8,12 +8,12 @@ import {
   VALID_PATTERN,
 } from "../../services/constant";
 import Sidebar from "../../components/page/Sidebar";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import { ActionSection, FormCard } from "../../components/form/FormCard";
 import { InputField } from "../../components/form/InputField";
 import { SubmitButton } from "../../components/form/Button";
 import { LoadingDialog } from "../../components/page/Dialog";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 
 const ChangePassword = () => {
   const { setToast } = useGlobalContext();

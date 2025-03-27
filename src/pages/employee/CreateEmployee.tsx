@@ -1,6 +1,6 @@
 import { InputField } from "../../components/form/InputField";
 import Sidebar from "../../components/page/Sidebar";
-import { PAGE_CONFIG } from "../../components/PageConfig";
+import { PAGE_CONFIG } from "../../components/config/PageConfig";
 import useForm from "../../hooks/useForm";
 import { CancelButton, SubmitButton } from "../../components/form/Button";
 import { ActionSection, FormCard } from "../../components/form/FormCard";
@@ -23,7 +23,7 @@ import {
 } from "../../services/constant";
 import { LoadingDialog } from "../../components/page/Dialog";
 import useQueryState from "../../hooks/useQueryState";
-import { useGlobalContext } from "../../components/GlobalProvider";
+import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { parseDate, validateDateTime } from "../../services/utils";
 
 const CreateEmployee = () => {

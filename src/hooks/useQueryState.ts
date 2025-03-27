@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGlobalContext } from "../components/GlobalProvider";
+import { useGlobalContext } from "../components/config/GlobalProvider";
 import { useEffect } from "react";
 
 const useQueryState = ({ path, requireSessionKey = false }: any) => {

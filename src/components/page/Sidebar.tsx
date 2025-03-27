@@ -4,7 +4,7 @@ import {
   MousePointer2Icon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useGlobalContext } from "../GlobalProvider";
+import { useGlobalContext } from "../config/GlobalProvider";
 import { useEffect, useState } from "react";
 import { LOCAL_STORAGE } from "../../services/constant";
 import { getStorageData } from "../../services/storages";
@@ -12,7 +12,7 @@ import MainHeader from "./MainHeader";
 import UnauthorizedDialog from "../../pages/auth/UnauthorizedDialog";
 import { getMediaImage } from "../../services/utils";
 import NotReadyDialog from "../../pages/auth/NotReadyDialog";
-import { SESSION_KEY_PAGES } from "../PageConfig";
+import { SESSION_KEY_PAGES } from "../config/PageConfig";
 import InputSessionKey from "../../pages/auth/InputSessionKey";
 
 const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {

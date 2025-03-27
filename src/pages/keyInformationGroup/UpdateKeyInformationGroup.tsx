@@ -7,14 +7,16 @@ import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
 import useApi from "../../hooks/useApi";
 import { LoadingDialog } from "../../components/page/Dialog";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
+import { decryptData } from "../../services/utils";
+import { DECRYPT_FIELDS } from "../../components/config/PageConfig";
 
-const UpdateDepartment = ({ isVisible, formConfig }: any) => {
-  const { setToast } = useGlobalContext();
-  const { department, loading } = useApi();
+const UpdateKeyInformationGroup = ({ isVisible, formConfig }: any) => {
+  const { setToast, sessionKey } = useGlobalContext();
+  const { keyInformationGroup, loading } = useApi();
   const validate = (form: any) => {
     const newErrors: any = {};
     if (!form.name.trim()) {
-      newErrors.name = "Tên phòng ban không hợp lệ";
+      newErrors.name = "Tên nhóm không hợp lệ";
     }
     if (!form.description.trim()) {
       newErrors.description = "Mô tả không hợp lệ";
@@ -27,10 +29,17 @@ const UpdateDepartment = ({ isVisible, formConfig }: any) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!sessionKey) {
+        formConfig?.hideModal();
+      }
       resetForm();
-      const res = await department.get(formConfig.initForm.id);
+      const res = await keyInformationGroup.get(formConfig.initForm.id);
       if (res.result) {
-        const data = res.data;
+        const data = decryptData(
+          sessionKey,
+          res.data,
+          DECRYPT_FIELDS.KEY_INFORMATION_GROUP
+        );
         setForm({
           id: data.id,
           name: data.name,
@@ -70,9 +79,9 @@ const UpdateDepartment = ({ isVisible, formConfig }: any) => {
           <>
             <div className="flex flex-col space-y-4">
               <InputField
-                title="Tên phòng ban"
+                title="Tên nhóm"
                 isRequired={true}
-                placeholder="Nhập tên phòng ban"
+                placeholder="Nhập tên nhóm"
                 value={form?.name}
                 onChangeText={(value: any) => handleChange("name", value)}
                 error={errors?.name}
@@ -106,4 +115,4 @@ const UpdateDepartment = ({ isVisible, formConfig }: any) => {
   );
 };
 
-export default UpdateDepartment;
+export default UpdateKeyInformationGroup;

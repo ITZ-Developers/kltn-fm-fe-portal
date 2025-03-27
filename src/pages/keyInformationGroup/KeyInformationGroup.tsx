@@ -1,6 +1,7 @@
 import {
   ActionDeleteButton,
   ActionEditButton,
+  ActionPermissionButton,
 } from "../../components/form/Button";
 import {
   configDeleteDialog,
@@ -8,9 +9,11 @@ import {
   ConfirmationDialog,
   LoadingDialog,
 } from "../../components/page/Dialog";
-import { PAGE_CONFIG } from "../../components/config/PageConfig";
+import {
+  DECRYPT_FIELDS,
+  PAGE_CONFIG,
+} from "../../components/config/PageConfig";
 import useApi from "../../hooks/useApi";
-import { useGridView } from "../../hooks/useGridView";
 import useModal from "../../hooks/useModal";
 import {
   ALIGNMENT,
@@ -28,17 +31,26 @@ import {
 } from "../../components/config/ItemRender";
 import { truncateString } from "../../services/utils";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
-import CreateDepartment from "./CreateDepartment";
-import UpdateDepartment from "./UpdateDepartment";
+import useGridViewLocal from "../../hooks/useGridViewLocal";
+import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import CreateKeyInformationGroup from "./CreateKeyInformationGroup";
+import UpdateKeyInformationGroup from "./UpdateKeyInformationGroup";
 
-const initQuery = {
-  name: "",
-  page: 0,
-  size: ITEMS_PER_PAGE,
-};
+const initQuery = { name: "" };
 
-const Department = () => {
-  const { setToast } = useGlobalContext();
+const KeyInformationGroup = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const customFilterData = useCallback((allData: any[], query: any) => {
+    return allData.filter((item) => {
+      return (
+        !query?.name ||
+        item.name.toLowerCase().includes(query.name.toLowerCase())
+      );
+    });
+  }, []);
+  const { setToast, sessionKey } = useGlobalContext();
   const {
     isModalVisible: createFormVisible,
     showModal: showCreateForm,
@@ -57,23 +69,27 @@ const Department = () => {
     hideModal: hideDeleteDialog,
     formConfig: deleteDialogConfig,
   } = useModal();
-  const { department: apiList, loading: loadingList } = useApi();
-  const { department, loading } = useApi();
+  const { keyInformationGroup: apiList, loading: loadingList } = useApi();
+  const { keyInformationGroup, loading } = useApi();
   const {
     data,
     query,
-    setQuery,
     totalPages,
     handlePageChange,
     handleSubmitQuery,
-  } = useGridView({
+    handleDeleteItem,
+    handleRefreshData,
+  } = useGridViewLocal({
+    initQuery: state?.query || initQuery,
+    filterData: customFilterData,
+    decryptFields: DECRYPT_FIELDS.KEY_INFORMATION_GROUP,
+    secretKey: sessionKey,
     fetchListApi: apiList.list,
-    initQuery,
   });
 
   const columns = [
     {
-      label: "Tên phòng ban",
+      label: "Tên nhóm",
       accessor: "name",
       align: ALIGNMENT.LEFT,
     },
@@ -90,17 +106,22 @@ const Department = () => {
     },
     renderActionButton({
       role: [
-        PAGE_CONFIG.UPDATE_DEPARTMENT.role,
-        PAGE_CONFIG.DELETE_DEPARTMENT.role,
+        PAGE_CONFIG.CREATE_KEY_INFORMATION_GROUP.role,
+        PAGE_CONFIG.UPDATE_KEY_INFORMATION_GROUP.role,
+        PAGE_CONFIG.KEY_INFORMATION_GROUP_PERMISSION.role,
       ],
       renderChildren: (item: any) => (
         <>
+          <ActionPermissionButton
+            role={PAGE_CONFIG.KEY_INFORMATION_GROUP_PERMISSION.role}
+            onClick={() => onPermissionButtonClick(item.id)}
+          />
           <ActionEditButton
-            role={PAGE_CONFIG.UPDATE_DEPARTMENT.role}
+            role={PAGE_CONFIG.UPDATE_KEY_INFORMATION_GROUP.role}
             onClick={() => onUpdateButtonClick(item.id)}
           />
           <ActionDeleteButton
-            role={PAGE_CONFIG.DELETE_DEPARTMENT.role}
+            role={PAGE_CONFIG.DELETE_KEY_INFORMATION_GROUP.role}
             onClick={() => onDeleteButtonClick(item.id)}
           />
         </>
@@ -108,12 +129,16 @@ const Department = () => {
     }),
   ];
 
+  const onPermissionButtonClick = (id: any) => {
+    navigate(`/key-information-group/permission/${id}`, { state: { query } });
+  };
+
   const onDeleteButtonClick = (id: any) => {
     showDeleteDialog(
       configDeleteDialog({
-        label: PAGE_CONFIG.DELETE_DEPARTMENT.label,
-        deleteApi: () => department.del(id),
-        refreshData: () => handleSubmitQuery(query),
+        label: PAGE_CONFIG.DELETE_KEY_INFORMATION_GROUP.label,
+        deleteApi: () => keyInformationGroup.del(id),
+        refreshData: () => handleDeleteItem(id),
         hideModal: hideDeleteDialog,
         setToast,
       })
@@ -123,9 +148,9 @@ const Department = () => {
   const onCreateButtonClick = () => {
     showCreateForm(
       configModalForm({
-        label: PAGE_CONFIG.CREATE_DEPARTMENT.label,
-        fetchApi: department.create,
-        refreshData: () => handleSubmitQuery(query),
+        label: PAGE_CONFIG.CREATE_KEY_INFORMATION_GROUP.label,
+        fetchApi: keyInformationGroup.create,
+        refreshData: handleRefreshData,
         hideModal: hideCreateForm,
         setToast,
         successMessage: BASIC_MESSAGES.CREATED,
@@ -140,9 +165,9 @@ const Department = () => {
   const onUpdateButtonClick = (id: any) => {
     showUpdateForm(
       configModalForm({
-        label: PAGE_CONFIG.UPDATE_DEPARTMENT.label,
-        fetchApi: department.update,
-        refreshData: () => handleSubmitQuery(query),
+        label: PAGE_CONFIG.UPDATE_KEY_INFORMATION_GROUP.label,
+        fetchApi: keyInformationGroup.update,
+        refreshData: handleRefreshData,
         hideModal: hideUpdateForm,
         setToast,
         successMessage: BASIC_MESSAGES.UPDATED,
@@ -159,10 +184,10 @@ const Department = () => {
     <Sidebar
       breadcrumbs={[
         {
-          label: PAGE_CONFIG.DEPARTMENT.label,
+          label: PAGE_CONFIG.KEY_INFORMATION_GROUP.label,
         },
       ]}
-      activeItem={PAGE_CONFIG.DEPARTMENT.name}
+      activeItem={PAGE_CONFIG.KEY_INFORMATION_GROUP.name}
       renderContent={
         <>
           <LoadingDialog isVisible={loading} />
@@ -172,17 +197,17 @@ const Department = () => {
                 <InputBox
                   value={query.name}
                   onChangeText={(value: any) =>
-                    setQuery({ ...query, name: value })
+                    handleSubmitQuery({ ...query, name: value })
                   }
-                  placeholder="Tên phòng ban..."
+                  placeholder="Tên nhóm..."
                 />
               </>
             }
-            onSearch={async () => await handleSubmitQuery(query)}
-            onClear={async () => await handleSubmitQuery(initQuery)}
+            onClear={() => handleSubmitQuery(initQuery)}
+            onRefresh={handleRefreshData}
             actionButtons={
               <CreateButton
-                role={PAGE_CONFIG.CREATE_DEPARTMENT.role}
+                role={PAGE_CONFIG.CREATE_KEY_INFORMATION_GROUP.role}
                 onClick={onCreateButtonClick}
               />
             }
@@ -196,11 +221,11 @@ const Department = () => {
             onPageChange={handlePageChange}
             totalPages={totalPages}
           />
-          <CreateDepartment
+          <CreateKeyInformationGroup
             isVisible={createFormVisible}
             formConfig={createFormConfig}
           />
-          <UpdateDepartment
+          <UpdateKeyInformationGroup
             isVisible={updateFormVisible}
             formConfig={updateFormConfig}
           />
@@ -213,4 +238,4 @@ const Department = () => {
     ></Sidebar>
   );
 };
-export default Department;
+export default KeyInformationGroup;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ITEMS_PER_PAGE, TOAST } from "../services/constant";
 import { decryptData } from "../services/utils";
-import { useGlobalContext } from "../components/GlobalProvider";
+import { useGlobalContext } from "../components/config/GlobalProvider";
 
 const useGridViewLocal = ({
   fetchListApi,
