@@ -30,7 +30,6 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleMenuItemClick = (itemName: string) => {
-    setIsSystemNotReady(false);
     const selectedItem = menuGroups
       .flatMap((group) => group.items)
       .find((item) => item.name === itemName);
