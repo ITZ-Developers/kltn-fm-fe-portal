@@ -25,9 +25,9 @@ import { useEffect, useState } from "react";
 import { renderActionButton } from "../../components/ItemRender";
 import { decryptData } from "../../services/utils";
 import { useGlobalContext } from "../../components/GlobalProvider";
-import CreateTransactionPermission from "./CreateTransactionPermission";
+import CreateTransactionPermission from "./CreateTransactionGroupPermission";
 
-const TransactionPermission = () => {
+const TransactionGroupPermission = () => {
   const { setToast, sessionKey } = useGlobalContext();
   const { transactionGroupId } = useParams();
   const initQuery = {
@@ -111,11 +111,11 @@ const TransactionPermission = () => {
       align: ALIGNMENT.LEFT,
     },
     renderActionButton({
-      role: [PAGE_CONFIG.DELETE_TRANSACTION_PERMISSION.role],
+      role: [PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.role],
       renderChildren: (item: any) => (
         <>
           <ActionDeleteButton
-            role={PAGE_CONFIG.DELETE_TRANSACTION_PERMISSION.role}
+            role={PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.role}
             onClick={() => onDeleteButtonClick(item.id)}
           />
         </>
@@ -126,7 +126,7 @@ const TransactionPermission = () => {
   const onDeleteButtonClick = (id: any) => {
     showDeleteDialog(
       configDeleteDialog({
-        label: PAGE_CONFIG.DELETE_TRANSACTION_PERMISSION.label,
+        label: PAGE_CONFIG.DELETE_TRANSACTION_GROUP_PERMISSION.label,
         deleteApi: () => transactionPermission.del(id),
         refreshData: () => handleSubmitQuery(query),
         hideModal: hideDeleteDialog,
@@ -138,7 +138,7 @@ const TransactionPermission = () => {
   const onCreateButtonClick = () => {
     showCreateForm(
       configModalForm({
-        label: PAGE_CONFIG.CREATE_TRANSACTION_PERMISSION.label,
+        label: PAGE_CONFIG.CREATE_TRANSACTION_GROUP_PERMISSION.label,
         fetchApi: transactionPermission.create,
         refreshData: () => handleSubmitQuery(query),
         hideModal: hideCreateForm,
@@ -161,7 +161,7 @@ const TransactionPermission = () => {
           onClick: handleNavigateBack,
         },
         {
-          label: PAGE_CONFIG.TRANSACTION_PERMISSION.label,
+          label: PAGE_CONFIG.TRANSACTION_GROUP_PERMISSION.label,
         },
       ]}
       activeItem={PAGE_CONFIG.TRANSACTION_GROUP.name}
@@ -186,7 +186,7 @@ const TransactionPermission = () => {
             onClear={async () => await handleSubmitQuery(initQuery)}
             actionButtons={
               <CreateButton
-                role={PAGE_CONFIG.CREATE_TRANSACTION_PERMISSION.role}
+                role={PAGE_CONFIG.CREATE_TRANSACTION_GROUP_PERMISSION.role}
                 onClick={onCreateButtonClick}
               />
             }
@@ -213,4 +213,4 @@ const TransactionPermission = () => {
     ></Sidebar>
   );
 };
-export default TransactionPermission;
+export default TransactionGroupPermission;

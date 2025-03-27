@@ -102,12 +102,12 @@ const TransactionGroup = () => {
       role: [
         PAGE_CONFIG.CREATE_TRANSACTION_GROUP.role,
         PAGE_CONFIG.UPDATE_TRANSACTION_GROUP.role,
-        PAGE_CONFIG.TRANSACTION_PERMISSION.role,
+        PAGE_CONFIG.TRANSACTION_GROUP_PERMISSION.role,
       ],
       renderChildren: (item: any) => (
         <>
           <ActionPermissionButton
-            role={PAGE_CONFIG.TRANSACTION_PERMISSION.role}
+            role={PAGE_CONFIG.TRANSACTION_GROUP_PERMISSION.role}
             onClick={() => onPermissionButtonClick(item.id)}
           />
           <ActionEditButton

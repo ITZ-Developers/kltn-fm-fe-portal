@@ -7,7 +7,7 @@ import { SelectField } from "../../components/form/SelectField";
 import useApi from "../../hooks/useApi";
 import { useGlobalContext } from "../../components/GlobalProvider";
 
-const CreateTransactionPermission = ({ isVisible, formConfig }: any) => {
+const CreateTransactionGroupPermission = ({ isVisible, formConfig }: any) => {
   const { setToast } = useGlobalContext();
   const { employee } = useApi();
   const validate = (form: any) => {
@@ -75,4 +75,4 @@ const CreateTransactionPermission = ({ isVisible, formConfig }: any) => {
   );
 };
 
-export default CreateTransactionPermission;
+export default CreateTransactionGroupPermission;
