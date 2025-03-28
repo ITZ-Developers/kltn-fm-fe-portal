@@ -126,7 +126,7 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                             }`}
                             onClick={() => handleMenuItemClick(item.name)}
                           >
-                            <span className="ml-1">{item.label}</span>
+                            <span className="ml-1 pl-6">{item.label}</span>
                           </div>
                         </li>
                       ))}
