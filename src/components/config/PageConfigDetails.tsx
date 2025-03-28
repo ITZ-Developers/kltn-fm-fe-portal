@@ -7,6 +7,7 @@ import KeyInformationGroup from "../../pages/keyInformationGroup/KeyInformationG
 import KeyInformationGroupPermission from "../../pages/keyInformationGroupPermission/KeyInformationGroupPermission";
 import KeyInformationTag from "../../pages/keyInformationTag/KeyInformationTag";
 import UpdateLocationByCustomer from "../../pages/location/UpdateLocationByCustomer";
+import NotificationGroup from "../../pages/notificationGroup/NotificationGroup";
 import Organization from "../../pages/organization/Organization";
 import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
 import ChangePassword from "../../pages/profile/ChangePassword";
@@ -23,6 +24,7 @@ import UpdateTransaction from "../../pages/transaction/UpdateTransaction";
 import TransactionGroup from "../../pages/transactionGroup/TransactionGroup";
 import TransactionGroupPermission from "../../pages/transactionGroupPermission/TransactionGroupPermission";
 import TransactionTag from "../../pages/transactionTag/TransactionTag";
+import UserNotificationGroup from "../../pages/userNotificationGroup/UserNotificationGroup";
 import RedirecProfile from "../redirect/RedirectProfile";
 
 const TRANSACTION_CONFIG = {
@@ -409,6 +411,45 @@ const PROJECT_TAG_CONFIG = {
   },
 };
 
+const NOTIFICATION_GROUP_CONFIG = {
+  NOTIFICATION_GROUP: {
+    name: "notification_group",
+    label: "Nhóm thông báo",
+    path: "/notification-group",
+    role: "NO_G_L",
+    element: <NotificationGroup />,
+  },
+  CREATE_NOTIFICATION_GROUP: {
+    label: "Thêm mới nhóm thông báo",
+    role: "NO_G_C",
+  },
+  UPDATE_NOTIFICATION_GROUP: {
+    label: "Cập nhật nhóm thông báo",
+    role: "NO_G_U",
+  },
+  DELETE_NOTIFICATION_GROUP: {
+    label: "Xóa nhóm thông báo",
+    role: "NO_G_D",
+  },
+};
+
+const USER_NOTIFICATION_GROUP_CONFIG = {
+  USER_NOTIFICATION_GROUP: {
+    label: "Quản lý thành viên nhóm",
+    path: "/notification-group/users/:notificationGroupId",
+    role: "US_G_N_L",
+    element: <UserNotificationGroup />,
+  },
+  CREATE_USER_NOTIFICATION_GROUP: {
+    label: "Thêm thành viên vào nhóm",
+    role: "US_G_N_C",
+  },
+  DELETE_USER_NOTIFICATION_GROUP: {
+    label: "Xóa thành viên khỏi nhóm",
+    role: "US_G_N_D",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -428,4 +469,6 @@ export {
   SERVICE_TAG_CONFIG,
   KEY_INFORMATION_TAG_CONFIG,
   PROJECT_TAG_CONFIG,
+  NOTIFICATION_GROUP_CONFIG,
+  USER_NOTIFICATION_GROUP_CONFIG,
 };

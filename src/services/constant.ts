@@ -174,6 +174,7 @@ const BUTTON_TEXT = {
   TWO_FACTOR: "Xác thực hai bước",
   RESET_MFA: "Đặt lại MFA",
   PERMISSION: "Phân quyền",
+  ADD_MEMBER: "Thêm thành viên",
   SEARCH: "Tìm kiếm",
   REFRESH: "Làm mới",
   CREATE: "Thêm mới",

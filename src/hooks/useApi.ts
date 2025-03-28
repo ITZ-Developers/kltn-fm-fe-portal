@@ -17,6 +17,7 @@ import { organizationController } from "../controllers/organizationController.ts
 import { organizationPermissionController } from "../controllers/organizationPermissionController.ts";
 import { projectController } from "../controllers/projectController.ts";
 import { tagController } from "../controllers/tagController.ts";
+import { userNotificationGroupController } from "../controllers/userNotificationGroupController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -39,6 +40,7 @@ const useApi = () => {
   const organizationPermission = organizationPermissionController(fetchApi);
   const project = projectController(fetchApi);
   const tag = tagController(fetchApi);
+  const userNotificationGroup = userNotificationGroupController(fetchApi);
 
   return {
     auth,
@@ -61,6 +63,7 @@ const useApi = () => {
     organizationPermission,
     project,
     tag,
+    userNotificationGroup,
   };
 };
 

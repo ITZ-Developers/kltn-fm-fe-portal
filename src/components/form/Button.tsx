@@ -38,13 +38,17 @@ const ActionResetMfaButton = ({ onClick, role }: any) => {
   );
 };
 
-const ActionPermissionButton = ({ onClick, role }: any) => {
+const ActionPermissionButton = ({
+  onClick,
+  role,
+  text = BUTTON_TEXT.PERMISSION,
+}: any) => {
   return (
     <ActionButton
       onClick={onClick}
       Icon={UsersIcon}
       role={role}
-      title={BUTTON_TEXT.PERMISSION}
+      title={text}
       color="goldenrod"
     />
   );
