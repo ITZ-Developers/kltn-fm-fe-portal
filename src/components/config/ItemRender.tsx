@@ -5,7 +5,7 @@ import {
   getMediaImage,
   getNestedValue,
 } from "../../services/utils";
-import { ALIGNMENT, STATUS_MAP } from "../../services/constant";
+import { ALIGNMENT, STATUS_MAP, VALID_PATTERN } from "../../services/constant";
 import { useGlobalContext } from "./GlobalProvider";
 import { parse } from "date-fns";
 
@@ -181,6 +181,54 @@ const renderLastLogin = ({
   };
 };
 
+const renderColorCode = ({
+  label = "Mã màu",
+  accessor = "colorCode",
+  align = ALIGNMENT.CENTER,
+}: any) => {
+  return {
+    label,
+    accessor,
+    align,
+    render: (item: any) => {
+      const colorCode =
+        getNestedValue(item, accessor)?.toLowerCase() || "#000000";
+      const isValidColor = VALID_PATTERN.COLOR_CODE.test(colorCode);
+
+      const hexToRgb = (hex: string) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return { r, g, b };
+      };
+      const { r, g, b } = hexToRgb(colorCode);
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      const textColor = brightness > 128 ? "#1f2937" : "#ffffff";
+
+      return (
+        <div className={`text-${align}`}>
+          {isValidColor ? (
+            <span
+              className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap shadow-sm"
+              style={{
+                backgroundColor: colorCode,
+                color: textColor,
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+              }}
+            >
+              {colorCode.toUpperCase()}
+            </span>
+          ) : (
+            <span className="px-3 py-1 rounded-full text-sm font-medium text-gray-400 bg-gray-800/50 whitespace-nowrap">
+              Không hợp lệ
+            </span>
+          )}
+        </div>
+      );
+    },
+  };
+};
+
 export {
   basicRender,
   renderImage,
@@ -188,4 +236,5 @@ export {
   renderHrefLink,
   renderActionButton,
   renderLastLogin,
+  renderColorCode,
 };

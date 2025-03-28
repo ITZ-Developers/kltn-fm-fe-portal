@@ -6,6 +6,7 @@ const VALID_PATTERN = {
   PASSWORD: /^[a-zA-Z0-9!@#$%^&*()_+\-=]{6,}$/,
   HOST: /^(localhost|(([a-z0-9\-]+\.)*[a-z]{2,})|(\d{1,3}\.){3}\d{1,3}|\[([0-9a-f:]+)\])$/,
   PORT: /^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/,
+  COLOR_CODE: /^#[0-9A-F]{6}$/i,
 };
 
 const API_URL = {
@@ -134,6 +135,13 @@ const PERMISSION_KIND = {
   GROUP: 2,
 };
 
+const TAG_KIND = {
+  TRANSACTION: 1,
+  SERVICE: 2,
+  KEY_INFORMATION: 3,
+  PROJECT: 4,
+};
+
 const FILE_TYPES = {
   AVATAR: "AVATAR",
   DOCUMENT: "DOCUMENT",
@@ -200,4 +208,5 @@ export {
   SESSION_KEY_TIMEOUT,
   PERMISSION_KIND,
   TRANSACTION_KIND_MAP,
+  TAG_KIND,
 };

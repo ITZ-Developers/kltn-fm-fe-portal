@@ -2,7 +2,6 @@ import {
   ArrowLeftRightIcon,
   HeadsetIcon,
   KeyIcon,
-  NotebookPenIcon,
   SquareCheckBigIcon,
   UserIcon,
 } from "lucide-react";
@@ -12,15 +11,19 @@ import {
   EMPLOYEE_CONFIG,
   KEY_INFORMATION_GROUP_CONFIG,
   KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
+  KEY_INFORMATION_TAG_CONFIG,
   ORGANIZATION_CONFIG,
   ORGANIZATION_PERMISSION_CONFIG,
   PROFILE_CONFIG,
+  PROJECT_TAG_CONFIG,
   ROLE_CONFIG,
   SERVICE_GROUP_CONFIG,
   SERVICE_GROUP_PERMISSION_CONFIG,
+  SERVICE_TAG_CONFIG,
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
   TRANSACTION_GROUP_PERMISSION_CONFIG,
+  TRANSACTION_TAG_CONFIG,
 } from "./PageConfigDetails";
 
 const PAGE_CONFIG = {
@@ -38,6 +41,10 @@ const PAGE_CONFIG = {
   ...ORGANIZATION_CONFIG,
   ...ORGANIZATION_PERMISSION_CONFIG,
   ...CATEGORY_CONFIG,
+  ...TRANSACTION_TAG_CONFIG,
+  ...SERVICE_TAG_CONFIG,
+  ...KEY_INFORMATION_TAG_CONFIG,
+  ...PROJECT_TAG_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
@@ -47,6 +54,10 @@ const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.KEY_INFORMATION_GROUP.name,
   PAGE_CONFIG.ORGANIZATION.name,
   PAGE_CONFIG.CATEGORY.name,
+  PAGE_CONFIG.TRANSACTION_TAG.name,
+  PAGE_CONFIG.SERVICE_TAG.name,
+  PAGE_CONFIG.KEY_INFORMATION_TAG.name,
+  PAGE_CONFIG.PROJECT_TAG.name,
 ]);
 
 const DECRYPT_FIELDS = {
@@ -55,6 +66,7 @@ const DECRYPT_FIELDS = {
   KEY_INFORMATION_GROUP: ["name", "description"],
   ORGANIZATION: ["logo", "name"],
   CATEGORY: ["description", "name"],
+  TAG: ["colorCode", "name"],
 };
 
 const SIDEBAR_MENUS = [
@@ -65,22 +77,23 @@ const SIDEBAR_MENUS = [
       PAGE_CONFIG.TRANSACTION,
       PAGE_CONFIG.TRANSACTION_GROUP,
       PAGE_CONFIG.CATEGORY,
+      PAGE_CONFIG.TRANSACTION_TAG,
     ],
   },
   {
     name: "Quản lý dịch vụ",
     icon: <HeadsetIcon size={20} />,
-    items: [PAGE_CONFIG.SERVICE_GROUP],
+    items: [PAGE_CONFIG.SERVICE_GROUP, PAGE_CONFIG.SERVICE_TAG],
   },
   {
     name: "Quản lý key",
     icon: <KeyIcon size={20} />,
-    items: [PAGE_CONFIG.KEY_INFORMATION_GROUP],
+    items: [PAGE_CONFIG.KEY_INFORMATION_GROUP, PAGE_CONFIG.KEY_INFORMATION_TAG],
   },
   {
     name: "Quản lý ghi chú",
     icon: <SquareCheckBigIcon size={20} />,
-    items: [PAGE_CONFIG.ORGANIZATION],
+    items: [PAGE_CONFIG.ORGANIZATION, PAGE_CONFIG.PROJECT_TAG],
   },
   {
     name: "Quản lý người dùng",

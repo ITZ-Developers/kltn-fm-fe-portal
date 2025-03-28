@@ -9,6 +9,7 @@ const useGridViewLocal = ({
   filterData = (data: any[]) => data,
   decryptFields,
   secretKey,
+  queryParams,
 }: any) => {
   const { sessionKey, setToast } = useGlobalContext();
   const [allData, setAllData] = useState<any[]>([]);
@@ -77,7 +78,7 @@ const useGridViewLocal = ({
       updateData([]);
       return;
     }
-    const res = await fetchListApi({ isPaged: 0 });
+    const res = await fetchListApi({ isPaged: 0, ...queryParams });
     if (res.result) {
       const data = res.data;
       updateData(data?.content || []);

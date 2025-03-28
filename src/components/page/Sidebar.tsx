@@ -72,16 +72,16 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
           transition-transform duration-300 ease-in-out
           z-40
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:w-80
+          md:translate-x-0 md:w-60
           overflow-y-auto
         `}
         >
           <div className="h-full flex flex-col">
             <div
-              className="flex items-center m-2 space-x-3 cursor-pointer transition-all duration-200 hover:bg-gray-800 rounded-lg p-2"
+              className="flex items-center m-1 space-x-3 cursor-pointer transition-all duration-200 hover:bg-gray-800 rounded-lg p-2"
               onClick={handleMyLocationClick}
             >
-              <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16">
+              <div className="flex-shrink-0 h-8 w-8 md:h-12 md:w-12">
                 {tenantInfo?.logoPath ? (
                   <img
                     src={getMediaImage(tenantInfo.logoPath)}
@@ -94,19 +94,19 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                   </div>
                 )}
               </div>
-              <h1 className="text-lg md:text-xl font-semibold text-gray-100 truncate">
+              <h1 className="text-md md:text-lg font-semibold text-gray-100 truncate">
                 {tenantInfo?.name || "App Name"}
               </h1>
             </div>
             <nav className="flex-grow overflow-y-auto">
               {menuGroups.map((group) => (
-                <div key={group.name} className="mb-2">
+                <div key={group.name} className="mb-1">
                   <div
-                    className="flex justify-between items-center p-3 mx-2 mb-2 bg-gray-800 cursor-pointer rounded-lg"
+                    className="text-sm flex justify-between items-center p-2.5 mx-1 mb-1 bg-gray-800 cursor-pointer rounded-lg"
                     onClick={() => toggleGroupCollapse(group.name)}
                   >
                     {group.icon}
-                    <span className="ml-2">{group.name}</span>
+                    <span className="ml-1">{group.name}</span>
                     {collapsedGroups[group.name] ? (
                       <ChevronDownIcon size={20} />
                     ) : (
@@ -116,9 +116,9 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                   <ul>
                     {!collapsedGroups[group.name] &&
                       group.items.map((item: any) => (
-                        <li key={item.name} className="mb-2">
+                        <li key={item.name} className="mb-1">
                           <div
-                            className={`flex items-center p-3 mx-2 rounded-lg cursor-pointer transition-colors
+                            className={`text-sm flex items-center p-2 mx-1 rounded-lg cursor-pointer transition-colors
                             ${
                               activeItem === item.name
                                 ? "bg-blue-500"
@@ -126,7 +126,7 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                             }`}
                             onClick={() => handleMenuItemClick(item.name)}
                           >
-                            <span className="ml-2">{item.label}</span>
+                            <span className="ml-1">{item.label}</span>
                           </div>
                         </li>
                       ))}
@@ -165,11 +165,11 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
             </div>
 
             {/* Desktop header */}
-            <div className="hidden md:block p-4 border-b-2 border-gray-700 flex-1 md:ml-80">
+            <div className="hidden md:block p-4 border-b-2 border-gray-700 flex-1 md:ml-60">
               <MainHeader breadcrumbs={breadcrumbs} />
             </div>
 
-            <div className={`p-4 flex-1 transition-all duration-300 md:ml-80`}>
+            <div className={`p-4 flex-1 transition-all duration-300 md:ml-60`}>
               {isSystemNotReady ? (
                 <NotReadyDialog
                   color="goldenrod"

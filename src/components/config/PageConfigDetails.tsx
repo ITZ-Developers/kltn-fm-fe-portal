@@ -5,20 +5,24 @@ import Employee from "../../pages/employee/Employee";
 import UpdateEmployee from "../../pages/employee/UpdateEmployee";
 import KeyInformationGroup from "../../pages/keyInformationGroup/KeyInformationGroup";
 import KeyInformationGroupPermission from "../../pages/keyInformationGroupPermission/KeyInformationGroupPermission";
+import KeyInformationTag from "../../pages/keyInformationTag/KeyInformationTag";
 import UpdateLocationByCustomer from "../../pages/location/UpdateLocationByCustomer";
 import Organization from "../../pages/organization/Organization";
 import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
 import ChangePassword from "../../pages/profile/ChangePassword";
+import ProjectTag from "../../pages/projectTag/ProjectTag";
 import CreateRole from "../../pages/role/CreateRole";
 import Role from "../../pages/role/Role";
 import UpdateRole from "../../pages/role/UpdateRole";
 import ServiceGroup from "../../pages/serviceGroup/ServiceGroup";
 import ServiceGroupPermission from "../../pages/serviceGroupPermission/ServiceGroupPermission";
+import ServiceTag from "../../pages/serviceTag/ServiceTag";
 import CreateTransaction from "../../pages/transaction/CreateTransaction";
 import Transaction from "../../pages/transaction/Transaction";
 import UpdateTransaction from "../../pages/transaction/UpdateTransaction";
 import TransactionGroup from "../../pages/transactionGroup/TransactionGroup";
 import TransactionGroupPermission from "../../pages/transactionGroupPermission/TransactionGroupPermission";
+import TransactionTag from "../../pages/transactionTag/TransactionTag";
 import RedirecProfile from "../redirect/RedirectProfile";
 
 const TRANSACTION_CONFIG = {
@@ -317,6 +321,94 @@ const CATEGORY_CONFIG = {
   },
 };
 
+const TRANSACTION_TAG_CONFIG = {
+  TRANSACTION_TAG: {
+    name: "transaction_tag",
+    label: "Tag giao dịch",
+    path: "/transaction-tag",
+    role: "TAG_L",
+    element: <TransactionTag />,
+  },
+  CREATE_TRANSACTION_TAG: {
+    label: "Thêm mới tag giao dịch",
+    role: "TAG_C",
+  },
+  UPDATE_TRANSACTION_TAG: {
+    label: "Cập nhật tag giao dịch",
+    role: "TAG_U",
+  },
+  DELETE_TRANSACTION_TAG: {
+    label: "Xóa tag giao dịch",
+    role: "TAG_D",
+  },
+};
+
+const SERVICE_TAG_CONFIG = {
+  SERVICE_TAG: {
+    name: "service_tag",
+    label: "Tag dịch vụ",
+    path: "/service-tag",
+    role: "TAG_L",
+    element: <ServiceTag />,
+  },
+  CREATE_SERVICE_TAG: {
+    label: "Thêm mới tag dịch vụ",
+    role: "TAG_C",
+  },
+  UPDATE_SERVICE_TAG: {
+    label: "Cập nhật tag dịch vụ",
+    role: "TAG_U",
+  },
+  DELETE_SERVICE_TAG: {
+    label: "Xóa tag dịch vụ",
+    role: "TAG_D",
+  },
+};
+
+const KEY_INFORMATION_TAG_CONFIG = {
+  KEY_INFORMATION_TAG: {
+    name: "key_information_tag",
+    label: "Tag key",
+    path: "/key-information-tag",
+    role: "TAG_L",
+    element: <KeyInformationTag />,
+  },
+  CREATE_KEY_INFORMATION_TAG: {
+    label: "Thêm mới tag key",
+    role: "TAG_C",
+  },
+  UPDATE_KEY_INFORMATION_TAG: {
+    label: "Cập nhật tag key",
+    role: "TAG_U",
+  },
+  DELETE_KEY_INFORMATION_TAG: {
+    label: "Xóa tag key",
+    role: "TAG_D",
+  },
+};
+
+const PROJECT_TAG_CONFIG = {
+  PROJECT_TAG: {
+    name: "project_tag",
+    label: "Tag ghi chú",
+    path: "/project-tag",
+    role: "TAG_L",
+    element: <ProjectTag />,
+  },
+  CREATE_PROJECT_TAG: {
+    label: "Thêm mới tag ghi chú",
+    role: "TAG_C",
+  },
+  UPDATE_PROJECT_TAG: {
+    label: "Cập nhật tag ghi chú",
+    role: "TAG_U",
+  },
+  DELETE_PROJECT_TAG: {
+    label: "Xóa tag ghi chú",
+    role: "TAG_D",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -332,4 +424,8 @@ export {
   ORGANIZATION_CONFIG,
   ORGANIZATION_PERMISSION_CONFIG,
   CATEGORY_CONFIG,
+  TRANSACTION_TAG_CONFIG,
+  SERVICE_TAG_CONFIG,
+  KEY_INFORMATION_TAG_CONFIG,
+  PROJECT_TAG_CONFIG,
 };

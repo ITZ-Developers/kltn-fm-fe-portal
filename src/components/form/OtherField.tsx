@@ -87,7 +87,7 @@ const ColorPickerField = ({
 }: {
   title?: string;
   isRequired?: boolean;
-  value?: string; // Hex color code
+  value?: string;
   onChange: (color: string) => void;
   error?: string;
 }) => {
@@ -100,13 +100,13 @@ const ColorPickerField = ({
         </label>
       )}
       <div
-        className={`flex items-center border rounded-md p-2 flex-1 ${
-          error ? "border-red-500 bg-red-900/20" : "border-gray-600 bg-gray-800"
+        className={`flex items-center rounded-md p-0 flex-1 h-10 ${
+          error ? "border-red-500 bg-red-900/20" : "bg-gray-800"
         }`}
       >
         <input
           type="color"
-          className="flex-1 h-8 bg-transparent border-none outline-none cursor-pointer"
+          className="w-full h-full rounded-lg bg-transparent border-none outline-none cursor-pointer p-0 m-0"
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
