@@ -14,6 +14,7 @@ import ChangePassword from "../../pages/profile/ChangePassword";
 import CreateProject from "../../pages/project/CreateProject";
 import Project from "../../pages/project/Project";
 import UpdateProject from "../../pages/project/UpdateProject";
+import ProjectPermission from "../../pages/projectPermission/ProjectPermission";
 import ProjectTag from "../../pages/projectTag/ProjectTag";
 import CreateRole from "../../pages/role/CreateRole";
 import Role from "../../pages/role/Role";
@@ -516,6 +517,23 @@ const TASK_CONFIG = {
   },
 };
 
+const PROJECT_PERMISSION_CONFIG = {
+  PROJECT_PERMISSION: {
+    label: "Phân quyền ghi chú",
+    path: "/project/permission/:projectId",
+    role: "TA_P_L",
+    element: <ProjectPermission />,
+  },
+  CREATE_PROJECT_PERMISSION: {
+    label: "Thêm quyền ghi chú",
+    role: "TA_P_C",
+  },
+  DELETE_PROJECT_PERMISSION: {
+    label: "Xóa quyền ghi chú",
+    role: "TA_P_D",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -539,4 +557,5 @@ export {
   USER_NOTIFICATION_GROUP_CONFIG,
   PROJECT_CONFIG,
   TASK_CONFIG,
+  PROJECT_PERMISSION_CONFIG,
 };

@@ -1,6 +1,7 @@
 import {
   ActionDeleteButton,
   ActionEditButton,
+  ActionPermissionButton,
   ActionTasksButton,
 } from "../../components/form/Button";
 import {
@@ -111,9 +112,14 @@ const Project = () => {
         PAGE_CONFIG.DELETE_PROJECT.role,
         PAGE_CONFIG.UPDATE_PROJECT.role,
         PAGE_CONFIG.TASK.role,
+        PAGE_CONFIG.PROJECT_PERMISSION.role,
       ],
       renderChildren: (item: any) => (
         <>
+          <ActionPermissionButton
+            role={PAGE_CONFIG.PROJECT_PERMISSION.role}
+            onClick={() => onPermissionButtonClick(item.id)}
+          />
           <ActionTasksButton
             role={PAGE_CONFIG.TASK.role}
             onClick={() => onTaskButtonClick(item.id)}
@@ -130,6 +136,10 @@ const Project = () => {
       ),
     }),
   ];
+
+  const onPermissionButtonClick = (id: any) => {
+    navigate(`/project/permission/${id}`, { state: { query } });
+  };
 
   const onTaskButtonClick = (id: any) => {
     navigate(`/project/task/${id}`, { state: { query } });

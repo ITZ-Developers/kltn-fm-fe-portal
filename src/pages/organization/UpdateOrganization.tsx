@@ -78,7 +78,7 @@ const UpdateOrganization = ({ isVisible, formConfig }: any) => {
             <div className="flex flex-col space-y-4">
               <ImageUploadField
                 title="Biểu trưng"
-                value={form.logo}
+                value={form?.logo}
                 onChange={(value: any) => handleChange("logo", value)}
               />
               <InputField
