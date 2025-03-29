@@ -5,7 +5,12 @@ import {
   getMediaImage,
   getNestedValue,
 } from "../../services/utils";
-import { ALIGNMENT, STATUS_MAP, VALID_PATTERN } from "../../services/constant";
+import {
+  ALIGNMENT,
+  KEY_KIND_MAP,
+  STATUS_MAP,
+  VALID_PATTERN,
+} from "../../services/constant";
 import { useGlobalContext } from "./GlobalProvider";
 import { parse } from "date-fns";
 
@@ -259,6 +264,44 @@ const renderTagField = ({
   };
 };
 
+const renderIconField = ({
+  label = "Tên",
+  accessor = "name",
+  iconMapField = "kind",
+  align = ALIGNMENT.LEFT,
+  dataMap = KEY_KIND_MAP,
+}: any) => {
+  return {
+    label,
+    accessor,
+    align,
+    render: (item: any) => {
+      const kindValue = getNestedValue(item, iconMapField);
+      const displayValue = getNestedValue(item, accessor);
+      const kind: any = Object.values(dataMap).find(
+        (entry: any) => entry.value === kindValue
+      );
+      const IconComponent = kind.icon;
+
+      return (
+        <div
+          className={`text-${align} flex items-center space-x-2 whitespace-nowrap`}
+        >
+          {IconComponent && (
+            <span
+              className={`${kind.textColor}`}
+              title={kind.label || kindValue}
+            >
+              <IconComponent size={20} />
+            </span>
+          )}
+          <span className="text-gray-300">{displayValue}</span>
+        </div>
+      );
+    },
+  };
+};
+
 export {
   basicRender,
   renderImage,
@@ -268,4 +311,5 @@ export {
   renderLastLogin,
   renderColorCode,
   renderTagField,
+  renderIconField,
 };

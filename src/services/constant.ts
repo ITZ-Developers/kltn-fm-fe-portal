@@ -1,3 +1,5 @@
+import { DatabaseIcon, GlobeIcon } from "lucide-react";
+
 const MIME_TYPES = {
   // Images
   ".jpg": "image/jpeg",
@@ -164,6 +166,23 @@ const TASK_STATE_MAP = {
   },
 };
 
+const KEY_KIND_MAP = {
+  SERVER: {
+    value: 1,
+    label: "Server",
+    className: "bg-blue-900 text-blue-300",
+    textColor: "text-blue-600",
+    icon: DatabaseIcon,
+  },
+  WEB: {
+    value: 2,
+    label: "Web",
+    className: "bg-blue-900 text-blue-300",
+    textColor: "text-blue-600",
+    icon: GlobeIcon,
+  },
+};
+
 const ITEMS_PER_PAGE = 10;
 const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
@@ -239,6 +258,7 @@ const BUTTON_TEXT = {
   CANCEL: "Hủy",
   DONE: "Hoàn thành",
   EXPORT_EXCEL: "Xuất Excel",
+  IMPORT_EXCEL: "Nhập Excel",
 };
 
 export {
@@ -272,4 +292,5 @@ export {
   SORT_DATE,
   IS_PAGED,
   MIME_TYPES,
+  KEY_KIND_MAP,
 };

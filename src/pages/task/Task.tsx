@@ -46,8 +46,9 @@ import {
   truncateString,
 } from "../../services/utils";
 import useQueryState from "../../hooks/useQueryState";
+import { StaticSelectBox } from "../../components/page/SelectBox";
 
-const initQuery = { taskName: "" };
+const initQuery = { taskName: "", state: "" };
 
 const Task = () => {
   const { handleNavigateBack } = useQueryState({
@@ -61,7 +62,8 @@ const Task = () => {
       const nameFilter =
         !query?.taskName ||
         item.name.toLowerCase().includes(query.taskName.toLowerCase());
-      return nameFilter;
+      const stateFilter = !query.state || item.state == query.state;
+      return nameFilter && stateFilter;
     });
   }, []);
   const { setToast, sessionKey } = useGlobalContext();
@@ -248,6 +250,14 @@ const Task = () => {
                     handleSubmitQuery({ ...query, taskName: value })
                   }
                   placeholder="Tên công việc..."
+                />
+                <StaticSelectBox
+                  value={query.state}
+                  onChange={(value: any) => {
+                    handleSubmitQuery({ ...query, state: value });
+                  }}
+                  dataMap={TASK_STATE_MAP}
+                  placeholder="Tình trạng..."
                 />
               </>
             }

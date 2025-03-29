@@ -9,6 +9,7 @@ import {
   CATEGORY_CONFIG,
   DEPARTMENT_CONFIG,
   EMPLOYEE_CONFIG,
+  KEY_INFORMATION_CONFIG,
   KEY_INFORMATION_GROUP_CONFIG,
   KEY_INFORMATION_GROUP_PERMISSION_CONFIG,
   KEY_INFORMATION_TAG_CONFIG,
@@ -55,6 +56,7 @@ const PAGE_CONFIG = {
   ...PROJECT_CONFIG,
   ...TASK_CONFIG,
   ...PROJECT_PERMISSION_CONFIG,
+  ...KEY_INFORMATION_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
@@ -70,6 +72,7 @@ const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.PROJECT_TAG.name,
   PAGE_CONFIG.NOTIFICATION_GROUP.name,
   PAGE_CONFIG.PROJECT.name,
+  PAGE_CONFIG.KEY_INFORMATION.name,
 ]);
 
 const DECRYPT_FIELDS = {
@@ -82,6 +85,16 @@ const DECRYPT_FIELDS = {
   NOTIFICATION_GROUP: ["name", "description"],
   PROJECT: ["logo", "name", "note", "organization.name", "tag.colorCode"],
   TASK: ["name", "note", "document"],
+  KEY_INFORMATION: [
+    "name",
+    "additionalInformation",
+    "document",
+    "keyInformationGroup.name",
+    "organization.name",
+    "tag.name",
+    "tag.colorCode",
+    "description",
+  ],
 };
 
 const SIDEBAR_MENUS = [
@@ -107,7 +120,11 @@ const SIDEBAR_MENUS = [
   {
     name: "Quản lý key",
     icon: <KeyIcon size={20} />,
-    items: [PAGE_CONFIG.KEY_INFORMATION_GROUP, PAGE_CONFIG.KEY_INFORMATION_TAG],
+    items: [
+      PAGE_CONFIG.KEY_INFORMATION,
+      PAGE_CONFIG.KEY_INFORMATION_GROUP,
+      PAGE_CONFIG.KEY_INFORMATION_TAG,
+    ],
   },
   {
     name: "Quản lý ghi chú",

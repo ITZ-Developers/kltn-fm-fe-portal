@@ -3,6 +3,9 @@ import Department from "../../pages/department/Department";
 import CreateEmployee from "../../pages/employee/CreateEmployee";
 import Employee from "../../pages/employee/Employee";
 import UpdateEmployee from "../../pages/employee/UpdateEmployee";
+import CreateKeyInformation from "../../pages/keyInformation/CreateKeyInformation";
+import KeyInformation from "../../pages/keyInformation/KeyInformation";
+import UpdateKeyInformation from "../../pages/keyInformation/UpdateKeyInformation";
 import KeyInformationGroup from "../../pages/keyInformationGroup/KeyInformationGroup";
 import KeyInformationGroupPermission from "../../pages/keyInformationGroupPermission/KeyInformationGroupPermission";
 import KeyInformationTag from "../../pages/keyInformationTag/KeyInformationTag";
@@ -534,6 +537,40 @@ const PROJECT_PERMISSION_CONFIG = {
   },
 };
 
+const KEY_INFORMATION_CONFIG = {
+  KEY_INFORMATION: {
+    name: "key_information",
+    label: "Thông tin key",
+    path: "/key-information",
+    role: "KE_I_L",
+    element: <KeyInformation />,
+  },
+  CREATE_KEY_INFORMATION: {
+    label: "Thêm mới key",
+    path: "/key-information/create",
+    role: "KE_I_C",
+    element: <CreateKeyInformation />,
+  },
+  UPDATE_KEY_INFORMATION: {
+    label: "Cập nhật key",
+    path: "/key-information/update/:id",
+    role: "KE_I_U",
+    element: <UpdateKeyInformation />,
+  },
+  DELETE_KEY_INFORMATION: {
+    label: "Xóa key",
+    role: "KE_I_D",
+  },
+  IMPORT_EXCEL_KEY_INFORMATION: {
+    label: "Tải lên tệp Excel key",
+    role: "KE_I_I_E",
+  },
+  EXPORT_EXCEL_KEY_INFORMATION: {
+    label: "Xuất tệp Excel key",
+    role: "KE_I_E_E",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -558,4 +595,5 @@ export {
   PROJECT_CONFIG,
   TASK_CONFIG,
   PROJECT_PERMISSION_CONFIG,
+  KEY_INFORMATION_CONFIG,
 };
