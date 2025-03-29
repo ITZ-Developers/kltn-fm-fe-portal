@@ -178,7 +178,7 @@ const Task = () => {
     showDeleteDialog(
       configDoneDialog({
         label: PAGE_CONFIG.DONE_TASK.label,
-        deleteApi: () => task.changeState(id),
+        doneApi: () => task.changeState(id),
         refreshData: handleRefreshData,
         hideModal: hideDeleteDialog,
         setToast,
