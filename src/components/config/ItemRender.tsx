@@ -11,7 +11,7 @@ import { parse } from "date-fns";
 
 const basicRender = ({ content, align = ALIGNMENT.LEFT }: any) => {
   return (
-    <span className={`text-gray-300 p-4 text-${align} whitespace-nowrap`}>
+    <span className={`text-gray-300 text-${align} whitespace-nowrap`}>
       {content}
     </span>
   );
@@ -22,7 +22,6 @@ const renderImage = ({
   accessor = "avatarPath",
   Icon = UserIcon,
   align = ALIGNMENT.LEFT,
-  className = "ml-2",
 }) => {
   return {
     label,
@@ -30,7 +29,7 @@ const renderImage = ({
     align,
     render: (item: any) => (
       <div
-        className={`${className} flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-700`}
+        className={`flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gray-700`}
       >
         {getNestedValue(item, accessor) ? (
           <img
@@ -92,7 +91,7 @@ const renderHrefLink = ({
       }
       return (
         <a
-          className={`text-blue-600 hover:underline p-4 text-${align} whitespace-nowrap hover:cursor-pointer`}
+          className={`text-blue-600 hover:underline text-${align} whitespace-nowrap hover:cursor-pointer`}
           onClick={() => onClick(item)}
         >
           {getNestedValue(item, accessor)}
@@ -132,7 +131,7 @@ const renderActionButton = ({
 const renderLastLogin = ({
   label = "Lần đăng nhập cuối",
   accessor = "lastLogin",
-  align = ALIGNMENT.LEFT,
+  align = ALIGNMENT.CENTER,
 }: any) => {
   return {
     label,
@@ -146,7 +145,7 @@ const renderLastLogin = ({
 
       if (!lastLogin) {
         return basicRender({
-          align: ALIGNMENT.LEFT,
+          align,
           content: "Không có dữ liệu",
         });
       }
@@ -161,7 +160,7 @@ const renderLastLogin = ({
       const isVeryOld = daysAgo > 30;
 
       return (
-        <div className="flex items-center space-x-2 py-2">
+        <div className={`flex items-center justify-${align} space-x-2 py-2`}>
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${
               isRecent
@@ -209,7 +208,7 @@ const renderColorCode = ({
         <div className={`text-${align}`}>
           {isValidColor ? (
             <span
-              className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap shadow-sm"
+              className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow-sm"
               style={{
                 backgroundColor: colorCode,
                 color: textColor,
@@ -219,10 +218,41 @@ const renderColorCode = ({
               {colorCode.toUpperCase()}
             </span>
           ) : (
-            <span className="px-3 py-1 rounded-full text-sm font-medium text-gray-400 bg-gray-800/50 whitespace-nowrap">
+            <span className="px-2 py-1 rounded-full text-xs font-medium text-gray-400 bg-gray-800/50 whitespace-nowrap">
               Không hợp lệ
             </span>
           )}
+        </div>
+      );
+    },
+  };
+};
+
+const renderTagField = ({
+  label = "Tên ghi chú",
+  accessor = "name",
+  align = ALIGNMENT.LEFT,
+  colorCodeField = "",
+}: any) => {
+  return {
+    label,
+    accessor,
+    align,
+    render: (item: any) => {
+      const value = getNestedValue(item, accessor);
+      const colorCode = getNestedValue(item, colorCodeField);
+
+      return (
+        <div
+          className={`text-${align} flex items-center space-x-2 whitespace-nowrap`}
+        >
+          {colorCode && (
+            <span
+              className="inline-block w-4 h-4 rounded"
+              style={{ backgroundColor: colorCode }}
+            />
+          )}
+          <span className="text-gray-300">{value}</span>
         </div>
       );
     },
@@ -237,4 +267,5 @@ export {
   renderActionButton,
   renderLastLogin,
   renderColorCode,
+  renderTagField,
 };

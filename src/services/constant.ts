@@ -1,3 +1,34 @@
+const MIME_TYPES = {
+  // Images
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".gif": "image/gif",
+  ".svg": "image/svg+xml",
+  ".webp": "image/webp",
+  ".bmp": "image/bmp",
+
+  // Videos
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+  ".ogg": "video/ogg",
+  ".m3u8": "application/x-mpegURL",
+  ".ts": "video/mp2t",
+
+  // Soundtracks
+  ".mp3": "audio/mpeg",
+  ".wav": "audio/wav",
+
+  // Documents
+  ".pdf": "application/pdf",
+  ".txt": "text/plain",
+  ".csv": "text/csv",
+  ".json": "application/json",
+  ".xml": "application/xml",
+  ".md": "text/markdown",
+  ".html": "text/html",
+};
+
 const VALID_PATTERN = {
   NAME: /^[\p{L}][\p{L} ]*[\p{L}]$/u,
   EMAIL: /^(?!.*[.]{2,})[a-zA-Z0-9.%]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -120,6 +151,19 @@ const TRANSACTION_KIND_MAP = {
   },
 };
 
+const TASK_STATE_MAP = {
+  PENDING: {
+    value: 1,
+    label: "Đang xử lý",
+    className: "bg-yellow-900 text-yellow-300",
+  },
+  DONE: {
+    value: 2,
+    label: "Hoàn thành",
+    className: "bg-green-900 text-green-300",
+  },
+};
+
 const ITEMS_PER_PAGE = 10;
 const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
@@ -133,6 +177,16 @@ const SOCKET_CMD = {
 const PERMISSION_KIND = {
   ITEM: 1,
   GROUP: 2,
+};
+
+const IS_PAGED = {
+  TRUE: 1,
+  FALSE: 0,
+};
+
+const SORT_DATE = {
+  ASC: 1,
+  DESC: 2,
 };
 
 const TAG_KIND = {
@@ -164,6 +218,8 @@ const BASIC_MESSAGES = {
   UPDATED: "Cập nhật thành công",
   DELETED: "Xóa thành công",
   RESETED: "Đặt lại thành công",
+  EXPORTED: "Xuất tệp thành công",
+  NO_DATA: "Không có dữ liệu",
 };
 
 const BUTTON_TEXT = {
@@ -181,6 +237,8 @@ const BUTTON_TEXT = {
   UPDATE: "Cập nhật",
   DELETE: "Xóa",
   CANCEL: "Hủy",
+  DONE: "Hoàn thành",
+  EXPORT_EXCEL: "Xuất Excel",
 };
 
 export {
@@ -210,4 +268,8 @@ export {
   PERMISSION_KIND,
   TRANSACTION_KIND_MAP,
   TAG_KIND,
+  TASK_STATE_MAP,
+  SORT_DATE,
+  IS_PAGED,
+  MIME_TYPES,
 };

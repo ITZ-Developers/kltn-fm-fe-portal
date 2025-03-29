@@ -72,7 +72,7 @@ const GlobalContext = createContext<{
 export const GlobalProvider = ({ children }: any) => {
   const { message, sendMessage } = useWebSocket();
   const [isUnauthorized, setIsUnauthorized] = useState(false);
-  const [isSystemNotReady, setIsSystemNotReady] = useState(true);
+  const [isSystemNotReady, setIsSystemNotReady] = useState(false);
   const [isCustomer, setIsCustomer] = useState<any>(null);
   const [authorities, setAuthorities] = useState<any>([]);
   const [collapsedGroups, setCollapsedGroups] = useState(

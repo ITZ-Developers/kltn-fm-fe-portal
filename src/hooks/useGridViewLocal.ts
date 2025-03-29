@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { ITEMS_PER_PAGE, TOAST } from "../services/constant";
+import {
+  IS_PAGED,
+  ITEMS_PER_PAGE,
+  SORT_DATE,
+  TOAST,
+} from "../services/constant";
 import { decryptData } from "../services/utils";
 import { useGlobalContext } from "../components/config/GlobalProvider";
 
@@ -78,7 +83,11 @@ const useGridViewLocal = ({
       updateData([]);
       return;
     }
-    const res = await fetchListApi({ isPaged: 0, ...queryParams });
+    const res = await fetchListApi({
+      ...queryParams,
+      isPaged: IS_PAGED.FALSE,
+      sortDate: SORT_DATE.DESC,
+    });
     if (res.result) {
       const data = res.data;
       updateData(data?.content || []);

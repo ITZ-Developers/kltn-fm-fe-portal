@@ -69,7 +69,7 @@ const Role = () => {
       render: (item: any) => {
         return (
           <span
-            className={`text-gray-300 p-4 text-${ALIGNMENT.LEFT} whitespace-nowrap`}
+            className={`text-gray-300 text-${ALIGNMENT.LEFT} whitespace-nowrap`}
           >
             {convertUtcToVn(item.modifiedDate)}
           </span>

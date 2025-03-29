@@ -16,7 +16,6 @@ import useApi from "../../hooks/useApi";
 import {
   BASIC_MESSAGES,
   BUTTON_TEXT,
-  GROUP_KIND_MAP,
   STATUS_MAP,
   TOAST,
   VALID_PATTERN,

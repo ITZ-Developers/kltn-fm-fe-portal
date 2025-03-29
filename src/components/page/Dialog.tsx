@@ -130,6 +130,43 @@ const configResetMfaDialog = ({
   };
 };
 
+const configDoneDialog = ({
+  label,
+  doneApi,
+  refreshData,
+  hideModal,
+  setToast,
+}: any) => {
+  return {
+    title: label,
+    message: "Bạn có muốn đánh dấu hoàn thành?",
+    color: "mediumseagreen",
+    onConfirm: async () => {
+      hideModal();
+      const res = await doneApi();
+      if (res.result) {
+        setToast(BASIC_MESSAGES.SUCCESS, TOAST.SUCCESS);
+        await refreshData();
+      } else {
+        setToast(res.message, TOAST.ERROR);
+      }
+    },
+    confirmText: BUTTON_TEXT.SUBMIT,
+    onCancel: hideModal,
+  };
+};
+
+const configDeleteFileDialog = ({ label, hideModal, onConfirm }: any) => {
+  return {
+    title: label,
+    message: "Bạn có chắc chắn muốn xóa?",
+    color: "crimson",
+    onConfirm: onConfirm,
+    confirmText: BUTTON_TEXT.DELETE,
+    onCancel: hideModal,
+  };
+};
+
 const configDeleteDialog = ({
   label,
   deleteApi,
@@ -191,4 +228,6 @@ export {
   configDeleteDialog,
   configModalForm,
   configResetMfaDialog,
+  configDoneDialog,
+  configDeleteFileDialog,
 };

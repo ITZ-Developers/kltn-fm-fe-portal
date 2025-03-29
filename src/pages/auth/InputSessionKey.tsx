@@ -44,12 +44,7 @@ const InputKeyForm = ({ isVisible, formConfig }: any) => {
         formConfig?.hideModal();
       }
       const secretKey = res?.data?.secretKey;
-      if (!secretKey) {
-        formConfig?.hideModal();
-        setToast("Vui lòng gửi yêu cầu lấy khóa bảo mật", TOAST.ERROR);
-        return;
-      }
-      setMySecretKey(res?.data?.secretKey);
+      setMySecretKey(secretKey);
     };
     getKey();
     resetForm();

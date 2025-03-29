@@ -11,6 +11,9 @@ import NotificationGroup from "../../pages/notificationGroup/NotificationGroup";
 import Organization from "../../pages/organization/Organization";
 import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
 import ChangePassword from "../../pages/profile/ChangePassword";
+import CreateProject from "../../pages/project/CreateProject";
+import Project from "../../pages/project/Project";
+import UpdateProject from "../../pages/project/UpdateProject";
 import ProjectTag from "../../pages/projectTag/ProjectTag";
 import CreateRole from "../../pages/role/CreateRole";
 import Role from "../../pages/role/Role";
@@ -18,6 +21,9 @@ import UpdateRole from "../../pages/role/UpdateRole";
 import ServiceGroup from "../../pages/serviceGroup/ServiceGroup";
 import ServiceGroupPermission from "../../pages/serviceGroupPermission/ServiceGroupPermission";
 import ServiceTag from "../../pages/serviceTag/ServiceTag";
+import CreateTask from "../../pages/task/CreateTask";
+import Task from "../../pages/task/Task";
+import UpdateTask from "../../pages/task/UpdateTask";
 import CreateTransaction from "../../pages/transaction/CreateTransaction";
 import Transaction from "../../pages/transaction/Transaction";
 import UpdateTransaction from "../../pages/transaction/UpdateTransaction";
@@ -326,21 +332,21 @@ const CATEGORY_CONFIG = {
 const TRANSACTION_TAG_CONFIG = {
   TRANSACTION_TAG: {
     name: "transaction_tag",
-    label: "Tag giao dịch",
+    label: "Thẻ giao dịch",
     path: "/transaction-tag",
     role: "TAG_L",
     element: <TransactionTag />,
   },
   CREATE_TRANSACTION_TAG: {
-    label: "Thêm mới tag giao dịch",
+    label: "Thêm mới thẻ giao dịch",
     role: "TAG_C",
   },
   UPDATE_TRANSACTION_TAG: {
-    label: "Cập nhật tag giao dịch",
+    label: "Cập nhật thẻ giao dịch",
     role: "TAG_U",
   },
   DELETE_TRANSACTION_TAG: {
-    label: "Xóa tag giao dịch",
+    label: "Xóa thẻ giao dịch",
     role: "TAG_D",
   },
 };
@@ -348,21 +354,21 @@ const TRANSACTION_TAG_CONFIG = {
 const SERVICE_TAG_CONFIG = {
   SERVICE_TAG: {
     name: "service_tag",
-    label: "Tag dịch vụ",
+    label: "Thẻ dịch vụ",
     path: "/service-tag",
     role: "TAG_L",
     element: <ServiceTag />,
   },
   CREATE_SERVICE_TAG: {
-    label: "Thêm mới tag dịch vụ",
+    label: "Thêm mới thẻ dịch vụ",
     role: "TAG_C",
   },
   UPDATE_SERVICE_TAG: {
-    label: "Cập nhật tag dịch vụ",
+    label: "Cập nhật thẻ dịch vụ",
     role: "TAG_U",
   },
   DELETE_SERVICE_TAG: {
-    label: "Xóa tag dịch vụ",
+    label: "Xóa thẻ dịch vụ",
     role: "TAG_D",
   },
 };
@@ -370,21 +376,21 @@ const SERVICE_TAG_CONFIG = {
 const KEY_INFORMATION_TAG_CONFIG = {
   KEY_INFORMATION_TAG: {
     name: "key_information_tag",
-    label: "Tag key",
+    label: "Thẻ key",
     path: "/key-information-tag",
     role: "TAG_L",
     element: <KeyInformationTag />,
   },
   CREATE_KEY_INFORMATION_TAG: {
-    label: "Thêm mới tag key",
+    label: "Thêm mới thẻ key",
     role: "TAG_C",
   },
   UPDATE_KEY_INFORMATION_TAG: {
-    label: "Cập nhật tag key",
+    label: "Cập nhật thẻ key",
     role: "TAG_U",
   },
   DELETE_KEY_INFORMATION_TAG: {
-    label: "Xóa tag key",
+    label: "Xóa thẻ key",
     role: "TAG_D",
   },
 };
@@ -392,21 +398,21 @@ const KEY_INFORMATION_TAG_CONFIG = {
 const PROJECT_TAG_CONFIG = {
   PROJECT_TAG: {
     name: "project_tag",
-    label: "Tag ghi chú",
+    label: "Thẻ ghi chú",
     path: "/project-tag",
     role: "TAG_L",
     element: <ProjectTag />,
   },
   CREATE_PROJECT_TAG: {
-    label: "Thêm mới tag ghi chú",
+    label: "Thêm mới thẻ ghi chú",
     role: "TAG_C",
   },
   UPDATE_PROJECT_TAG: {
-    label: "Cập nhật tag ghi chú",
+    label: "Cập nhật thẻ ghi chú",
     role: "TAG_U",
   },
   DELETE_PROJECT_TAG: {
-    label: "Xóa tag ghi chú",
+    label: "Xóa thẻ ghi chú",
     role: "TAG_D",
   },
 };
@@ -450,6 +456,66 @@ const USER_NOTIFICATION_GROUP_CONFIG = {
   },
 };
 
+const PROJECT_CONFIG = {
+  PROJECT: {
+    name: "project",
+    label: "Ghi chú",
+    path: "/project",
+    role: "PR_L",
+    element: <Project />,
+  },
+  CREATE_PROJECT: {
+    label: "Thêm mới ghi chú",
+    path: "/project/create",
+    role: "PR_C",
+    element: <CreateProject />,
+  },
+  UPDATE_PROJECT: {
+    label: "Cập nhật ghi chú",
+    path: "/project/update/:id",
+    role: "PR_U",
+    element: <UpdateProject />,
+  },
+  DELETE_PROJECT: {
+    label: "Xóa ghi chú",
+    role: "PR_D",
+  },
+};
+
+const TASK_CONFIG = {
+  TASK: {
+    name: "task",
+    label: "Công việc",
+    path: "/project/task/:projectId",
+    role: "TA_L",
+    element: <Task />,
+  },
+  CREATE_TASK: {
+    label: "Thêm mới công việc",
+    path: "/project/task/:projectId/create",
+    role: "TA_C",
+    element: <CreateTask />,
+  },
+  UPDATE_TASK: {
+    label: "Cập nhật công việc",
+    path: "/project/task/:projectId/update/:id",
+    role: "TA_U",
+    element: <UpdateTask />,
+  },
+  DELETE_TASK: {
+    label: "Xóa công việc",
+    role: "TA_D",
+  },
+  DONE_TASK: {
+    label: "Hoàn thành công việc",
+    role: "TA_C_S",
+  },
+  EXPORT_EXCEL_TASK: {
+    label: "Xuất tệp Excel công việc",
+    role: "TA_E_E",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -471,4 +537,6 @@ export {
   PROJECT_TAG_CONFIG,
   NOTIFICATION_GROUP_CONFIG,
   USER_NOTIFICATION_GROUP_CONFIG,
+  PROJECT_CONFIG,
+  TASK_CONFIG,
 };

@@ -1,7 +1,15 @@
-import { PenLineIcon, RotateCcwIcon, TrashIcon, UsersIcon } from "lucide-react";
+import {
+  BriefcaseBusinessIcon,
+  CheckIcon,
+  PenLineIcon,
+  RotateCcwIcon,
+  TrashIcon,
+  UsersIcon,
+} from "lucide-react";
 import { ActionButton } from "../page/GridView";
 import { BUTTON_TEXT } from "../../services/constant";
 import { useGlobalContext } from "../config/GlobalProvider";
+import { PAGE_CONFIG } from "../config/PageConfig";
 
 const SubmitButton = ({ text, onClick, color = "royalblue" }: any) => {
   return (
@@ -50,6 +58,30 @@ const ActionPermissionButton = ({
       role={role}
       title={text}
       color="goldenrod"
+    />
+  );
+};
+
+const ActionDoneButton = ({ onClick, role }: any) => {
+  return (
+    <ActionButton
+      onClick={onClick}
+      Icon={CheckIcon}
+      role={role}
+      title={BUTTON_TEXT.DONE}
+      color="mediumseagreen"
+    />
+  );
+};
+
+const ActionTasksButton = ({ onClick, role }: any) => {
+  return (
+    <ActionButton
+      onClick={onClick}
+      Icon={BriefcaseBusinessIcon}
+      role={role}
+      title={PAGE_CONFIG.TASK.label}
+      color="mediumseagreen"
     />
   );
 };
@@ -116,4 +148,6 @@ export {
   ActionResetMfaButton,
   ActionPermissionButton,
   OptionButton,
+  ActionTasksButton,
+  ActionDoneButton,
 };

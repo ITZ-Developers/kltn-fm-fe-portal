@@ -16,11 +16,13 @@ import {
   ORGANIZATION_CONFIG,
   ORGANIZATION_PERMISSION_CONFIG,
   PROFILE_CONFIG,
+  PROJECT_CONFIG,
   PROJECT_TAG_CONFIG,
   ROLE_CONFIG,
   SERVICE_GROUP_CONFIG,
   SERVICE_GROUP_PERMISSION_CONFIG,
   SERVICE_TAG_CONFIG,
+  TASK_CONFIG,
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
   TRANSACTION_GROUP_PERMISSION_CONFIG,
@@ -49,6 +51,8 @@ const PAGE_CONFIG = {
   ...PROJECT_TAG_CONFIG,
   ...NOTIFICATION_GROUP_CONFIG,
   ...USER_NOTIFICATION_GROUP_CONFIG,
+  ...PROJECT_CONFIG,
+  ...TASK_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
@@ -63,6 +67,7 @@ const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.KEY_INFORMATION_TAG.name,
   PAGE_CONFIG.PROJECT_TAG.name,
   PAGE_CONFIG.NOTIFICATION_GROUP.name,
+  PAGE_CONFIG.PROJECT.name,
 ]);
 
 const DECRYPT_FIELDS = {
@@ -73,6 +78,8 @@ const DECRYPT_FIELDS = {
   CATEGORY: ["description", "name"],
   TAG: ["colorCode", "name"],
   NOTIFICATION_GROUP: ["name", "description"],
+  PROJECT: ["logo", "name", "note", "organization.name", "tag.colorCode"],
+  TASK: ["name", "note", "document"],
 };
 
 const SIDEBAR_MENUS = [
@@ -103,7 +110,11 @@ const SIDEBAR_MENUS = [
   {
     name: "Quản lý ghi chú",
     icon: <SquareCheckBigIcon size={20} />,
-    items: [PAGE_CONFIG.ORGANIZATION, PAGE_CONFIG.PROJECT_TAG],
+    items: [
+      PAGE_CONFIG.ORGANIZATION,
+      PAGE_CONFIG.PROJECT,
+      PAGE_CONFIG.PROJECT_TAG,
+    ],
   },
   {
     name: "Quản lý người dùng",

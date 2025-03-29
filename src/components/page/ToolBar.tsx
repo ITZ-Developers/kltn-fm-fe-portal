@@ -1,4 +1,10 @@
-import { EraserIcon, PlusIcon, RefreshCcwIcon, SearchIcon } from "lucide-react";
+import {
+  DownloadIcon,
+  EraserIcon,
+  PlusIcon,
+  RefreshCcwIcon,
+  SearchIcon,
+} from "lucide-react";
 import { useGlobalContext } from "../config/GlobalProvider";
 import { BUTTON_TEXT } from "../../services/constant";
 
@@ -14,6 +20,22 @@ const CreateButton = ({ role, onClick }: any) => {
     >
       <PlusIcon size={20} className="mr-1" />
       {BUTTON_TEXT.CREATE}
+    </button>
+  );
+};
+
+const ExportExcelButton = ({ role, onClick }: any) => {
+  const { hasRoles } = useGlobalContext();
+  if (role && !hasRoles(role)) {
+    return null;
+  }
+  return (
+    <button
+      onClick={onClick}
+      className="ml-2 whitespace-nowrap bg-green-700 hover:bg-green-800 text-white p-2 rounded-lg flex items-center transition-colors duration-200"
+    >
+      <DownloadIcon size={20} className="mr-1" />
+      {BUTTON_TEXT.EXPORT_EXCEL}
     </button>
   );
 };
@@ -60,4 +82,4 @@ const ToolBar = ({
   </div>
 );
 
-export { CreateButton, ToolBar };
+export { CreateButton, ToolBar, ExportExcelButton };
