@@ -42,6 +42,7 @@ const ServiceGroupPermission = () => {
   };
   const { handleNavigateBack } = useQueryState({
     path: PAGE_CONFIG.SERVICE_GROUP.path,
+    requireSessionKey: true,
   });
   const {
     isModalVisible: createFormVisible,

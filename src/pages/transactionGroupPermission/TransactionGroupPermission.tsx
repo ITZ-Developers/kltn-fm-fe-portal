@@ -42,6 +42,7 @@ const TransactionGroupPermission = () => {
   };
   const { handleNavigateBack } = useQueryState({
     path: PAGE_CONFIG.TRANSACTION_GROUP.path,
+    requireSessionKey: true,
   });
   const {
     isModalVisible: createFormVisible,

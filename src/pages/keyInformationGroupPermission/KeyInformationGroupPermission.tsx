@@ -42,6 +42,7 @@ const KeyInformationGroupPermission = () => {
   };
   const { handleNavigateBack } = useQueryState({
     path: PAGE_CONFIG.KEY_INFORMATION_GROUP.path,
+    requireSessionKey: true,
   });
   const {
     isModalVisible: createFormVisible,

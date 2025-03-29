@@ -41,6 +41,7 @@ const OrganizationPermission = () => {
   };
   const { handleNavigateBack } = useQueryState({
     path: PAGE_CONFIG.ORGANIZATION.path,
+    requireSessionKey: true,
   });
   const {
     isModalVisible: createFormVisible,

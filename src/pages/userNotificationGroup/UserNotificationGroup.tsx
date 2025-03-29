@@ -40,6 +40,7 @@ const UserNotificationGroup = () => {
   };
   const { handleNavigateBack } = useQueryState({
     path: PAGE_CONFIG.NOTIFICATION_GROUP.path,
+    requireSessionKey: true,
   });
   const {
     isModalVisible: createFormVisible,
