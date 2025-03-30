@@ -18,7 +18,7 @@ const ActionButton = ({
 
   return (
     <button
-      className={`p-1 hover:opacity-90`}
+      className={`px-1 py-2 hover:opacity-90`}
       onClick={onClick}
       title={title}
       style={{ color }}
