@@ -332,6 +332,14 @@ const Service = () => {
                   dataMap={TRANSACTION_KIND_MAP}
                   placeholder="Loại..."
                 />
+                <StaticSelectBox
+                  value={query.periodKind}
+                  onChange={(value: any) => {
+                    handleSubmitQuery({ ...query, periodKind: value });
+                  }}
+                  dataMap={PERIOD_KIND_MAP}
+                  placeholder="Chu kỳ..."
+                />
                 <SelectBoxLazy
                   value={query.serviceGroupId}
                   onChange={(value: any) => {
@@ -379,11 +387,13 @@ const Service = () => {
             }
             onClear={() => handleSubmitQuery(initQuery)}
             onRefresh={handleRefreshData}
-            actionButtons={
-              <CreateButton
-                role={PAGE_CONFIG.CREATE_SERVICE.role}
-                onClick={onCreateButtonClick}
-              />
+            actionButtons2={
+              <div className="flex justify-end">
+                <CreateButton
+                  role={PAGE_CONFIG.CREATE_SERVICE.role}
+                  onClick={onCreateButtonClick}
+                />
+              </div>
             }
           />
           <GridView

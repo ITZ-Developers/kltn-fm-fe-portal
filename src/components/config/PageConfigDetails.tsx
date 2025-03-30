@@ -66,6 +66,26 @@ const TRANSACTION_CONFIG = {
     label: "Xóa giao dịch",
     role: "TR_D",
   },
+  REMOVE_TRANSACTION_FROM_PERIOD: {
+    label: "Gỡ giao dịch khỏi kỳ thanh toán",
+    role: "TR_R_F_P",
+  },
+  APPROVE_TRANSACTION: {
+    label: "Chấp nhận giao dịch",
+    role: "TR_A",
+  },
+  REJECT_TRANSACTION: {
+    label: "Từ chối giao dịch",
+    role: "TR_R",
+  },
+  IMPORT_EXCEL_TRANSACTION: {
+    label: "Tải lên tệp Excel giao dịch",
+    role: "TR_I_E",
+  },
+  EXPORT_EXCEL_TRANSACTION: {
+    label: "Xuất tệp Excel giao dịch",
+    role: "TR_E_E",
+  },
 };
 
 const TRANSACTION_GROUP_CONFIG = {

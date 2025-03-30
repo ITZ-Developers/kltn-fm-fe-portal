@@ -111,6 +111,16 @@ const DECRYPT_FIELDS = {
     "tag.colorCode",
   ],
   SERVICE_NOTIFICATION_GROUP: ["notificationGroup.name"],
+  TRANSACTION: [
+    "money",
+    "name",
+    "document",
+    "note",
+    "transactionGroup.name",
+    "category.name",
+    "tag.name",
+    "tag.colorCode",
+  ],
 };
 
 const SIDEBAR_MENUS = [

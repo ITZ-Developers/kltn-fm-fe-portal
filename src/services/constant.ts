@@ -176,6 +176,29 @@ const TASK_STATE_MAP = {
   },
 };
 
+const TRANSACTION_STATE_MAP = {
+  CREATED: {
+    value: 1,
+    label: "Đã tạo",
+    className: "bg-yellow-900 text-yellow-300",
+  },
+  APPROVE: {
+    value: 2,
+    label: "Chấp nhận",
+    className: "bg-blue-900 text-blue-300",
+  },
+  REJECT: {
+    value: 3,
+    label: "Từ chối",
+    className: "bg-red-900 text-red-300",
+  },
+  PAID: {
+    value: 4,
+    label: "Thanh toán",
+    className: "bg-green-900 text-green-300",
+  },
+};
+
 const PERIOD_KIND_MAP = {
   FIXED_DATE: {
     value: 1,
@@ -330,4 +353,5 @@ export {
   KEY_KIND_MAP,
   PERIOD_KIND_MAP,
   NOTIFICATION_STATE,
+  TRANSACTION_STATE_MAP,
 };
