@@ -21,6 +21,9 @@ import { userNotificationGroupController } from "../controllers/userNotification
 import { taskController } from "../controllers/taskController.ts";
 import { taskPermissionController } from "../controllers/taskPermissionController.ts";
 import { keyInformationController } from "../controllers/keyInformationController.ts";
+import { serviceController } from "../controllers/serviceController.ts";
+import { serviceScheduleController } from "../controllers/serviceScheduleController.ts";
+import { serviceNotificationGroupController } from "../controllers/serviceNotificationGroupController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -47,6 +50,9 @@ const useApi = () => {
   const task = taskController(fetchApi);
   const taskPermission = taskPermissionController(fetchApi);
   const keyInformation = keyInformationController(fetchApi);
+  const service = serviceController(fetchApi);
+  const serviceSchedule = serviceScheduleController(fetchApi);
+  const serviceNotificationGroup = serviceNotificationGroupController(fetchApi);
 
   return {
     auth,
@@ -73,6 +79,9 @@ const useApi = () => {
     task,
     taskPermission,
     keyInformation,
+    service,
+    serviceSchedule,
+    serviceNotificationGroup,
   };
 };
 

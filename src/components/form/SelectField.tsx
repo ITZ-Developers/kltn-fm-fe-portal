@@ -338,9 +338,9 @@ const SelectFieldLazy = ({
   const fetchData = async () => {
     try {
       const res = await fetchListApi({
-        ...queryParams,
         isPaged: IS_PAGED.FALSE,
         sortDate: SORT_DATE.DESC,
+        ...queryParams,
       });
       const data = res?.data?.content || [];
       setItems(

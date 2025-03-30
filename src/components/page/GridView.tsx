@@ -34,7 +34,7 @@ const GridViewLoading = ({ loading }: any) => {
   return (
     <div className="w-full min-h-[200px] flex items-center justify-center bg-gray-800 bg-opacity-70">
       <div className="relative">
-        <div className="w-12 h-12 border-4 border-t-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-t-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
         <div className="absolute inset-0 -m-2 bg-blue-500 rounded-full opacity-20 animate-ping"></div>
       </div>
     </div>
@@ -67,11 +67,11 @@ const GridView = ({
               <table className="w-full bg-gray-800 shadow-lg rounded-lg">
                 <thead className="bg-gray-700 text-gray-200">
                   <tr className="text-sm leading-normal">
-                    <th className="p-4 text-left rounded-tl-lg">#</th>
+                    <th className="py-3 px-2 text-left rounded-tl-lg">#</th>
                     {filteredColumns.map((col: any, index: number) => (
                       <th
                         key={col.accessor}
-                        className={`p-4 text-${
+                        className={`py-3 px-2 text-${
                           col.align
                         } whitespace-nowrap font-semibold ${
                           index === filteredColumns.length - 1
@@ -84,16 +84,16 @@ const GridView = ({
                     ))}
                   </tr>
                 </thead>
-                <tbody className="text-gray-300">
+                <tbody className="text-gray-300 text-sm">
                   {data.map((item: any, index: any) => (
                     <tr key={index} className="border-b border-gray-700">
-                      <td className="p-4 text-left">
+                      <td className="p-2 text-left">
                         {index + 1 + currentPage * itemsPerPage}
                       </td>
                       {filteredColumns.map((col: any) => (
                         <td
                           key={col.accessor}
-                          className={`p-4 text-${col.align} whitespace-nowrap`}
+                          className={`p-2 text-${col.align} whitespace-nowrap`}
                         >
                           {col.render
                             ? col.render(item)
@@ -107,7 +107,7 @@ const GridView = ({
             </div>
           </div>
           {totalPages > 1 && (
-            <div className="mt-4">
+            <div className="mt-2">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

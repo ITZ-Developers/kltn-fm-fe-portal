@@ -84,9 +84,9 @@ const useGridViewLocal = ({
       return;
     }
     const res = await fetchListApi({
-      ...queryParams,
-      isPaged: IS_PAGED.FALSE,
       sortDate: SORT_DATE.DESC,
+      isPaged: IS_PAGED.FALSE,
+      ...queryParams,
     });
     if (res.result) {
       const data = res.data;

@@ -53,9 +53,9 @@ const ImportExcelButton = ({ role, fetchApi, onFileUploaded }: any) => {
       />
       <button
         onClick={handleButtonClick}
-        className="ml-2 whitespace-nowrap bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-lg flex items-center transition-colors duration-200"
+        className="ml-2 whitespace-nowrap bg-blue-700 hover:bg-blue-800 text-white text-sm p-2 rounded-lg flex items-center transition-colors duration-200"
       >
-        <UploadIcon size={20} className="mr-1" />
+        <UploadIcon size={16} className="mr-1" />
         {BUTTON_TEXT.IMPORT_EXCEL}
       </button>
     </>

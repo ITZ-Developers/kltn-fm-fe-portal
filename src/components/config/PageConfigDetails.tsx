@@ -22,8 +22,12 @@ import ProjectTag from "../../pages/projectTag/ProjectTag";
 import CreateRole from "../../pages/role/CreateRole";
 import Role from "../../pages/role/Role";
 import UpdateRole from "../../pages/role/UpdateRole";
+import CreateService from "../../pages/service/CreateService";
+import Service from "../../pages/service/Service";
+import UpdateService from "../../pages/service/UpdateService";
 import ServiceGroup from "../../pages/serviceGroup/ServiceGroup";
 import ServiceGroupPermission from "../../pages/serviceGroupPermission/ServiceGroupPermission";
+import ServiceNotificationGroup from "../../pages/serviceNotificationGroup/ServiceNotificationGroup";
 import ServiceTag from "../../pages/serviceTag/ServiceTag";
 import CreateTask from "../../pages/task/CreateTask";
 import Task from "../../pages/task/Task";
@@ -569,6 +573,56 @@ const KEY_INFORMATION_CONFIG = {
     label: "Xuất tệp Excel key",
     role: "KE_I_E_E",
   },
+  DECRYPT_PASSWORD_KEY_INFORMATION: {
+    label: "Giải mã mật khẩu key",
+  },
+};
+
+const SERVICE_CONFIG = {
+  SERVICE: {
+    name: "service",
+    label: "Dịch vụ",
+    path: "/service",
+    role: "SE_L",
+    element: <Service />,
+  },
+  CREATE_SERVICE: {
+    label: "Thêm mới dịch vụ",
+    path: "/service/create",
+    role: "SE_C",
+    element: <CreateService />,
+  },
+  UPDATE_SERVICE: {
+    label: "Cập nhật dịch vụ",
+    path: "/service/update/:id",
+    role: "SE_U",
+    element: <UpdateService />,
+  },
+  DELETE_SERVICE: {
+    label: "Xóa dịch vụ",
+    role: "SE_D",
+  },
+  RESOLVE_SERVICE: {
+    label: "Thanh toán dịch vụ",
+    role: "SE_R",
+  },
+};
+
+const SERVICE_NOTIFICATION_GROUP_CONFIG = {
+  SERVICE_NOTIFICATION_GROUP: {
+    label: "Quản lý nhóm thông báo",
+    path: "/service/notification-group/:serviceId",
+    role: "SE_N_G_L",
+    element: <ServiceNotificationGroup />,
+  },
+  CREATE_SERVICE_NOTIFICATION_GROUP: {
+    label: "Gán nhóm vào dịch vụ",
+    role: "SE_N_G_C",
+  },
+  DELETE_SERVICE_NOTIFICATION_GROUP: {
+    label: "Xóa nhóm khỏi dịch vụ",
+    role: "SE_N_G_D",
+  },
 };
 
 export {
@@ -596,4 +650,6 @@ export {
   TASK_CONFIG,
   PROJECT_PERMISSION_CONFIG,
   KEY_INFORMATION_CONFIG,
+  SERVICE_CONFIG,
+  SERVICE_NOTIFICATION_GROUP_CONFIG,
 };

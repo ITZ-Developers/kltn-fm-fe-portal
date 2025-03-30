@@ -51,13 +51,13 @@ const StaticSelectBox = ({ placeholder, onChange, dataMap, value }: any) => {
   };
 
   return (
-    <div ref={wrapperRef} className="w-full md:w-[15rem] relative">
+    <div ref={wrapperRef} className="w-full md:w-[10rem] relative">
       <div
         className="w-full flex items-center p-2 rounded-md bg-gray-600 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         <div
-          className={`flex-1 text-base truncate ${
+          className={`flex-1 text-sm truncate ${
             selectedItem ? "text-gray-100" : "text-gray-300"
           }`}
         >
@@ -71,10 +71,10 @@ const StaticSelectBox = ({ placeholder, onChange, dataMap, value }: any) => {
             }}
             className="p-1 text-gray-300 hover:text-gray-100 rounded-full hover:bg-gray-700 transition-colors duration-200"
           >
-            <XIcon size={16} />
+            <XIcon size={14} />
           </button>
         ) : (
-          <ChevronDownIcon size={20} className="text-gray-100" />
+          <ChevronDownIcon size={16} className="text-gray-100" />
         )}
       </div>
 
@@ -88,14 +88,14 @@ const StaticSelectBox = ({ placeholder, onChange, dataMap, value }: any) => {
                 onClick={() => handleSelect(item)}
               >
                 <span
-                  className={`px-2 py-1 rounded-md font-semibold text-sm whitespace-nowrap ${item.className}`}
+                  className={`px-2 py-1 rounded-md font-semibold text-xs whitespace-nowrap ${item.className}`}
                 >
                   {item.label}
                 </span>
               </div>
             ))
           ) : (
-            <div className="p-2 text-gray-300">Không có dữ liệu</div>
+            <div className="p-2 text-gray-300 text-sm">Không có dữ liệu</div>
           )}
         </div>
       )}
@@ -174,14 +174,14 @@ const SelectBox = ({
   };
 
   return (
-    <div ref={wrapperRef} className="w-full md:w-[15rem] relative">
+    <div ref={wrapperRef} className="w-full md:w-[15rem] relative text-sm">
       <div
         className="w-full flex items-center p-2 rounded-md bg-gray-600 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? (
           <input
-            className="flex-1 text-base outline-none text-gray-100 placeholder:text-gray-300 bg-gray-600 cursor-pointer"
+            className="flex-1 text-sm outline-none text-gray-100 placeholder:text-gray-300 bg-gray-600 cursor-pointer"
             placeholder={placeholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -192,7 +192,7 @@ const SelectBox = ({
           />
         ) : (
           <div
-            className={`flex-1 text-base truncate ${
+            className={`flex-1 text-sm truncate ${
               selectedItem ? "text-gray-100" : "text-gray-300"
             }`}
           >
@@ -207,10 +207,10 @@ const SelectBox = ({
             }}
             className="p-1 text-gray-300 hover:text-gray-100 rounded-full hover:bg-gray-700 transition-colors duration-200"
           >
-            <XIcon size={16} />
+            <XIcon size={14} />
           </button>
         ) : (
-          <ChevronDownIcon size={20} className="text-gray-100" />
+          <ChevronDownIcon size={16} className="text-gray-100" />
         )}
       </div>
 
@@ -269,9 +269,9 @@ const SelectBoxLazy = ({
   const fetchData = async () => {
     try {
       const res = await fetchListApi({
-        ...queryParams,
         isPaged: IS_PAGED.FALSE,
         sortDate: SORT_DATE.DESC,
+        ...queryParams,
       });
       const data = res?.data?.content || [];
       setItems(
@@ -342,14 +342,14 @@ const SelectBoxLazy = ({
   };
 
   return (
-    <div ref={wrapperRef} className="w-full md:w-[15rem] relative">
+    <div ref={wrapperRef} className="w-full md:w-[15rem] relative text-sm">
       <div
         className="w-full flex items-center p-2 rounded-md bg-gray-600 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? (
           <input
-            className="flex-1 text-base outline-none text-gray-100 placeholder:text-gray-300 bg-gray-600 cursor-pointer"
+            className="flex-1 text-sm outline-none text-gray-100 placeholder:text-gray-300 bg-gray-600 cursor-pointer"
             placeholder={placeholder}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -360,7 +360,7 @@ const SelectBoxLazy = ({
           />
         ) : (
           <div
-            className={`flex-1 text-base truncate flex items-center ${
+            className={`flex-1 text-sm truncate flex items-center ${
               selectedItem ? "text-gray-100" : "text-gray-300"
             }`}
           >
@@ -383,7 +383,7 @@ const SelectBoxLazy = ({
               }}
               className="p-1 text-gray-300 hover:text-gray-100 rounded-full hover:bg-gray-700 transition-colors duration-200"
             >
-              <XIcon size={16} />
+              <XIcon size={14} />
             </button>
           )}
           <button
@@ -391,9 +391,9 @@ const SelectBoxLazy = ({
             title={BUTTON_TEXT.REFRESH}
             className="p-1 text-gray-300 hover:text-gray-100 rounded-full hover:bg-gray-700 transition-colors duration-200"
           >
-            <RefreshCwIcon size={16} />
+            <RefreshCwIcon size={14} />
           </button>
-          <ChevronDownIcon size={20} className="text-gray-100" />
+          <ChevronDownIcon size={16} className="text-gray-100" />
         </div>
       </div>
 

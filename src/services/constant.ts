@@ -1,4 +1,9 @@
-import { DatabaseIcon, GlobeIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  DatabaseIcon,
+  GlobeIcon,
+} from "lucide-react";
 
 const MIME_TYPES = {
   // Images
@@ -40,6 +45,7 @@ const VALID_PATTERN = {
   HOST: /^(localhost|(([a-z0-9\-]+\.)*[a-z]{2,})|(\d{1,3}\.){3}\d{1,3}|\[([0-9a-f:]+)\])$/,
   PORT: /^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/,
   COLOR_CODE: /^#[0-9A-F]{6}$/i,
+  MONEY: /^-?\d+(\.\d+)?$/,
 };
 
 const API_URL = {
@@ -145,11 +151,15 @@ const TRANSACTION_KIND_MAP = {
     value: 1,
     label: "Thu",
     className: "bg-green-900 text-green-300",
+    textColor: "text-green-600",
+    icon: ArrowUpIcon,
   },
   EXPENSE: {
     value: 2,
     label: "Chi",
     className: "bg-red-900 text-red-300",
+    textColor: "text-red-600",
+    icon: ArrowDownIcon,
   },
 };
 
@@ -162,6 +172,24 @@ const TASK_STATE_MAP = {
   DONE: {
     value: 2,
     label: "Hoàn thành",
+    className: "bg-green-900 text-green-300",
+  },
+};
+
+const PERIOD_KIND_MAP = {
+  FIXED_DATE: {
+    value: 1,
+    label: "Ngày cố định",
+    className: "bg-indigo-900 text-indigo-300",
+  },
+  MONTHLY: {
+    value: 2,
+    label: "Theo tháng",
+    className: "bg-yellow-900 text-yellow-300",
+  },
+  YEARLY: {
+    value: 3,
+    label: "Theo năm",
     className: "bg-green-900 text-green-300",
   },
 };
@@ -183,7 +211,7 @@ const KEY_KIND_MAP = {
   },
 };
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 20;
 const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
 const PING_INTERVAL = 5000; // 5s
@@ -259,6 +287,8 @@ const BUTTON_TEXT = {
   DONE: "Hoàn thành",
   EXPORT_EXCEL: "Xuất Excel",
   IMPORT_EXCEL: "Nhập Excel",
+  DECRYPT: "Giải mã",
+  RESOLVE: "Giải quyết",
 };
 
 export {
@@ -293,4 +323,5 @@ export {
   IS_PAGED,
   MIME_TYPES,
   KEY_KIND_MAP,
+  PERIOD_KIND_MAP,
 };

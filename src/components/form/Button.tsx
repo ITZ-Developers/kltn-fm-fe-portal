@@ -86,6 +86,24 @@ const ActionTasksButton = ({ onClick, role }: any) => {
   );
 };
 
+const BasicActionButton = ({
+  onClick,
+  role,
+  Icon,
+  buttonText,
+  color = "royalblue",
+}: any) => {
+  return (
+    <ActionButton
+      onClick={onClick}
+      Icon={Icon}
+      role={role}
+      title={buttonText}
+      color={color}
+    />
+  );
+};
+
 const ActionEditButton = ({ onClick, role }: any) => {
   return (
     <ActionButton
@@ -150,4 +168,5 @@ export {
   OptionButton,
   ActionTasksButton,
   ActionDoneButton,
+  BasicActionButton,
 };

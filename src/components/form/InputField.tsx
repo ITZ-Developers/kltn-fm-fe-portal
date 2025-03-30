@@ -40,7 +40,7 @@ const InputField = ({
               : disabled
               ? "text-gray-400 placeholder-gray-500/50 cursor-not-allowed opacity-70"
               : "text-gray-200 placeholder-gray-500"
-          }`}
+          } ${type === "number" ? "no-arrows" : ""}`}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChangeText(e.target.value)}
@@ -72,7 +72,7 @@ const TextAreaField = ({
   placeholder = "",
   onChangeText,
   error = "",
-  maxLength = 500,
+  maxLength = 1000,
 }: any) => {
   return (
     <div className="flex-1 items-center">

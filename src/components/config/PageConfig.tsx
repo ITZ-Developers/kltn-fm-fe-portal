@@ -21,8 +21,10 @@ import {
   PROJECT_PERMISSION_CONFIG,
   PROJECT_TAG_CONFIG,
   ROLE_CONFIG,
+  SERVICE_CONFIG,
   SERVICE_GROUP_CONFIG,
   SERVICE_GROUP_PERMISSION_CONFIG,
+  SERVICE_NOTIFICATION_GROUP_CONFIG,
   SERVICE_TAG_CONFIG,
   TASK_CONFIG,
   TRANSACTION_CONFIG,
@@ -57,6 +59,8 @@ const PAGE_CONFIG = {
   ...TASK_CONFIG,
   ...PROJECT_PERMISSION_CONFIG,
   ...KEY_INFORMATION_CONFIG,
+  ...SERVICE_CONFIG,
+  ...SERVICE_NOTIFICATION_GROUP_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
@@ -73,6 +77,7 @@ const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.NOTIFICATION_GROUP.name,
   PAGE_CONFIG.PROJECT.name,
   PAGE_CONFIG.KEY_INFORMATION.name,
+  PAGE_CONFIG.SERVICE.name,
 ]);
 
 const DECRYPT_FIELDS = {
@@ -95,6 +100,15 @@ const DECRYPT_FIELDS = {
     "tag.colorCode",
     "description",
   ],
+  SERVICE: [
+    "description",
+    "money",
+    "name",
+    "serviceGroup.name",
+    "tag.name",
+    "tag.colorCode",
+  ],
+  SERVICE_NOTIFICATION_GROUP: ["notificationGroup.name"],
 };
 
 const SIDEBAR_MENUS = [
@@ -112,6 +126,7 @@ const SIDEBAR_MENUS = [
     name: "Quản lý dịch vụ",
     icon: <HeadsetIcon size={20} />,
     items: [
+      PAGE_CONFIG.SERVICE,
       PAGE_CONFIG.SERVICE_GROUP,
       PAGE_CONFIG.NOTIFICATION_GROUP,
       PAGE_CONFIG.SERVICE_TAG,

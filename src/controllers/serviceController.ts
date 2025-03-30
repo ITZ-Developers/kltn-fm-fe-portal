@@ -6,13 +6,13 @@ import {
   METHOD,
 } from "../services/constant.ts";
 
-export const keyInformationController = (fetchApi: any) => {
+export const serviceController = (fetchApi: any) => {
   const { tenantInfo } = useGlobalContext();
 
   const list = (payload: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: "/v1/key-information/list",
+      endpoint: "/v1/service/list",
       method: METHOD.GET,
       payload,
       authType: AUTH_TYPE.BEARER,
@@ -24,7 +24,7 @@ export const keyInformationController = (fetchApi: any) => {
   const autoComplete = (payload: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: "/v1/key-information/auto-complete",
+      endpoint: "/v1/service/auto-complete",
       method: METHOD.GET,
       payload,
       authType: AUTH_TYPE.BEARER,
@@ -36,7 +36,7 @@ export const keyInformationController = (fetchApi: any) => {
   const get = (id: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/key-information/get/${id}`,
+      endpoint: `/v1/service/get/${id}`,
       method: METHOD.GET,
       authType: AUTH_TYPE.BEARER,
       headers: {
@@ -47,7 +47,7 @@ export const keyInformationController = (fetchApi: any) => {
   const create = (payload: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/key-information/create`,
+      endpoint: `/v1/service/create`,
       method: METHOD.POST,
       payload,
       authType: AUTH_TYPE.BEARER,
@@ -59,7 +59,7 @@ export const keyInformationController = (fetchApi: any) => {
   const update = (payload: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/key-information/update`,
+      endpoint: `/v1/service/update`,
       method: METHOD.PUT,
       payload,
       authType: AUTH_TYPE.BEARER,
@@ -71,7 +71,7 @@ export const keyInformationController = (fetchApi: any) => {
   const del = (id: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/key-information/delete/${id}`,
+      endpoint: `/v1/service/delete/${id}`,
       method: METHOD.DELETE,
       authType: AUTH_TYPE.BEARER,
       headers: {
@@ -79,40 +79,12 @@ export const keyInformationController = (fetchApi: any) => {
       },
     });
 
-  const exportToExcel = (keyInformationIds: any, kind: any) =>
+  const resolve = (payload: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/key-information/export-to-excel`,
-      method: METHOD.POST,
-      payload: { keyInformationIds, kind },
-      authType: AUTH_TYPE.BEARER,
-      headers: {
-        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
-      },
-    });
-
-  const importExcel = (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file, file.name);
-
-    return fetchApi({
-      apiUrl: API_URL.TENANT_API,
-      endpoint: "/v1/key-information/import-excel",
-      method: METHOD.POST,
-      payload: formData,
-      authType: AUTH_TYPE.BEARER,
-      headers: {
-        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
-      },
-    });
-  };
-
-  const decrypt = (value: any) =>
-    fetchApi({
-      apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/key-information/decrypt`,
-      method: METHOD.POST,
-      payload: { value },
+      endpoint: `/v1/service/resolve`,
+      method: METHOD.PUT,
+      payload,
       authType: AUTH_TYPE.BEARER,
       headers: {
         [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
@@ -126,8 +98,6 @@ export const keyInformationController = (fetchApi: any) => {
     create,
     update,
     del,
-    exportToExcel,
-    importExcel,
-    decrypt,
+    resolve,
   };
 };

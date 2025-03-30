@@ -16,7 +16,7 @@ import { parse } from "date-fns";
 
 const basicRender = ({ content, align = ALIGNMENT.LEFT }: any) => {
   return (
-    <span className={`text-gray-300 text-${align} whitespace-nowrap`}>
+    <span className={`text-gray-300 text-sm text-${align} whitespace-nowrap`}>
       {content}
     </span>
   );
@@ -42,7 +42,7 @@ const renderImage = ({
             className="object-cover"
           />
         ) : (
-          <Icon size={20} className={`text-white`} />
+          <Icon size={20} className={`text-white text-sm`} />
         )}
       </div>
     ),
@@ -64,7 +64,7 @@ const renderEnum = ({
       return (
         <div className={`text-${align}`}>
           <span
-            className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap text-sm ${value.className}`}
+            className={`px-2 py-1 rounded-md font-semibold whitespace-nowrap text-xs ${value.className}`}
           >
             {value.label}
           </span>
@@ -96,7 +96,7 @@ const renderHrefLink = ({
       }
       return (
         <a
-          className={`text-blue-600 hover:underline text-${align} whitespace-nowrap hover:cursor-pointer`}
+          className={`text-blue-600 hover:underline text-sm text-${align} whitespace-nowrap hover:cursor-pointer`}
           onClick={() => onClick(item)}
         >
           {getNestedValue(item, accessor)}
@@ -125,7 +125,7 @@ const renderActionButton = ({
     align,
     render: (item: any) => {
       return (
-        <span className="flex items-center text-center justify-center space-x-2">
+        <span className="flex items-center text-sm text-center justify-center space-x-1">
           {renderChildren?.(item)}
         </span>
       );
@@ -167,7 +167,7 @@ const renderLastLogin = ({
       return (
         <div className={`flex items-center justify-${align} space-x-2 py-2`}>
           <span
-            className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${
+            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
               isRecent
                 ? "bg-green-900/20 text-green-300"
                 : isWarning
@@ -257,7 +257,7 @@ const renderTagField = ({
               style={{ backgroundColor: colorCode }}
             />
           )}
-          <span className="text-gray-300">{value}</span>
+          <span className="text-gray-300 text-sm">{value}</span>
         </div>
       );
     },
@@ -295,8 +295,44 @@ const renderIconField = ({
               <IconComponent size={20} />
             </span>
           )}
-          <span className="text-gray-300">{displayValue}</span>
+          <span className="text-gray-300 text-sm">{displayValue}</span>
         </div>
+      );
+    },
+  };
+};
+const renderMoneyField = ({
+  label = "Số tiền",
+  accessor = "amount",
+  align = ALIGNMENT.RIGHT,
+  currencySymbol = "đ",
+}: any) => {
+  const formatMoney = (val: string | number) => {
+    if (!val && val !== 0) return `0 ${currencySymbol}`;
+
+    const num = Math.round(parseFloat(val.toString().replace(/[^0-9.-]/g, "")));
+    if (isNaN(num)) return `0 ${currencySymbol}`;
+
+    const formattedInteger = num
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `${formattedInteger} ${currencySymbol}`;
+  };
+
+  return {
+    label,
+    accessor,
+    align,
+    render: (item: any) => {
+      const value = getNestedValue(item, accessor);
+      const formattedValue = formatMoney(value);
+
+      return (
+        <span
+          className={`text-gray-300 text-sm text-${align} whitespace-nowrap`}
+        >
+          {formattedValue}
+        </span>
       );
     },
   };
@@ -312,4 +348,5 @@ export {
   renderColorCode,
   renderTagField,
   renderIconField,
+  renderMoneyField,
 };

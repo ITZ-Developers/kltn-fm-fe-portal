@@ -221,7 +221,7 @@ const Sidebar = ({ activeItem, breadcrumbs, renderContent }: any) => {
                     onClick={() => toggleGroupCollapse(group.name)}
                   >
                     <div className="flex items-center font-medium">
-                      <span className="inline-flex items-center w-5 h-5 mr-2 justify-center text-white">
+                      <span className="inline-flex items-center w-4 h-4 mr-2 justify-center text-white">
                         {group.icon}
                       </span>
                       <span>{group.name}</span>

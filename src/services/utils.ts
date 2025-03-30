@@ -1,6 +1,7 @@
+import moment from "moment";
 import * as CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
-import { API_URL } from "./constant";
+import { API_URL, PERIOD_KIND_MAP } from "./constant";
 import forge from "node-forge";
 
 const extractPrivateKey = (keyString: string): string => {
@@ -353,6 +354,75 @@ const extractHostAndPort = (jdbcUrl: string) => {
   return match ? { host: match[1], port: parseInt(match[2], 10) } : null;
 };
 
+const getNextValidExpirationDate = (
+  startDate: any,
+  expirationDate: any,
+  periodKind: any
+) => {
+  let start = moment(startDate, "DD/MM/YYYY HH:mm:ss");
+  let exp = moment(expirationDate, "DD/MM/YYYY HH:mm:ss");
+
+  if (periodKind == PERIOD_KIND_MAP.MONTHLY.value) {
+    exp.add(1, "months");
+  } else if (periodKind == PERIOD_KIND_MAP.YEARLY.value) {
+    exp.add(1, "years");
+  }
+
+  if (start.date() > 28) {
+    let startDay = start.date();
+    exp.date(Math.min(exp.daysInMonth(), startDay));
+  }
+
+  return exp.format("DD/MM/YYYY HH:mm:ss");
+};
+
+const getPreviousExpirationDate = (
+  startDate: any,
+  expirationDate: any,
+  periodKind: any
+) => {
+  let start = moment(startDate, "DD/MM/YYYY HH:mm:ss");
+  let exp = moment(expirationDate, "DD/MM/YYYY HH:mm:ss");
+
+  if (periodKind == PERIOD_KIND_MAP.MONTHLY.value) {
+    exp.subtract(1, "months");
+  } else if (periodKind == PERIOD_KIND_MAP.YEARLY.value) {
+    exp.subtract(1, "years");
+  }
+
+  if (start.date() > 28) {
+    let startDay = start.date();
+    exp.date(Math.min(exp.daysInMonth(), startDay));
+  }
+
+  return exp.format("DD/MM/YYYY HH:mm:ss");
+};
+
+const calculateExpirationDate = (startDate: any, periodKind: any) => {
+  let start = moment(startDate, "DD/MM/YYYY HH:mm:ss");
+  let expDate = moment(start);
+
+  if (periodKind == PERIOD_KIND_MAP.MONTHLY.value) {
+    expDate.add(1, "months");
+  } else if (periodKind == PERIOD_KIND_MAP.YEARLY.value) {
+    expDate.add(1, "years");
+  }
+
+  let currentDate = moment();
+  while (expDate.isBefore(currentDate)) {
+    expDate = moment(
+      getNextValidExpirationDate(
+        startDate,
+        expDate.format("DD/MM/YYYY HH:mm:ss"),
+        periodKind
+      ),
+      "DD/MM/YYYY HH:mm:ss"
+    );
+  }
+
+  return expDate.format("DD/MM/YYYY HH:mm:ss");
+};
+
 export {
   encrypt,
   decrypt,
@@ -376,4 +446,7 @@ export {
   decryptWithRSA,
   decryptAES,
   decryptData,
+  calculateExpirationDate,
+  getNextValidExpirationDate,
+  getPreviousExpirationDate,
 };

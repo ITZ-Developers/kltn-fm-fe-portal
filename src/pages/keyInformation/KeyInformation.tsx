@@ -24,6 +24,7 @@ import {
 import Sidebar from "../../components/page/Sidebar";
 import {
   CreateButton,
+  DecryptPasswordButton,
   ExportExcelButton,
   ToolBar,
 } from "../../components/page/ToolBar";
@@ -43,6 +44,7 @@ import {
   StaticSelectBox,
 } from "../../components/page/SelectBox";
 import ImportExcelButton from "../../components/form/ImportExcelButton";
+import DecryptPassword from "./DecryptPassword";
 
 const initQuery = {
   name: "",
@@ -102,6 +104,12 @@ const KeyInformation = () => {
     secretKey: sessionKey,
     fetchListApi: apiList.list,
   });
+  const {
+    isModalVisible: decryptFormVisible,
+    showModal: showDecryptForm,
+    hideModal: hideDecryptForm,
+    formConfig: decryptFormConfig,
+  } = useModal();
 
   const columns = [
     renderIconField({
@@ -178,6 +186,16 @@ const KeyInformation = () => {
     }
   };
 
+  const onDecryptPasswordButtonClick = async () => {
+    showDecryptForm({
+      title: PAGE_CONFIG.DECRYPT_PASSWORD_KEY_INFORMATION.label,
+      hideModal: hideDecryptForm,
+      initForm: {
+        value: "",
+      },
+    });
+  };
+
   return (
     <Sidebar
       breadcrumbs={[
@@ -189,6 +207,10 @@ const KeyInformation = () => {
       renderContent={
         <>
           <LoadingDialog isVisible={loading} />
+          <DecryptPassword
+            isVisible={decryptFormVisible}
+            formConfig={decryptFormConfig}
+          />
           <ToolBar
             searchBoxes={
               <>
@@ -244,20 +266,27 @@ const KeyInformation = () => {
             onClear={() => handleSubmitQuery(initQuery)}
             onRefresh={handleRefreshData}
             actionButtons2={
-              <div className="flex justify-end space-x-2">
-                <ImportExcelButton
-                  role={PAGE_CONFIG.IMPORT_EXCEL_KEY_INFORMATION.role}
-                  fetchApi={keyInformation.importExcel}
-                  onFileUploaded={handleRefreshData}
-                />
-                <ExportExcelButton
-                  role={PAGE_CONFIG.EXPORT_EXCEL_KEY_INFORMATION.role}
-                  onClick={onExportExcelButtonClick}
-                />
-                <CreateButton
-                  role={PAGE_CONFIG.CREATE_KEY_INFORMATION.role}
-                  onClick={onCreateButtonClick}
-                />
+              <div className="flex justify-between">
+                <span className="flex space-x-2">
+                  <DecryptPasswordButton
+                    onClick={onDecryptPasswordButtonClick}
+                  />
+                  <ImportExcelButton
+                    role={PAGE_CONFIG.IMPORT_EXCEL_KEY_INFORMATION.role}
+                    fetchApi={keyInformation.importExcel}
+                    onFileUploaded={handleRefreshData}
+                  />
+                </span>
+                <span className="flex space-x-2">
+                  <ExportExcelButton
+                    role={PAGE_CONFIG.EXPORT_EXCEL_KEY_INFORMATION.role}
+                    onClick={onExportExcelButtonClick}
+                  />
+                  <CreateButton
+                    role={PAGE_CONFIG.CREATE_KEY_INFORMATION.role}
+                    onClick={onCreateButtonClick}
+                  />
+                </span>
               </div>
             }
           />
