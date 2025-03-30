@@ -95,12 +95,6 @@ const ServiceSchedule = () => {
         return (
           <span
             className={`text-gray-300 text-sm text-${ALIGNMENT.LEFT} whitespace-nowrap`}
-            style={{
-              color: "#d1d5db",
-              background: "transparent",
-              padding: "2px 6px",
-              borderRadius: "4px",
-            }}
           >
             Thông báo dịch vụ tới hạn trước{" "}
             <span
