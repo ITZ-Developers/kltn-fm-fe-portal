@@ -236,6 +236,11 @@ const SORT_DATE = {
   DESC: 2,
 };
 
+const NOTIFICATION_STATE = {
+  SENT: 0,
+  READ: 1,
+};
+
 const TAG_KIND = {
   TRANSACTION: 1,
   SERVICE: 2,
@@ -324,4 +329,5 @@ export {
   MIME_TYPES,
   KEY_KIND_MAP,
   PERIOD_KIND_MAP,
+  NOTIFICATION_STATE,
 };

@@ -24,6 +24,7 @@ import { keyInformationController } from "../controllers/keyInformationControlle
 import { serviceController } from "../controllers/serviceController.ts";
 import { serviceScheduleController } from "../controllers/serviceScheduleController.ts";
 import { serviceNotificationGroupController } from "../controllers/serviceNotificationGroupController.ts";
+import { notificationController } from "../controllers/notificationController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -53,6 +54,7 @@ const useApi = () => {
   const service = serviceController(fetchApi);
   const serviceSchedule = serviceScheduleController(fetchApi);
   const serviceNotificationGroup = serviceNotificationGroupController(fetchApi);
+  const notification = notificationController(fetchApi);
 
   return {
     auth,
@@ -82,6 +84,7 @@ const useApi = () => {
     service,
     serviceSchedule,
     serviceNotificationGroup,
+    notification,
   };
 };
 
