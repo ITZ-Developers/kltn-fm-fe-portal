@@ -15,12 +15,13 @@ const useGridViewLocal = ({
   decryptFields,
   secretKey,
   queryParams,
+  pageAccesor = "page",
 }: any) => {
   const { sessionKey, setToast } = useGlobalContext();
   const [allData, setAllData] = useState<any[]>([]);
   const [filteredData, setFilteredData] = useState<any[]>([]);
   const [query, setQuery] = useState({
-    page: 0,
+    [`${pageAccesor}`]: 0,
     size: ITEMS_PER_PAGE,
     ...initQuery,
   });
@@ -34,16 +35,19 @@ const useGridViewLocal = ({
   useEffect(() => {
     const filtered = filterData(allData, query);
     const newTotalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-    const startIndex = query.page * ITEMS_PER_PAGE;
+    const startIndex = query[pageAccesor] * ITEMS_PER_PAGE;
     const paginatedData = filtered.slice(
       startIndex,
       startIndex + ITEMS_PER_PAGE
     );
 
-    if (query.page >= newTotalPages && newTotalPages > 0) {
-      setQuery((prev: any) => ({ ...prev, page: newTotalPages - 1 }));
-    } else if (query.page < 0) {
-      setQuery((prev: any) => ({ ...prev, page: 0 }));
+    if (query[pageAccesor] >= newTotalPages && newTotalPages > 0) {
+      setQuery((prev: any) => ({
+        ...prev,
+        [`${pageAccesor}`]: newTotalPages - 1,
+      }));
+    } else if (query[pageAccesor] < 0) {
+      setQuery((prev: any) => ({ ...prev, [`${pageAccesor}`]: 0 }));
     }
 
     setFilteredData(filtered);
@@ -52,14 +56,14 @@ const useGridViewLocal = ({
 
   const [data, setData] = useState(() => {
     const filtered = filterData(allData, query);
-    const startIndex = query.page * ITEMS_PER_PAGE;
+    const startIndex = query[pageAccesor] * ITEMS_PER_PAGE;
     return filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   });
 
   const handlePageChange = (page: number) => {
     setQuery((prev: any) => ({
       ...prev,
-      page: Math.max(0, Math.min(page, totalPages - 1)),
+      [`${pageAccesor}`]: Math.max(0, Math.min(page, totalPages - 1)),
     }));
   };
 
@@ -67,7 +71,7 @@ const useGridViewLocal = ({
     setQuery((prev: any) => ({
       ...prev,
       ...newQuery,
-      page: 0,
+      [`${pageAccesor}`]: 0,
     }));
   };
 

@@ -53,6 +53,7 @@ const initQuery = { taskName: "", state: "" };
 const Task = () => {
   const { handleNavigateBack } = useQueryState({
     path: PAGE_CONFIG.PROJECT.path,
+    requireSessionKey: true,
   });
   const { projectId } = useParams();
   const { state } = useLocation();
@@ -92,6 +93,7 @@ const Task = () => {
     secretKey: sessionKey,
     fetchListApi: apiList.list,
     queryParams: { projectId },
+    pageAccesor: "taskPage",
   });
 
   useEffect(() => {
@@ -280,7 +282,7 @@ const Task = () => {
             isLoading={loadingList}
             data={data}
             columns={columns}
-            currentPage={query.page}
+            currentPage={query["taskPage"]}
             itemsPerPage={ITEMS_PER_PAGE}
             onPageChange={handlePageChange}
             totalPages={totalPages}

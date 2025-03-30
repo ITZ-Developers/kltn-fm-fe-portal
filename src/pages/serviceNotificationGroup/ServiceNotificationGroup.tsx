@@ -34,7 +34,6 @@ const initQuery = {
 };
 
 const ServiceNotificationGroup = () => {
-  const { state } = useLocation();
   const { setToast, sessionKey } = useGlobalContext();
   const { serviceId } = useParams();
   const customFilterData = useCallback((allData: any[], query: any) => {
@@ -75,7 +74,7 @@ const ServiceNotificationGroup = () => {
     handleDeleteItem,
     handleRefreshData,
   } = useGridViewLocal({
-    initQuery: state?.query || initQuery,
+    initQuery,
     filterData: customFilterData,
     decryptFields: DECRYPT_FIELDS.SERVICE_NOTIFICATION_GROUP,
     secretKey: sessionKey,
