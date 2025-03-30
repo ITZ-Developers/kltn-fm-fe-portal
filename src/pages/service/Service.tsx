@@ -45,7 +45,7 @@ import {
 import { parseDate, truncateToDDMMYYYY } from "../../services/utils";
 import DatePickerBox from "../../components/page/DatePickerBox";
 import ResolveService from "./ResolveService";
-import { MegaphoneIcon, WalletIcon } from "lucide-react";
+import { CalendarIcon, MegaphoneIcon, WalletIcon } from "lucide-react";
 
 const renderExpirationDateField = (item: any) => {
   const expiredDate = parseDate(item.expirationDate);
@@ -218,6 +218,7 @@ const Service = () => {
         PAGE_CONFIG.UPDATE_SERVICE.role,
         PAGE_CONFIG.RESOLVE_SERVICE.role,
         PAGE_CONFIG.SERVICE_NOTIFICATION_GROUP.role,
+        PAGE_CONFIG.SERVICE_SCHEDULE.role,
       ],
       renderChildren: (item: any) => (
         <>
@@ -229,6 +230,12 @@ const Service = () => {
               onClick={() => onResolveButtonClick(item)}
             />
           )}
+          <BasicActionButton
+            role={PAGE_CONFIG.SERVICE_SCHEDULE.role}
+            Icon={CalendarIcon}
+            buttonText={PAGE_CONFIG.SERVICE_SCHEDULE.label}
+            onClick={() => onServiceScheduleClick(item.id)}
+          />
           <BasicActionButton
             role={PAGE_CONFIG.SERVICE_NOTIFICATION_GROUP.role}
             Icon={MegaphoneIcon}
@@ -286,6 +293,10 @@ const Service = () => {
 
   const onServiceNotificationGroupClick = (id: any) => {
     navigate(`/service/notification-group/${id}`, { state: { query } });
+  };
+
+  const onServiceScheduleClick = (id: any) => {
+    navigate(`/service/schedule/${id}`, { state: { query } });
   };
 
   return (

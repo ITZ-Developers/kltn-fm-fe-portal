@@ -28,6 +28,7 @@ import UpdateService from "../../pages/service/UpdateService";
 import ServiceGroup from "../../pages/serviceGroup/ServiceGroup";
 import ServiceGroupPermission from "../../pages/serviceGroupPermission/ServiceGroupPermission";
 import ServiceNotificationGroup from "../../pages/serviceNotificationGroup/ServiceNotificationGroup";
+import ServiceSchedule from "../../pages/serviceSchedule/ServiceSchedule";
 import ServiceTag from "../../pages/serviceTag/ServiceTag";
 import CreateTask from "../../pages/task/CreateTask";
 import Task from "../../pages/task/Task";
@@ -625,6 +626,23 @@ const SERVICE_NOTIFICATION_GROUP_CONFIG = {
   },
 };
 
+const SERVICE_SCHEDULE_CONFIG = {
+  SERVICE_SCHEDULE: {
+    label: "Cài đặt lịch thông báo",
+    path: "/service/schedule/:serviceId",
+    role: "SE_S_L",
+    element: <ServiceSchedule />,
+  },
+  CREATE_SERVICE_SCHEDULE: {
+    label: "Đặt nhắc hẹn dịch vụ",
+    role: "SE_S_U",
+  },
+  DELETE_SERVICE_SCHEDULE: {
+    label: "Xóa nhắc hẹn dịch vụ",
+    role: "SE_S_U",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -652,4 +670,5 @@ export {
   KEY_INFORMATION_CONFIG,
   SERVICE_CONFIG,
   SERVICE_NOTIFICATION_GROUP_CONFIG,
+  SERVICE_SCHEDULE_CONFIG,
 };

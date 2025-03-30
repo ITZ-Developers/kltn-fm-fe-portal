@@ -98,15 +98,21 @@ const useGridViewLocal = ({
   };
 
   const updateData = (newData: any[]) => {
-    setAllData(
-      newData?.map((item) => decryptData(secretKey, item, decryptFields))
-    );
+    if (decryptFields && secretKey) {
+      setAllData(
+        newData?.map((item) => decryptData(secretKey, item, decryptFields))
+      );
+    } else {
+      setAllData(newData);
+    }
   };
 
   return {
     data,
+    allData,
     totalPages,
     query,
+    updateData,
     setQuery,
     handlePageChange,
     handleSubmitQuery,

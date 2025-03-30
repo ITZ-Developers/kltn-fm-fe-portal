@@ -135,6 +135,23 @@ const decryptData = (secretKey: string, item: any, fields: string[]) => {
   return decryptedItem;
 };
 
+const encryptAES = (plainText: string, secretKey: string): string => {
+  try {
+    const encrypted = CryptoJS.AES.encrypt(
+      plainText,
+      CryptoJS.enc.Utf8.parse(secretKey),
+      {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return encrypted.toString();
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
+};
+
 const decryptAES = (encryptedStr: string, secretKey: string): string | null => {
   try {
     let decrypted = CryptoJS.AES.decrypt(
@@ -444,6 +461,7 @@ export {
   extractHostAndPort,
   validateDateTime,
   decryptWithRSA,
+  encryptAES,
   decryptAES,
   decryptData,
   calculateExpirationDate,
