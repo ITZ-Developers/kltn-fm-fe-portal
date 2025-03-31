@@ -117,6 +117,8 @@ const KeyInformation = () => {
       accessor: "name",
       iconMapField: "kind",
       dataMap: KEY_KIND_MAP,
+      role: PAGE_CONFIG.VIEW_KEY_INFORMATION.role,
+      onClick: (item: any) => onViewClick(item.id),
     }),
     renderTagField({
       label: "Nhóm key",
@@ -166,6 +168,10 @@ const KeyInformation = () => {
 
   const onUpdateButtonClick = (id: any) => {
     navigate(`/key-information/update/${id}`, { state: { query } });
+  };
+
+  const onViewClick = (id: any) => {
+    navigate(`/key-information/view/${id}`, { state: { query } });
   };
 
   const onExportExcelButtonClick = async () => {

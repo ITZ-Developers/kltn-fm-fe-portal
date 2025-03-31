@@ -1,9 +1,13 @@
 import {
   ActionDeleteButton,
+  ActionDoneButton,
   ActionEditButton,
+  ActionRejectButton,
 } from "../../components/form/Button";
 import {
+  configApproveDialog,
   configDeleteDialog,
+  configRejectDialog,
   ConfirmationDialog,
   LoadingDialog,
 } from "../../components/page/Dialog";
@@ -15,13 +19,20 @@ import useApi from "../../hooks/useApi";
 import useModal from "../../hooks/useModal";
 import {
   ALIGNMENT,
+  BASIC_MESSAGES,
+  BUTTON_TEXT,
   ITEMS_PER_PAGE,
   TAG_KIND,
+  TOAST,
   TRANSACTION_KIND_MAP,
   TRANSACTION_STATE_MAP,
 } from "../../services/constant";
 import Sidebar from "../../components/page/Sidebar";
-import { CreateButton, ToolBar } from "../../components/page/ToolBar";
+import {
+  CreateButton,
+  ExportExcelButton,
+  ToolBar,
+} from "../../components/page/ToolBar";
 import InputBox from "../../components/page/InputBox";
 import { GridView } from "../../components/page/GridView";
 import {
@@ -34,7 +45,7 @@ import {
 } from "../../components/config/ItemRender";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import useGridViewLocal from "../../hooks/useGridViewLocal";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   SelectBoxLazy,
@@ -42,6 +53,7 @@ import {
 } from "../../components/page/SelectBox";
 import { parseDate, truncateToDDMMYYYY } from "../../services/utils";
 import DatePickerBox from "../../components/page/DatePickerBox";
+import ImportExcelButton from "../../components/form/ImportExcelButton";
 
 const initQuery = {
   name: "",
@@ -93,11 +105,13 @@ const Transaction = () => {
     formConfig: deleteDialogConfig,
   } = useModal();
   const { transaction: apiList, loading: loadingList } = useApi();
+  const [totalStats, setTotalStats] = useState<any>({ income: 0, expense: 0 });
   const { transaction, loading } = useApi();
   const { transactionGroup, tag } = useApi();
   const {
     data,
     query,
+    allData,
     totalPages,
     handlePageChange,
     handleSubmitQuery,
@@ -112,9 +126,26 @@ const Transaction = () => {
     queryParams: { ignorePaymentPeriod: 1, sortDate: 4 },
   });
 
+  useEffect(() => {
+    if (!allData || !Array.isArray(allData)) return;
+
+    const stats = allData.reduce(
+      (acc, item) => {
+        if (item.kind == TRANSACTION_KIND_MAP.INCOME.value)
+          acc.income += parseFloat(item.money) || 0;
+        if (item.kind == TRANSACTION_KIND_MAP.EXPENSE.value)
+          acc.expense += parseFloat(item.money) || 0;
+        return acc;
+      },
+      { income: 0, expense: 0 }
+    );
+
+    setTotalStats(stats);
+  }, [allData]);
+
   const columns = [
     {
-      label: "Ngày",
+      label: "Ngày giao dịch",
       accessor: "transactionDate",
       align: ALIGNMENT.LEFT,
       render: (item: any) => {
@@ -129,6 +160,8 @@ const Transaction = () => {
       accessor: "name",
       iconMapField: "kind",
       dataMap: TRANSACTION_KIND_MAP,
+      role: PAGE_CONFIG.VIEW_TRANSACTION.role,
+      onClick: (item: any) => onViewClick(item.id),
     }),
     renderMoneyField({
       label: "Số tiền",
@@ -155,21 +188,62 @@ const Transaction = () => {
       role: [
         PAGE_CONFIG.DELETE_TRANSACTION.role,
         PAGE_CONFIG.UPDATE_TRANSACTION.role,
+        PAGE_CONFIG.APPROVE_TRANSACTION.role,
+        PAGE_CONFIG.REJECT_TRANSACTION.role,
       ],
       renderChildren: (item: any) => (
         <>
-          <ActionEditButton
-            role={PAGE_CONFIG.UPDATE_TRANSACTION.role}
-            onClick={() => onUpdateButtonClick(item.id)}
-          />
-          <ActionDeleteButton
-            role={PAGE_CONFIG.DELETE_TRANSACTION.role}
-            onClick={() => onDeleteButtonClick(item.id)}
-          />
+          {item.state != TRANSACTION_STATE_MAP.PAID.value && (
+            <>
+              {item.state != TRANSACTION_STATE_MAP.APPROVE.value && (
+                <ActionDoneButton
+                  text={BUTTON_TEXT.APPROVE}
+                  role={PAGE_CONFIG.APPROVE_TRANSACTION.role}
+                  onClick={() => onApproveButtonClick(item.id)}
+                />
+              )}
+              <ActionRejectButton
+                role={PAGE_CONFIG.REJECT_TRANSACTION.role}
+                onClick={() => onRejectButtonClick(item.id)}
+              />
+              <ActionEditButton
+                role={PAGE_CONFIG.UPDATE_TRANSACTION.role}
+                onClick={() => onUpdateButtonClick(item.id)}
+              />
+              <ActionDeleteButton
+                role={PAGE_CONFIG.DELETE_TRANSACTION.role}
+                onClick={() => onDeleteButtonClick(item.id)}
+              />
+            </>
+          )}
         </>
       ),
     }),
   ];
+
+  const onApproveButtonClick = (id: any) => {
+    showDeleteDialog(
+      configApproveDialog({
+        label: PAGE_CONFIG.APPROVE_TRANSACTION.label,
+        fetchApi: () => transaction.approve(id),
+        refreshData: handleRefreshData,
+        hideModal: hideDeleteDialog,
+        setToast,
+      })
+    );
+  };
+
+  const onRejectButtonClick = (id: any) => {
+    showDeleteDialog(
+      configRejectDialog({
+        label: PAGE_CONFIG.REJECT_TRANSACTION.label,
+        fetchApi: () => transaction.reject(id),
+        refreshData: handleRefreshData,
+        hideModal: hideDeleteDialog,
+        setToast,
+      })
+    );
+  };
 
   const onDeleteButtonClick = (id: any) => {
     showDeleteDialog(
@@ -189,6 +263,24 @@ const Transaction = () => {
 
   const onUpdateButtonClick = (id: any) => {
     navigate(`/transaction/update/${id}`, { state: { query } });
+  };
+
+  const onViewClick = (id: any) => {
+    navigate(`/transaction/view/${id}`, { state: { query } });
+  };
+
+  const onExportExcelButtonClick = async () => {
+    if (!data.length) {
+      setToast(BASIC_MESSAGES.NO_DATA, TOAST.WARN);
+      return;
+    }
+    const ids = data.map((item: any) => item.id);
+    const res = await transaction.exportToExcel(ids, query.kind);
+    if (res.result) {
+      setToast(BASIC_MESSAGES.EXPORTED, TOAST.SUCCESS);
+    } else {
+      setToast(BASIC_MESSAGES.FAILED, TOAST.ERROR);
+    }
   };
 
   return (
@@ -276,11 +368,36 @@ const Transaction = () => {
             onClear={() => handleSubmitQuery(initQuery)}
             onRefresh={handleRefreshData}
             actionButtons2={
-              <div className="flex justify-end">
-                <CreateButton
-                  role={PAGE_CONFIG.CREATE_TRANSACTION.role}
-                  onClick={onCreateButtonClick}
-                />
+              <div className="flex justify-between items-center">
+                <div className="flex gap-2">
+                  <div className="flex items-center gap-2 bg-green-100 text-green-700 text-sm p-2 rounded-lg shadow-md">
+                    <span className="font-semibold">Tổng thu:</span>
+                    <span className="font-bold">
+                      {totalStats.income.toLocaleString()} đ
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-red-100 text-red-700 text-sm p-2 rounded-lg shadow-md">
+                    <span className="font-semibold">Tổng chi:</span>
+                    <span className="font-bold">
+                      {totalStats.expense.toLocaleString()} đ
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-row space-x-2">
+                  <ImportExcelButton
+                    role={PAGE_CONFIG.IMPORT_EXCEL_TRANSACTION.role}
+                    fetchApi={transaction.importExcel}
+                    onFileUploaded={handleRefreshData}
+                  />
+                  <ExportExcelButton
+                    role={PAGE_CONFIG.EXPORT_EXCEL_TRANSACTION.role}
+                    onClick={onExportExcelButtonClick}
+                  />
+                  <CreateButton
+                    role={PAGE_CONFIG.CREATE_TRANSACTION.role}
+                    onClick={onCreateButtonClick}
+                  />
+                </div>
               </div>
             }
           />

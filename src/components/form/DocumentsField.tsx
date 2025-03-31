@@ -28,11 +28,8 @@ const DocumentsField = ({
   title = "",
   value = "[]",
   onChange,
-}: {
-  title?: string;
-  value?: string; // JSON string like "[{\"name\":\"\", \"url\":\"\"}]"
-  onChange: (value: string) => void;
-}) => {
+  disabled = false,
+}: any) => {
   const { setToast } = useGlobalContext();
   const { media, loading } = useApi();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -143,22 +140,24 @@ const DocumentsField = ({
               {title}
             </label>
           )}
-          <div className="ml-2">
-            <input
-              type="file"
-              accept="*"
-              onChange={handleFileUpload}
-              ref={fileInputRef}
-              className="hidden"
-            />
-            <button
-              title="Tải tệp lên"
-              onClick={() => fileInputRef.current?.click()}
-              className="font-bold flex rounded-full items-center p-2 bg-blue-700 text-white hover:bg-blue-600 transition-colors"
-            >
-              <UploadIcon size={12} />
-            </button>
-          </div>
+          {!disabled && (
+            <div className="ml-2">
+              <input
+                type="file"
+                accept="*"
+                onChange={handleFileUpload}
+                ref={fileInputRef}
+                className="hidden"
+              />
+              <button
+                title="Tải tệp lên"
+                onClick={() => fileInputRef.current?.click()}
+                className="font-bold flex rounded-full items-center p-2 bg-blue-700 text-white hover:bg-blue-600 transition-colors"
+              >
+                <UploadIcon size={12} />
+              </button>
+            </div>
+          )}
         </div>
 
         {files.length > 0 && (
@@ -177,13 +176,15 @@ const DocumentsField = ({
                     {file.name}
                   </span>
                 </div>
-                <button
-                  title={BUTTON_TEXT.DELETE}
-                  onClick={() => onDeleteButtonClick(index)}
-                  className="text-gray-400 hover:text-red-400"
-                >
-                  <Trash2Icon size={16} />
-                </button>
+                {!disabled && (
+                  <button
+                    title={BUTTON_TEXT.DELETE}
+                    onClick={() => onDeleteButtonClick(index)}
+                    className="text-gray-400 hover:text-red-400"
+                  >
+                    <Trash2Icon size={16} />
+                  </button>
+                )}
               </div>
             ))}
           </div>

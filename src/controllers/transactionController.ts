@@ -68,6 +68,42 @@ export const transactionController = (fetchApi: any) => {
       },
     });
 
+  const approve = (id: any) =>
+    fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: `/v1/transaction/approve`,
+      method: METHOD.PUT,
+      payload: { id },
+      authType: AUTH_TYPE.BEARER,
+      headers: {
+        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
+      },
+    });
+
+  const reject = (id: any) =>
+    fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: `/v1/transaction/reject`,
+      method: METHOD.PUT,
+      payload: { id },
+      authType: AUTH_TYPE.BEARER,
+      headers: {
+        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
+      },
+    });
+
+  const removeFromPeriod = (id: any) =>
+    fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: `/v1/transaction/remove-from-period`,
+      method: METHOD.PUT,
+      payload: { id },
+      authType: AUTH_TYPE.BEARER,
+      headers: {
+        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
+      },
+    });
+
   const del = (id: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
@@ -79,6 +115,34 @@ export const transactionController = (fetchApi: any) => {
       },
     });
 
+  const exportToExcel = (transactionIds: any, kind: any) =>
+    fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: `/v1/transaction/export-to-excel`,
+      method: METHOD.POST,
+      payload: { transactionIds, kind },
+      authType: AUTH_TYPE.BEARER,
+      headers: {
+        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
+      },
+    });
+
+  const importExcel = (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    return fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: "/v1/transaction/import-excel",
+      method: METHOD.POST,
+      payload: formData,
+      authType: AUTH_TYPE.BEARER,
+      headers: {
+        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
+      },
+    });
+  };
+
   return {
     list,
     autoComplete,
@@ -86,5 +150,10 @@ export const transactionController = (fetchApi: any) => {
     create,
     update,
     del,
+    approve,
+    reject,
+    exportToExcel,
+    importExcel,
+    removeFromPeriod,
   };
 };

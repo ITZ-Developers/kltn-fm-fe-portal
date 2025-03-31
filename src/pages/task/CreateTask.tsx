@@ -117,9 +117,9 @@ const CreateTask = () => {
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-row space-x-2">
                   <InputField
-                    title="Tên ghi chú"
+                    title="Tên công việc"
                     isRequired={true}
-                    placeholder="Nhập tên ghi chú"
+                    placeholder="Nhập tên công việc"
                     value={form.name}
                     onChangeText={(value: any) => handleChange("name", value)}
                     error={errors.name}
@@ -146,7 +146,7 @@ const CreateTask = () => {
                 <DocumentsField
                   title="Tài liệu"
                   value={form.document}
-                  onChange={(value) => handleChange("document", value)}
+                  onChange={(value: any) => handleChange("document", value)}
                 />
                 <ActionSection
                   children={

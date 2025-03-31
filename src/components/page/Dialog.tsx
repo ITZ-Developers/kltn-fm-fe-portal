@@ -130,6 +130,58 @@ const configResetMfaDialog = ({
   };
 };
 
+const configApproveDialog = ({
+  label,
+  fetchApi,
+  refreshData,
+  hideModal,
+  setToast,
+}: any) => {
+  return {
+    title: label,
+    message: "Bạn có muốn chấp nhận không?",
+    color: "mediumseagreen",
+    onConfirm: async () => {
+      hideModal();
+      const res = await fetchApi();
+      if (res.result) {
+        setToast(BASIC_MESSAGES.APPROVE, TOAST.SUCCESS);
+        await refreshData();
+      } else {
+        setToast(res.message, TOAST.ERROR);
+      }
+    },
+    confirmText: BUTTON_TEXT.SUBMIT,
+    onCancel: hideModal,
+  };
+};
+
+const configRejectDialog = ({
+  label,
+  fetchApi,
+  refreshData,
+  hideModal,
+  setToast,
+}: any) => {
+  return {
+    title: label,
+    message: "Bạn có muốn từ chối không?",
+    color: "crimson",
+    onConfirm: async () => {
+      hideModal();
+      const res = await fetchApi();
+      if (res.result) {
+        setToast(BASIC_MESSAGES.REJECT, TOAST.SUCCESS);
+        await refreshData();
+      } else {
+        setToast(res.message, TOAST.ERROR);
+      }
+    },
+    confirmText: BUTTON_TEXT.SUBMIT,
+    onCancel: hideModal,
+  };
+};
+
 const configDoneDialog = ({
   label,
   doneApi,
@@ -230,4 +282,6 @@ export {
   configResetMfaDialog,
   configDoneDialog,
   configDeleteFileDialog,
+  configApproveDialog,
+  configRejectDialog,
 };

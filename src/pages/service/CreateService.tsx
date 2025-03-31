@@ -43,6 +43,9 @@ const CreateService = () => {
     if (!VALID_PATTERN.MONEY.test(form.money)) {
       newErrors.money = "Số tiền không hợp lệ";
     }
+    if (!form.serviceGroupId) {
+      newErrors.serviceGroupId = "Nhóm không hợp lệ";
+    }
     if (!form.kind) {
       newErrors.kind = "Loại không hợp lệ";
     }
@@ -172,7 +175,6 @@ const CreateService = () => {
                     error={errors?.kind}
                   />
                 </div>
-
                 <div className="flex flex-row space-x-2">
                   <DatePickerField
                     title="Ngày bắt đầu"

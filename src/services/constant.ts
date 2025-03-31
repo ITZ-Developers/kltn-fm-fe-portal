@@ -1,6 +1,8 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  CircleDotDashedIcon,
+  CircleDotIcon,
   DatabaseIcon,
   GlobeIcon,
 } from "lucide-react";
@@ -168,15 +170,19 @@ const TASK_STATE_MAP = {
     value: 1,
     label: "Đang xử lý",
     className: "bg-yellow-900 text-yellow-300",
+    textColor: "text-yellow-600",
+    icon: CircleDotDashedIcon,
   },
   DONE: {
     value: 2,
     label: "Hoàn thành",
     className: "bg-green-900 text-green-300",
+    textColor: "text-green-600",
+    icon: CircleDotIcon,
   },
 };
 
-const TRANSACTION_STATE_MAP = {
+const TRANSACTION_UPDATE_STATE_MAP = {
   CREATED: {
     value: 1,
     label: "Đã tạo",
@@ -187,6 +193,10 @@ const TRANSACTION_STATE_MAP = {
     label: "Chấp nhận",
     className: "bg-blue-900 text-blue-300",
   },
+};
+
+const TRANSACTION_STATE_MAP = {
+  ...TRANSACTION_UPDATE_STATE_MAP,
   REJECT: {
     value: 3,
     label: "Từ chối",
@@ -295,6 +305,8 @@ const BASIC_MESSAGES = {
   RESETED: "Đặt lại thành công",
   EXPORTED: "Xuất tệp thành công",
   NO_DATA: "Không có dữ liệu",
+  APPROVE: "Xét duyệt thành công",
+  REJECT: "Từ chối yêu cầu thành công",
 };
 
 const BUTTON_TEXT = {
@@ -317,6 +329,9 @@ const BUTTON_TEXT = {
   IMPORT_EXCEL: "Nhập Excel",
   DECRYPT: "Giải mã",
   RESOLVE: "Giải quyết",
+  BACK: "Trở về",
+  REJECT: "Từ chối",
+  APPROVE: "Chấp nhận",
 };
 
 export {
@@ -354,4 +369,5 @@ export {
   PERIOD_KIND_MAP,
   NOTIFICATION_STATE,
   TRANSACTION_STATE_MAP,
+  TRANSACTION_UPDATE_STATE_MAP,
 };

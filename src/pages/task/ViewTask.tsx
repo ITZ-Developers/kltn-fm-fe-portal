@@ -5,16 +5,10 @@ import {
   PAGE_CONFIG,
 } from "../../components/config/PageConfig";
 import useForm from "../../hooks/useForm";
-import { CancelButton, SubmitButton } from "../../components/form/Button";
+import { CancelButton } from "../../components/form/Button";
 import { ActionSection, FormCard } from "../../components/form/FormCard";
 import useApi from "../../hooks/useApi";
-import {
-  BASIC_MESSAGES,
-  BUTTON_TEXT,
-  TASK_STATE_MAP,
-  TOAST,
-  VALID_PATTERN,
-} from "../../services/constant";
+import { BUTTON_TEXT, TASK_STATE_MAP } from "../../services/constant";
 import { LoadingDialog } from "../../components/page/Dialog";
 import useQueryState from "../../hooks/useQueryState";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
@@ -24,9 +18,9 @@ import { decryptData } from "../../services/utils";
 import { StaticSelectField } from "../../components/form/SelectField";
 import DocumentsField from "../../components/form/DocumentsField";
 
-const UpdateTask = () => {
+const ViewTask = () => {
   const { projectId, id } = useParams();
-  const { setToast, sessionKey } = useGlobalContext();
+  const { sessionKey } = useGlobalContext();
   const { handleNavigateBack: handleBackProject } = useQueryState({
     path: PAGE_CONFIG.PROJECT.path,
     requireSessionKey: true,
@@ -39,25 +33,14 @@ const UpdateTask = () => {
   const [taskData, setTaskData] = useState<any>({});
   const { task, loading } = useApi();
   const { project } = useApi();
-  const validate = (form: any) => {
-    const newErrors: any = {};
-    if (!VALID_PATTERN.NAME.test(form.name)) {
-      newErrors.name = "Tên không hợp lệ";
-    }
-    if (!form.state) {
-      newErrors.state = "Tình trạng không hợp lệ";
-    }
-    return newErrors;
-  };
-
-  const { form, setForm, errors, handleChange, isValidForm } = useForm(
+  const { form, setForm } = useForm(
     {
       document: "[]",
       name: "",
       note: "",
       state: 1,
     },
-    validate
+    () => {}
   );
 
   useEffect(() => {
@@ -86,20 +69,6 @@ const UpdateTask = () => {
     fetchData();
   }, [projectId, id]);
 
-  const handleSubmit = async () => {
-    if (isValidForm()) {
-      const res = await task.update({ ...form, id, projectId });
-      if (res.result) {
-        setToast(BASIC_MESSAGES.UPDATED, TOAST.SUCCESS);
-        handleBackTask();
-      } else {
-        setToast(res.message || BASIC_MESSAGES.FAILED, TOAST.ERROR);
-      }
-    } else {
-      setToast(BASIC_MESSAGES.INVALID_FORM, TOAST.ERROR);
-    }
-  };
-
   return (
     <Sidebar
       breadcrumbs={[
@@ -112,7 +81,7 @@ const UpdateTask = () => {
           onClick: handleBackTask,
         },
         {
-          label: PAGE_CONFIG.UPDATE_TASK.label,
+          label: PAGE_CONFIG.VIEW_TASK.label,
         },
       ]}
       activeItem={PAGE_CONFIG.PROJECT.name}
@@ -120,50 +89,42 @@ const UpdateTask = () => {
         <>
           <LoadingDialog isVisible={loading} />
           <FormCard
-            title={PAGE_CONFIG.UPDATE_TASK.label}
+            title={PAGE_CONFIG.VIEW_TASK.label}
             children={
               <div className="flex flex-col space-y-4">
                 <div className="flex flex-row space-x-2">
                   <InputField
                     title="Tên công việc"
                     isRequired={true}
-                    placeholder="Nhập tên công việc"
                     value={form.name}
-                    onChangeText={(value: any) => handleChange("name", value)}
-                    error={errors.name}
+                    disabled={true}
                   />
                   <StaticSelectField
                     title="Tình trạng"
                     isRequired={true}
-                    placeholder="Chọn tình trạng"
+                    disabled={true}
                     dataMap={TASK_STATE_MAP}
                     value={form.state}
-                    onChange={(value: any) => handleChange("state", value)}
-                    error={errors.state}
                   />
                 </div>
                 <div className="flex flex-row space-x-2">
                   <TextAreaField
                     title="Ghi chú"
-                    placeholder="Nhập ghi chú"
                     value={form.note}
-                    onChangeText={(value: any) => handleChange("note", value)}
-                    error={errors.note}
+                    disabled={true}
                   />
                 </div>
                 <DocumentsField
                   title="Tài liệu"
                   value={form.document}
-                  onChange={(value: any) => handleChange("document", value)}
+                  disabled={true}
                 />
                 <ActionSection
                   children={
                     <>
-                      <CancelButton onClick={handleBackTask} />
-                      <SubmitButton
-                        text={BUTTON_TEXT.UPDATE}
-                        color="royalblue"
-                        onClick={handleSubmit}
+                      <CancelButton
+                        text={BUTTON_TEXT.BACK}
+                        onClick={handleBackTask}
                       />
                     </>
                   }
@@ -177,4 +138,4 @@ const UpdateTask = () => {
   );
 };
 
-export default UpdateTask;
+export default ViewTask;

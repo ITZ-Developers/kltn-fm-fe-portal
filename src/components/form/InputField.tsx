@@ -73,6 +73,7 @@ const TextAreaField = ({
   onChangeText,
   error = "",
   maxLength = 1000,
+  disabled = false,
 }: any) => {
   return (
     <div className="flex-1 items-center">
@@ -85,18 +86,19 @@ const TextAreaField = ({
       <div
         className={`flex items-center border rounded-md p-2 flex-1 ${
           error ? "border-red-500 bg-red-900/20" : "border-gray-600 bg-gray-800"
-        }`}
+        } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <textarea
           className={`flex-1 text-base outline-none bg-transparent resize-y min-h-[100px] ${
             error
               ? "text-red-400 placeholder-red-400/50"
               : "text-gray-200 placeholder-gray-500"
-          }`}
+          } ${disabled ? "cursor-not-allowed" : ""}`}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChangeText(e.target.value)}
           maxLength={maxLength}
+          disabled={disabled}
         />
       </div>
       {error && <p className="text-red-400 text-sm mt-1 text-left">{error}</p>}

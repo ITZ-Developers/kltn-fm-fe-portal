@@ -56,6 +56,9 @@ const UpdateService = () => {
     if (!form.periodKind) {
       newErrors.periodKind = "Chu kỳ không hợp lệ";
     }
+    if (!form.serviceGroupId) {
+      newErrors.serviceGroupId = "Nhóm không hợp lệ";
+    }
     const startDate = parseDate(form.startDate);
     if (!startDate) {
       newErrors.startDate = "Ngày bắt đầu không hợp lệ";

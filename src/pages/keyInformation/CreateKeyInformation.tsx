@@ -302,7 +302,7 @@ const CreateKeyInformation = () => {
                 <DocumentsField
                   title="Tài liệu"
                   value={form.document}
-                  onChange={(value) => handleChange("document", value)}
+                  onChange={(value: any) => handleChange("document", value)}
                 />
                 <ActionSection
                   children={

@@ -5,6 +5,7 @@ import {
   RotateCcwIcon,
   TrashIcon,
   UsersIcon,
+  XIcon,
 } from "lucide-react";
 import { ActionButton } from "../page/GridView";
 import { BUTTON_TEXT } from "../../services/constant";
@@ -62,14 +63,26 @@ const ActionPermissionButton = ({
   );
 };
 
-const ActionDoneButton = ({ onClick, role }: any) => {
+const ActionDoneButton = ({ text = BUTTON_TEXT.DONE, onClick, role }: any) => {
   return (
     <ActionButton
       onClick={onClick}
       Icon={CheckIcon}
       role={role}
-      title={BUTTON_TEXT.DONE}
+      title={text}
       color="mediumseagreen"
+    />
+  );
+};
+
+const ActionRejectButton = ({ onClick, role }: any) => {
+  return (
+    <ActionButton
+      onClick={onClick}
+      Icon={XIcon}
+      role={role}
+      title={BUTTON_TEXT.REJECT}
+      color="crimson"
     />
   );
 };
@@ -169,4 +182,5 @@ export {
   ActionTasksButton,
   ActionDoneButton,
   BasicActionButton,
+  ActionRejectButton,
 };

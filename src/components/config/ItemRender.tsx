@@ -270,7 +270,12 @@ const renderIconField = ({
   iconMapField = "kind",
   align = ALIGNMENT.LEFT,
   dataMap = KEY_KIND_MAP,
+  role,
+  onClick,
 }: any) => {
+  const { hasRoles } = useGlobalContext();
+  const isHref = onClick && role && hasRoles(role);
+
   return {
     label,
     accessor,
@@ -295,12 +300,22 @@ const renderIconField = ({
               <IconComponent size={20} />
             </span>
           )}
-          <span className="text-gray-300 text-sm">{displayValue}</span>
+          {isHref ? (
+            <a
+              onClick={() => onClick(item)}
+              className="text-gray-300 text-sm hover:underline whitespace-nowrap hover:cursor-pointer"
+            >
+              {displayValue}
+            </a>
+          ) : (
+            <span className="text-gray-300 text-sm">{displayValue}</span>
+          )}
         </div>
       );
     },
   };
 };
+
 const renderMoneyField = ({
   label = "Số tiền",
   accessor = "amount",

@@ -34,7 +34,7 @@ import { GridView } from "../../components/page/GridView";
 import {
   basicRender,
   renderActionButton,
-  renderEnum,
+  renderIconField,
 } from "../../components/config/ItemRender";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import useGridViewLocal from "../../hooks/useGridViewLocal";
@@ -116,11 +116,14 @@ const Task = () => {
   }, [projectId]);
 
   const columns = [
-    {
+    renderIconField({
       label: "Tên công việc",
       accessor: "name",
-      align: ALIGNMENT.LEFT,
-    },
+      iconMapField: "state",
+      dataMap: TASK_STATE_MAP,
+      role: PAGE_CONFIG.VIEW_TASK.role,
+      onClick: (item: any) => onViewClick(item),
+    }),
     {
       label: "Ghi chú",
       accessor: "note",
@@ -128,15 +131,10 @@ const Task = () => {
       render: (item: any) => {
         return basicRender({
           align: ALIGNMENT.LEFT,
-          content: truncateString(item.description, TRUNCATE_LENGTH),
+          content: truncateString(item.note, TRUNCATE_LENGTH),
         });
       },
     },
-    renderEnum({
-      label: "Tình trạng",
-      accessor: "state",
-      dataMap: TASK_STATE_MAP,
-    }),
     {
       label: "Ngày tạo",
       accessor: "createdDate",
@@ -218,6 +216,12 @@ const Task = () => {
 
   const onCreateButtonClick = () => {
     navigate(`/project/task/${projectId}/create`, {
+      state: { query },
+    });
+  };
+
+  const onViewClick = (item: any) => {
+    navigate(`/project/task/${item.project.id}/view/${item.id}`, {
       state: { query },
     });
   };

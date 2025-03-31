@@ -299,6 +299,7 @@ const StaticSelectField = ({
     </div>
   );
 };
+
 const SelectFieldLazy = ({
   title = "",
   isRequired = false,
@@ -313,6 +314,7 @@ const SelectFieldLazy = ({
   disabled = false,
   colorCodeField = "",
   decryptFields = [],
+  refreshOnOpen = false,
 }: any) => {
   const { sessionKey } = useGlobalContext();
   const [isOpen, setIsOpen] = useState(false);
@@ -357,6 +359,12 @@ const SelectFieldLazy = ({
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (isOpen && refreshOnOpen) {
+      fetchData();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!value) {

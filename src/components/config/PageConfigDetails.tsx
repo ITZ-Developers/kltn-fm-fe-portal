@@ -6,6 +6,7 @@ import UpdateEmployee from "../../pages/employee/UpdateEmployee";
 import CreateKeyInformation from "../../pages/keyInformation/CreateKeyInformation";
 import KeyInformation from "../../pages/keyInformation/KeyInformation";
 import UpdateKeyInformation from "../../pages/keyInformation/UpdateKeyInformation";
+import ViewKeyInformation from "../../pages/keyInformation/ViewKeyInformation";
 import KeyInformationGroup from "../../pages/keyInformationGroup/KeyInformationGroup";
 import KeyInformationGroupPermission from "../../pages/keyInformationGroupPermission/KeyInformationGroupPermission";
 import KeyInformationTag from "../../pages/keyInformationTag/KeyInformationTag";
@@ -33,9 +34,11 @@ import ServiceTag from "../../pages/serviceTag/ServiceTag";
 import CreateTask from "../../pages/task/CreateTask";
 import Task from "../../pages/task/Task";
 import UpdateTask from "../../pages/task/UpdateTask";
+import ViewTask from "../../pages/task/ViewTask";
 import CreateTransaction from "../../pages/transaction/CreateTransaction";
 import Transaction from "../../pages/transaction/Transaction";
 import UpdateTransaction from "../../pages/transaction/UpdateTransaction";
+import ViewTransaction from "../../pages/transaction/ViewTransaction";
 import TransactionGroup from "../../pages/transactionGroup/TransactionGroup";
 import TransactionGroupPermission from "../../pages/transactionGroupPermission/TransactionGroupPermission";
 import TransactionTag from "../../pages/transactionTag/TransactionTag";
@@ -85,6 +88,12 @@ const TRANSACTION_CONFIG = {
   EXPORT_EXCEL_TRANSACTION: {
     label: "Xuất tệp Excel giao dịch",
     role: "TR_E_E",
+  },
+  VIEW_TRANSACTION: {
+    label: "Xem chi tiết giao dịch",
+    path: "/transaction/view/:id",
+    role: "TR_V",
+    element: <ViewTransaction />,
   },
 };
 
@@ -539,6 +548,12 @@ const TASK_CONFIG = {
     label: "Hoàn thành công việc",
     role: "TA_C_S",
   },
+  VIEW_TASK: {
+    label: "Xem công việc",
+    path: "/project/task/:projectId/view/:id",
+    role: "TA_V",
+    element: <ViewTask />,
+  },
   EXPORT_EXCEL_TASK: {
     label: "Xuất tệp Excel công việc",
     role: "TA_E_E",
@@ -596,6 +611,12 @@ const KEY_INFORMATION_CONFIG = {
   },
   DECRYPT_PASSWORD_KEY_INFORMATION: {
     label: "Giải mã mật khẩu key",
+  },
+  VIEW_KEY_INFORMATION: {
+    label: "Xem chi tiết key",
+    path: "/key-information/view/:id",
+    role: "KE_I_V",
+    element: <ViewKeyInformation />,
   },
 };
 
