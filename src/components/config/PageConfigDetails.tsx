@@ -17,6 +17,8 @@ import UpdateLocationByCustomer from "../../pages/location/UpdateLocationByCusto
 import NotificationGroup from "../../pages/notificationGroup/NotificationGroup";
 import Organization from "../../pages/organization/Organization";
 import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
+import DetailPaymentPeriod from "../../pages/paymentPeriod/DetailPaymentPeriod";
+import PaymentPeriod from "../../pages/paymentPeriod/PaymentPeriod";
 import ChangePassword from "../../pages/profile/ChangePassword";
 import CreateProject from "../../pages/project/CreateProject";
 import Project from "../../pages/project/Project";
@@ -721,6 +723,34 @@ const DEBIT_CONFIG = {
   },
 };
 
+const PAYMENT_PERIOD_CONFIG = {
+  PAYMENT_PERIOD: {
+    name: "payment_period",
+    label: "Kỳ thanh toán",
+    path: "/payment-period",
+    role: "PA_P_L",
+    element: <PaymentPeriod />,
+  },
+  VIEW_PAYMENT_PERIOD: {
+    label: "Chi tiết kỳ thanh toán",
+    path: "/payment-period/view/:id",
+    role: "TR_L",
+    element: <DetailPaymentPeriod />,
+  },
+  APPROVE_PAYMENT_PERIOD: {
+    label: "Duyệt kỳ thanh toán",
+    role: "PA_P_A",
+  },
+  RECALCULATE_PAYMENT_PERIOD: {
+    label: "Tính lại kỳ thanh toán",
+    role: "PA_P_R",
+  },
+  DELETE_PAYMENT_PERIOD: {
+    label: "Xóa kỳ thanh toán",
+    role: "PA_P_D",
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -750,4 +780,5 @@ export {
   SERVICE_NOTIFICATION_GROUP_CONFIG,
   SERVICE_SCHEDULE_CONFIG,
   DEBIT_CONFIG,
+  PAYMENT_PERIOD_CONFIG,
 };

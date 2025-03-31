@@ -156,6 +156,32 @@ const configApproveDialog = ({
   };
 };
 
+const configRecalculateDialog = ({
+  label,
+  fetchApi,
+  refreshData,
+  hideModal,
+  setToast,
+}: any) => {
+  return {
+    title: label,
+    message: "Bạn có muốn tính lại không?",
+    color: "royalblue",
+    onConfirm: async () => {
+      hideModal();
+      const res = await fetchApi();
+      if (res.result) {
+        setToast(BASIC_MESSAGES.SUCCESS, TOAST.SUCCESS);
+        await refreshData();
+      } else {
+        setToast(res.message, TOAST.ERROR);
+      }
+    },
+    confirmText: BUTTON_TEXT.SUBMIT,
+    onCancel: hideModal,
+  };
+};
+
 const configRejectDialog = ({
   label,
   fetchApi,
@@ -284,4 +310,5 @@ export {
   configDeleteFileDialog,
   configApproveDialog,
   configRejectDialog,
+  configRecalculateDialog,
 };

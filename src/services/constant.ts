@@ -1,6 +1,7 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  CircleCheckIcon,
   CircleDotDashedIcon,
   CircleDotIcon,
   DatabaseIcon,
@@ -209,6 +210,23 @@ const TRANSACTION_STATE_MAP = {
   },
 };
 
+const PAYMENT_PERIOD_STATE_MAP = {
+  CREATED: {
+    value: 1,
+    label: "Đã tạo",
+    className: "bg-yellow-900 text-yellow-300",
+    textColor: "text-yellow-600",
+    icon: CircleDotIcon,
+  },
+  APPROVE: {
+    value: 2,
+    label: "Đã duyệt",
+    className: "bg-blue-900 text-blue-300",
+    textColor: "text-blue-600",
+    icon: CircleCheckIcon,
+  },
+};
+
 const PERIOD_KIND_MAP = {
   FIXED_DATE: {
     value: 1,
@@ -332,6 +350,7 @@ const BUTTON_TEXT = {
   BACK: "Trở về",
   REJECT: "Từ chối",
   APPROVE: "Chấp nhận",
+  RECALCULATE: "Tính lại",
 };
 
 export {
@@ -370,4 +389,5 @@ export {
   NOTIFICATION_STATE,
   TRANSACTION_STATE_MAP,
   TRANSACTION_UPDATE_STATE_MAP,
+  PAYMENT_PERIOD_STATE_MAP,
 };

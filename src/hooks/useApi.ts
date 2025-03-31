@@ -26,6 +26,7 @@ import { serviceScheduleController } from "../controllers/serviceScheduleControl
 import { serviceNotificationGroupController } from "../controllers/serviceNotificationGroupController.ts";
 import { notificationController } from "../controllers/notificationController.ts";
 import { debitController } from "../controllers/debitController.ts";
+import { paymentPeriodController } from "../controllers/paymentPeriodController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -57,6 +58,7 @@ const useApi = () => {
   const serviceSchedule = serviceScheduleController(fetchApi);
   const serviceNotificationGroup = serviceNotificationGroupController(fetchApi);
   const notification = notificationController(fetchApi);
+  const paymentPeriod = paymentPeriodController(fetchApi);
 
   return {
     auth,
@@ -88,6 +90,7 @@ const useApi = () => {
     serviceNotificationGroup,
     notification,
     debit,
+    paymentPeriod,
   };
 };
 
