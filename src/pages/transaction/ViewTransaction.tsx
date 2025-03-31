@@ -21,8 +21,8 @@ import useApi from "../../hooks/useApi";
 import {
   BUTTON_TEXT,
   TAG_KIND,
-  TOAST,
   TRANSACTION_KIND_MAP,
+  TRANSACTION_STATE_MAP,
   TRANSACTION_UPDATE_STATE_MAP,
 } from "../../services/constant";
 import { LoadingDialog } from "../../components/page/Dialog";
@@ -190,7 +190,7 @@ const ViewTransaction = () => {
                   <StaticSelectField
                     title="Tình trạng"
                     isRequired={true}
-                    dataMap={TRANSACTION_UPDATE_STATE_MAP}
+                    dataMap={TRANSACTION_STATE_MAP}
                     value={form?.state}
                     disabled={true}
                   />

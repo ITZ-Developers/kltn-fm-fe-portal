@@ -17,7 +17,7 @@ import {
   BUTTON_TEXT,
   TAG_KIND,
   TRANSACTION_KIND_MAP,
-  TRANSACTION_UPDATE_STATE_MAP,
+  TRANSACTION_STATE_MAP,
 } from "../../services/constant";
 import { LoadingDialog } from "../../components/page/Dialog";
 import useQueryState from "../../hooks/useQueryState";
@@ -133,7 +133,7 @@ const ViewDebit = () => {
                   <StaticSelectField
                     title="Tình trạng"
                     isRequired={true}
-                    dataMap={TRANSACTION_UPDATE_STATE_MAP}
+                    dataMap={TRANSACTION_STATE_MAP}
                     value={fetchData?.state}
                     disabled={true}
                   />
