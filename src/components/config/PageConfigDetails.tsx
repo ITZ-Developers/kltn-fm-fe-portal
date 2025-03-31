@@ -1,4 +1,7 @@
 import Category from "../../pages/category/Category";
+import Debit from "../../pages/debit/Debit";
+import UpdateDebit from "../../pages/debit/UpdateDebit";
+import ViewDebit from "../../pages/debit/ViewDebit";
 import Department from "../../pages/department/Department";
 import CreateEmployee from "../../pages/employee/CreateEmployee";
 import Employee from "../../pages/employee/Employee";
@@ -684,6 +687,40 @@ const SERVICE_SCHEDULE_CONFIG = {
   },
 };
 
+const DEBIT_CONFIG = {
+  DEBIT: {
+    name: "debit",
+    label: "Công nợ",
+    path: "/debit",
+    role: "DEB_L",
+    element: <Debit />,
+  },
+  UPDATE_DEBIT: {
+    label: "Cập nhật công nợ",
+    path: "/debit/update/:id",
+    role: "DEB_U",
+    element: <UpdateDebit />,
+  },
+  DELETE_DEBIT: {
+    label: "Xóa công nợ",
+    role: "DEB_D",
+  },
+  APPROVE_DEBIT: {
+    label: "Thanh toán công nợ",
+    role: "DEB_A",
+  },
+  EXPORT_EXCEL_DEBIT: {
+    label: "Xuất tệp Excel công nợ",
+    role: "DEB_E_E",
+  },
+  VIEW_DEBIT: {
+    label: "Xem chi tiết công nợ",
+    path: "/debit/view/:id",
+    role: "DEB_V",
+    element: <ViewDebit />,
+  },
+};
+
 export {
   TRANSACTION_CONFIG,
   TRANSACTION_GROUP_CONFIG,
@@ -712,4 +749,5 @@ export {
   SERVICE_CONFIG,
   SERVICE_NOTIFICATION_GROUP_CONFIG,
   SERVICE_SCHEDULE_CONFIG,
+  DEBIT_CONFIG,
 };

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import {
   CATEGORY_CONFIG,
+  DEBIT_CONFIG,
   DEPARTMENT_CONFIG,
   EMPLOYEE_CONFIG,
   KEY_INFORMATION_CONFIG,
@@ -63,6 +64,7 @@ const PAGE_CONFIG = {
   ...SERVICE_CONFIG,
   ...SERVICE_NOTIFICATION_GROUP_CONFIG,
   ...SERVICE_SCHEDULE_CONFIG,
+  ...DEBIT_CONFIG,
 };
 
 const SESSION_KEY_PAGES: Set<string> = new Set([
@@ -80,6 +82,7 @@ const SESSION_KEY_PAGES: Set<string> = new Set([
   PAGE_CONFIG.PROJECT.name,
   PAGE_CONFIG.KEY_INFORMATION.name,
   PAGE_CONFIG.SERVICE.name,
+  PAGE_CONFIG.DEBIT.name,
 ]);
 
 const DECRYPT_FIELDS = {
@@ -121,6 +124,16 @@ const DECRYPT_FIELDS = {
     "tag.name",
     "tag.colorCode",
   ],
+  DEBIT: [
+    "money",
+    "name",
+    "document",
+    "note",
+    "transactionGroup.name",
+    "category.name",
+    "tag.name",
+    "tag.colorCode",
+  ],
 };
 
 const SIDEBAR_MENUS = [
@@ -131,6 +144,7 @@ const SIDEBAR_MENUS = [
       PAGE_CONFIG.TRANSACTION,
       PAGE_CONFIG.TRANSACTION_GROUP,
       PAGE_CONFIG.CATEGORY,
+      PAGE_CONFIG.DEBIT,
       PAGE_CONFIG.TRANSACTION_TAG,
     ],
   },
