@@ -19,6 +19,7 @@ import Organization from "../../pages/organization/Organization";
 import OrganizationPermission from "../../pages/organizationPermission/OrganizationPermission";
 import DetailPaymentPeriod from "../../pages/paymentPeriod/DetailPaymentPeriod";
 import PaymentPeriod from "../../pages/paymentPeriod/PaymentPeriod";
+import ViewTransactionPeriod from "../../pages/paymentPeriod/ViewTransactionPeriod";
 import ChangePassword from "../../pages/profile/ChangePassword";
 import CreateProject from "../../pages/project/CreateProject";
 import Project from "../../pages/project/Project";
@@ -730,6 +731,12 @@ const PAYMENT_PERIOD_CONFIG = {
     path: "/payment-period",
     role: "PA_P_L",
     element: <PaymentPeriod />,
+  },
+  VIEW_TRANSACTION_PERIOD: {
+    label: "Xem chi tiết giao dịch",
+    path: "/payment-period/view/:id/detail-transaction/:transactionId",
+    role: "TR_V",
+    element: <ViewTransactionPeriod />,
   },
   VIEW_PAYMENT_PERIOD: {
     label: "Chi tiết kỳ thanh toán",
