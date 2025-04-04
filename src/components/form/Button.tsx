@@ -58,7 +58,7 @@ const ActionPermissionButton = ({
       Icon={UsersIcon}
       role={role}
       title={text}
-      color="goldenrod"
+      color="royalblue"
     />
   );
 };
@@ -94,7 +94,7 @@ const ActionTasksButton = ({ onClick, role }: any) => {
       Icon={BriefcaseBusinessIcon}
       role={role}
       title={PAGE_CONFIG.TASK.label}
-      color="mediumseagreen"
+      color="royalblue"
     />
   );
 };

@@ -1,5 +1,6 @@
 import { UserIcon } from "lucide-react";
 import {
+  convertAlignment,
   convertUtcToVn,
   getEnumItem,
   getMediaImage,
@@ -125,7 +126,11 @@ const renderActionButton = ({
     align,
     render: (item: any) => {
       return (
-        <span className="flex items-center text-sm text-center justify-center space-x-1">
+        <span
+          className={`flex items-center text-sm text-${align} justify-${convertAlignment(
+            align
+          )} space-x-1`}
+        >
           {renderChildren?.(item)}
         </span>
       );

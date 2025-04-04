@@ -440,6 +440,14 @@ const calculateExpirationDate = (startDate: any, periodKind: any) => {
   return expDate.format("DD/MM/YYYY HH:mm:ss");
 };
 
+const convertAlignment = (value: any) => {
+  const mapping: any = {
+    left: "start",
+    right: "end",
+  };
+  return mapping[value] || value;
+};
+
 export {
   encrypt,
   decrypt,
@@ -467,4 +475,5 @@ export {
   calculateExpirationDate,
   getNextValidExpirationDate,
   getPreviousExpirationDate,
+  convertAlignment,
 };

@@ -185,6 +185,7 @@ const Transaction = () => {
       dataMap: TRANSACTION_STATE_MAP,
     }),
     renderActionButton({
+      align: ALIGNMENT.RIGHT,
       role: [
         PAGE_CONFIG.DELETE_TRANSACTION.role,
         PAGE_CONFIG.UPDATE_TRANSACTION.role,
