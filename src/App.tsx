@@ -12,6 +12,7 @@ import { getStorageData } from "./services/storages";
 import { GRANT_TYPE, LOCAL_STORAGE } from "./services/constant";
 import { getRoles } from "./services/utils";
 import RedirectHome from "./components/redirect/RedirectHome";
+import LoginQrCode from "./pages/auth/LoginQrCode";
 
 const App = () => {
   const [tokenData, setTokenData] = useState<any>(null);
@@ -80,6 +81,7 @@ const App = () => {
             ) : (
               <>
                 <Route path="/" element={<Login />} />
+                <Route path="/login-qr" element={<LoginQrCode />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
               </>

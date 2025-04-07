@@ -190,6 +190,10 @@ const Login = () => {
               type="password"
             />
             <HrefLink
+              label={BUTTON_TEXT.LOGIN_QR}
+              onClick={() => navigate("/login-qr")}
+            />
+            <HrefLink
               label={"Quên mật khẩu?"}
               onClick={() => navigate("/forgot-password")}
             />

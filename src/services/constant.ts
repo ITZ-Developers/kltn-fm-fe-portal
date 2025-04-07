@@ -267,9 +267,11 @@ const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
 const PING_INTERVAL = 5000; // 5s
 const SESSION_KEY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+const QR_TIMEOUT = 60000; // 60s
 
 const SOCKET_CMD = {
   CMD_LOCK_DEVICE: "CMD_LOCK_DEVICE",
+  CMD_LOGIN_QR_CODE: "CMD_LOGIN_QR_CODE",
 };
 
 const PERMISSION_KIND = {
@@ -333,6 +335,7 @@ const BUTTON_TEXT = {
   CONTINUE: "Tiếp tục",
   LOGIN: "Đăng nhập",
   TWO_FACTOR: "Xác thực hai bước",
+  LOGIN_QR: "Đăng nhập bằng mã QR",
   RESET_MFA: "Đặt lại MFA",
   PERMISSION: "Phân quyền",
   ADD_MEMBER: "Thêm thành viên",
@@ -390,4 +393,5 @@ export {
   TRANSACTION_STATE_MAP,
   TRANSACTION_UPDATE_STATE_MAP,
   PAYMENT_PERIOD_STATE_MAP,
+  QR_TIMEOUT,
 };

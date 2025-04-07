@@ -209,6 +209,16 @@ export const authController = (fetchApi: any) => {
       },
     });
 
+  const requestLoginQrCode = (clientId: string) => {
+    return fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: "/v1/account/request-login-qr-code",
+      method: METHOD.POST,
+      payload: { clientId },
+      authType: AUTH_TYPE.NONE,
+    });
+  };
+
   return {
     login,
     profile,
@@ -225,5 +235,6 @@ export const authController = (fetchApi: any) => {
     requestKey,
     getMyKey,
     updateLocationByCustomer,
+    requestLoginQrCode,
   };
 };
