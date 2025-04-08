@@ -151,7 +151,6 @@ const LoginQrCode = () => {
     if (
       message?.responseCode == 200 &&
       message?.cmd == SOCKET_CMD.CMD_LOGIN_QR_CODE &&
-      message?.data?.accessToken
     ) {
       if (message?.data?.accessToken) {
         setToast(BASIC_MESSAGES.LOGGED_IN, TOAST.SUCCESS);
