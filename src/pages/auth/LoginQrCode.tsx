@@ -150,7 +150,7 @@ const LoginQrCode = () => {
   useEffect(() => {
     if (
       message?.responseCode == 200 &&
-      message?.cmd == SOCKET_CMD.CMD_LOGIN_QR_CODE &&
+      message?.cmd == SOCKET_CMD.CMD_LOGIN_QR_CODE
     ) {
       if (message?.data?.accessToken) {
         setToast(BASIC_MESSAGES.LOGGED_IN, TOAST.SUCCESS);
