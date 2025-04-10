@@ -19,8 +19,24 @@ import useApi from "../../hooks/useApi";
 import useForm from "../../hooks/useForm";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { parseDate } from "../../services/utils";
+import FaceIdStatusField from "../../components/form/FaceIdStatusField";
+import useModal from "../../hooks/useModal";
+import RegisterFaceId from "../faceId/RegisterFaceId";
+import DeleteFaceId from "../faceId/DeleteFaceId";
 
 const ProfileEmployee = () => {
+  const {
+    isModalVisible: registerFaceIdVisible,
+    showModal: showRegisterFaceIdForm,
+    hideModal: hideRegisterFaceIdForm,
+    formConfig: registerFaceIdFormConfig,
+  } = useModal();
+  const {
+    isModalVisible: deleteFaceIdVisible,
+    showModal: showDeleteFaceIdForm,
+    hideModal: hideDeleteFaceIdForm,
+    formConfig: deleteFaceIdFormConfig,
+  } = useModal();
   const { setProfile, setToast } = useGlobalContext();
   const { auth, loading } = useApi();
 
@@ -47,33 +63,35 @@ const ProfileEmployee = () => {
         oldPassword: "",
         address: "",
         birthDate: "",
+        isFaceIdRegistered: false,
       },
       validate
     );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      resetForm();
-      const res = await auth.profile();
-      if (res.result) {
-        const data = res.data;
-        setForm({
-          ...form,
-          fullName: data.fullName,
-          username: data.username,
-          email: data.email,
-          phone: data.phone,
-          avatarPath: data.avatarPath,
-          groupName: data.group?.name,
-          departmentName: data.department?.name,
-          address: data.address,
-          birthDate: data.birthDate,
-        });
-      } else {
-        window.location.href = "/";
-      }
-    };
+  const fetchData = async () => {
+    resetForm();
+    const res = await auth.profile();
+    if (res.result) {
+      const data = res.data;
+      setForm({
+        ...form,
+        fullName: data.fullName,
+        username: data.username,
+        email: data.email,
+        phone: data.phone,
+        avatarPath: data.avatarPath,
+        groupName: data.group?.name,
+        departmentName: data.department?.name,
+        address: data.address,
+        birthDate: data.birthDate,
+        isFaceIdRegistered: data.isFaceIdRegistered,
+      });
+    } else {
+      window.location.href = "/";
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -96,6 +114,26 @@ const ProfileEmployee = () => {
     }
   };
 
+  const handleRegisterFaceId = async () => {
+    showRegisterFaceIdForm({
+      hideModal: hideRegisterFaceIdForm,
+      onButtonClick: async () => {
+        hideRegisterFaceIdForm();
+        await fetchData();
+      },
+    });
+  };
+
+  const handleDeleteFaceId = () => {
+    showDeleteFaceIdForm({
+      hideModal: hideDeleteFaceIdForm,
+      onButtonClick: async () => {
+        hideDeleteFaceIdForm();
+        await fetchData();
+      },
+    });
+  };
+
   return (
     <Sidebar
       breadcrumbs={[
@@ -106,6 +144,14 @@ const ProfileEmployee = () => {
       renderContent={
         <>
           <LoadingDialog isVisible={loading} />
+          <RegisterFaceId
+            isVisible={registerFaceIdVisible}
+            formConfig={registerFaceIdFormConfig}
+          />
+          <DeleteFaceId
+            isVisible={deleteFaceIdVisible}
+            formConfig={deleteFaceIdFormConfig}
+          />
           <FormCard
             title={PAGE_CONFIG.PROFILE.label}
             children={
@@ -191,7 +237,11 @@ const ProfileEmployee = () => {
                     type="password"
                     error={errors.oldPassword}
                   />
-                  <span className="flex-1" />
+                  <FaceIdStatusField
+                    isRegistered={form.isFaceIdRegistered}
+                    onRegister={handleRegisterFaceId}
+                    onDelete={handleDeleteFaceId}
+                  />
                 </div>
                 <ActionSection
                   children={

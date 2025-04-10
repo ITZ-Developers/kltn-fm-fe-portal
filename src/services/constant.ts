@@ -354,6 +354,9 @@ const BUTTON_TEXT = {
   REJECT: "Từ chối",
   APPROVE: "Chấp nhận",
   RECALCULATE: "Tính lại",
+  REGISTER_FACEID: "Đăng ký FaceID",
+  VERIFY_FACEID: "Xác thực FaceID",
+  DELETE_FACEID: "Xóa FaceID",
 };
 
 export {

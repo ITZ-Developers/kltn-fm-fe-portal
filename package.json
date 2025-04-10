@@ -40,6 +40,7 @@
     "react-router-dom": "^6.26.2",
     "react-syntax-highlighter": "^15.5.0",
     "react-toastify": "^10.0.5",
+    "react-webcam": "^7.2.0",
     "three": "^0.172.0",
     "uuid": "^10.0.0"
   },
