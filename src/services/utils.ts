@@ -3,6 +3,8 @@ import * as CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 import { API_URL, PERIOD_KIND_MAP } from "./constant";
 import forge from "node-forge";
+import { format, isSameDay } from "date-fns";
+import { vi } from "date-fns/locale";
 
 const extractPrivateKey = (keyString: string): string => {
   const beginMarker = "-----BEGIN PRIVATE KEY-----";
@@ -448,6 +450,44 @@ const convertAlignment = (value: any) => {
   return mapping[value] || value;
 };
 
+const parseCustomDateString = (dateStr: string): Date => {
+  const [datePart, timePart] = dateStr.split(" ");
+  const [day, month, year] = datePart.split("/").map(Number);
+  const [hour, minute, second] = timePart.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute, second);
+};
+
+const formatMessageTime = (dateStr: string): string => {
+  const createdDate = parseCustomDateString(dateStr);
+  const now = new Date();
+
+  if (isSameDay(createdDate, now)) {
+    return format(createdDate, "HH:mm", { locale: vi });
+  } else {
+    return format(createdDate, "dd/MM/yyyy", { locale: vi });
+  }
+};
+
+const getMimeType = (fileName: string): string => {
+  const extension = fileName.split(".").pop()?.toLowerCase();
+  switch (extension) {
+    case "jpg":
+    case "jpeg":
+    case "png":
+      return "image/" + extension;
+    case "mp4":
+      return "video/mp4";
+    case "mp3":
+      return "audio/mp3";
+    case "pdf":
+      return "application/pdf";
+    case "xlsx":
+      return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    default:
+      return "application/octet-stream";
+  }
+};
+
 export {
   encrypt,
   decrypt,
@@ -476,4 +516,7 @@ export {
   getNextValidExpirationDate,
   getPreviousExpirationDate,
   convertAlignment,
+  parseCustomDateString,
+  getMimeType,
+  formatMessageTime,
 };

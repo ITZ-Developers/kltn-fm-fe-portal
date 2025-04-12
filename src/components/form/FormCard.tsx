@@ -44,13 +44,28 @@ const ActionSection = ({ children }: any) => {
   );
 };
 
-const BasicCardForm = ({ title = "Login", children }: any) => (
+const BasicCardForm = ({ title = "Login", children, imgSrc }: any) => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4">
-    <div className="w-full max-w-sm rounded-xl bg-gray-900/95 p-8 shadow-2xl backdrop-blur-sm">
-      <h2 className="mb-6 text-center text-2xl font-semibold text-blue-500">
-        {title}
-      </h2>
-      {children}
+    <div
+      className={`w-full rounded-xl bg-gray-900/95 shadow-2xl backdrop-blur-sm flex overflow-hidden ${
+        imgSrc ? "max-w-5xl" : "max-w-md"
+      }`}
+    >
+      {imgSrc && (
+        <div className="w-1/2 hidden md:block">
+          <img
+            src={imgSrc}
+            className="h-full w-full object-contain"
+            alt="Card illustration"
+          />
+        </div>
+      )}
+      <div className={imgSrc ? "w-full md:w-1/2 p-8" : "w-full p-8"}>
+        <h2 className="mb-6 text-center text-2xl font-semibold text-blue-500">
+          {title}
+        </h2>
+        {children}
+      </div>
     </div>
   </div>
 );

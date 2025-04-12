@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { BellIcon, UserIcon } from "lucide-react";
+import { BellIcon, MessageSquareIcon, UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import { useGlobalContext } from "../config/GlobalProvider";
@@ -125,12 +125,22 @@ const MainHeader = ({ breadcrumbs }: any) => {
 
         <div className="relative flex items-center space-x-4 flex-shrink-0">
           {!isCustomer && (
-            <button
-              className="relative focus:outline-none"
-              onClick={() => setIsNotificationOpen(true)}
-            >
-              <BellIcon size={24} className="text-white" />
-            </button>
+            <>
+              <button
+                className="relative focus:outline-none"
+                onClick={() => setIsNotificationOpen(true)}
+                title="Thông báo"
+              >
+                <BellIcon size={24} className="text-white" />
+              </button>
+              <button
+                className="relative focus:outline-none"
+                onClick={() => navigate("/chat")}
+                title="Nhắn tin"
+              >
+                <MessageSquareIcon size={24} className="text-white" />
+              </button>
+            </>
           )}
 
           <div className="relative" ref={dropdownRef}>
