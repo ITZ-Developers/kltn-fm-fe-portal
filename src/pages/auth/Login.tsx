@@ -26,6 +26,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { StaticSelectField } from "../../components/form/SelectField";
+import welcomeImg from "../../assets/welcome.png";
 
 const Login = () => {
   const { setToast } = useGlobalContext();
@@ -153,7 +154,10 @@ const Login = () => {
     <>
       <LoadingDialog isVisible={loading} />
       {!isMfa ? (
-        <BasicCardForm title={BUTTON_TEXT.LOGIN}>
+        <BasicCardForm
+          title={"Chào mừng bạn đến với hệ thống"}
+          imgSrc={welcomeImg}
+        >
           <div className="space-y-4">
             <StaticSelectField
               title="Loại tài khoản"

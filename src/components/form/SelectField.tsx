@@ -156,7 +156,10 @@ const SelectField = ({
                 <div
                   key={index}
                   className="p-2 hover:bg-gray-700 text-gray-200 cursor-pointer whitespace-nowrap"
-                  onClick={() => handleSelect(item)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelect(item);
+                  }}
                 >
                   {item[labelKey]}
                 </div>
@@ -280,7 +283,10 @@ const StaticSelectField = ({
                 <div
                   key={index}
                   className="p-2 hover:bg-gray-700 text-gray-200 cursor-pointer"
-                  onClick={() => handleSelect(item)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelect(item);
+                  }}
                 >
                   <span
                     className={`px-2 py-1 rounded-md font-semibold text-sm whitespace-nowrap ${item.className}`}
@@ -507,7 +513,10 @@ const SelectFieldLazy = ({
                 <div
                   key={index}
                   className="p-2 hover:bg-gray-700 text-gray-200 cursor-pointer whitespace-nowrap flex items-center"
-                  onClick={() => handleSelect(item)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelect(item);
+                  }}
                 >
                   {renderColorTag(item)}
                   {item[labelKey]}
@@ -524,4 +533,203 @@ const SelectFieldLazy = ({
   );
 };
 
-export { SelectField, StaticSelectField, SelectFieldLazy };
+const MultiSelectField = ({
+  title = "",
+  isRequired = false,
+  placeholder = "",
+  onChange,
+  fetchListApi,
+  queryParams,
+  value = [],
+  valueKey = "id",
+  labelKey = "name",
+  error = "",
+  disabled = false,
+}: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [items, setItems] = useState<any[]>([]);
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const fetchData = async () => {
+    setTimeout(async () => {
+      const res = await fetchListApi({
+        [labelKey]: searchTerm,
+        ...queryParams,
+      });
+      setItems(res?.data?.content || []);
+    }, FETCH_INTERVAL);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (searchTerm || isOpen) {
+      fetchData();
+    }
+  }, [searchTerm, isOpen]);
+
+  useEffect(() => {
+    if (!value || value.length === 0) {
+      setSelectedItems([]);
+    } else if (items.length > 0) {
+      const foundItems = items.filter((item) => value.includes(item[valueKey]));
+      setSelectedItems(foundItems);
+    }
+  }, [value, items, valueKey]);
+
+  const handleSelect = (item: any) => {
+    if (!value.includes(item[valueKey])) {
+      const newSelectedItems = [...selectedItems, item];
+      setSelectedItems(newSelectedItems);
+      onChange([...value, item[valueKey]]);
+    }
+    setSearchTerm("");
+  };
+
+  const handleRemove = (item: any) => {
+    const newSelectedItems = selectedItems.filter(
+      (selected) => selected[valueKey] !== item[valueKey]
+    );
+    setSelectedItems(newSelectedItems);
+    onChange(newSelectedItems.map((selected) => selected[valueKey]));
+  };
+
+  const handleClearAll = () => {
+    setSelectedItems([]);
+    onChange([]);
+    setSearchTerm("");
+  };
+
+  return (
+    <div className="flex-1 items-center">
+      {title && (
+        <label className="text-base font-semibold text-gray-200 mb-2 text-left flex items-center">
+          {title}
+          {isRequired && <span className="ml-1 text-red-400">*</span>}
+        </label>
+      )}
+      <div
+        ref={wrapperRef}
+        className={`relative w-full ${
+          error ? "border border-red-500 rounded-md" : ""
+        }`}
+      >
+        <div
+          className={`w-full p-2 rounded-md ${
+            error
+              ? "bg-red-900/20"
+              : disabled
+              ? "bg-gray-700/50 border border-gray-700 cursor-not-allowed"
+              : "bg-gray-800 border border-gray-600"
+          }`}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+        >
+          <div className="flex flex-wrap items-center gap-1 min-h-[24px]">
+            {selectedItems.length > 0 ? (
+              <>
+                {selectedItems.map((item) => (
+                  <div
+                    key={item[valueKey]}
+                    className="flex items-center bg-gray-700 text-gray-200 rounded px-2 py-1 text-sm"
+                  >
+                    {item[labelKey]}
+                    {!disabled && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemove(item);
+                        }}
+                        className="ml-1 text-gray-300 hover:text-gray-100"
+                      >
+                        <XIcon size={14} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div
+                className={`flex-1 text-base ${
+                  disabled ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                {placeholder}
+              </div>
+            )}
+            {isOpen && !disabled ? (
+              <input
+                className="flex-1 text-base outline-none text-gray-200 placeholder:text-gray-500 bg-transparent"
+                placeholder={selectedItems.length > 0 ? "" : placeholder}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(true);
+                }}
+              />
+            ) : null}
+            <div className="flex items-center">
+              {selectedItems.length > 0 && !isOpen && !disabled && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClearAll();
+                  }}
+                  className="p-1 text-gray-300 hover:text-gray-100 rounded-full hover:bg-gray-700 transition-colors duration-200"
+                >
+                  <XIcon size={16} />
+                </button>
+              )}
+              <ChevronDownIcon
+                size={20}
+                className={disabled ? "text-gray-400" : "text-gray-200"}
+              />
+            </div>
+          </div>
+        </div>
+        {isOpen && !disabled && (
+          <div className="absolute w-full mt-1 max-h-60 overflow-y-auto rounded-md bg-gray-800 border border-gray-600 shadow-lg z-10">
+            {items.length > 0 ? (
+              items
+                .filter((item) => !value.includes(item[valueKey]))
+                .map((item, index) => (
+                  <div
+                    key={index}
+                    className="p-2 hover:bg-gray-700 text-gray-200 cursor-pointer whitespace-nowrap"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelect(item);
+                    }}
+                  >
+                    {item[labelKey]}
+                  </div>
+                ))
+            ) : (
+              <div className="p-2 text-gray-500">Không có dữ liệu</div>
+            )}
+          </div>
+        )}
+      </div>
+      {error && <p className="text-red-400 text-sm mt-1 text-left">{error}</p>}
+    </div>
+  );
+};
+
+export { SelectField, StaticSelectField, SelectFieldLazy, MultiSelectField };

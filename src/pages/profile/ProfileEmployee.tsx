@@ -86,6 +86,7 @@ const ProfileEmployee = () => {
         birthDate: data.birthDate,
         isFaceIdRegistered: data.isFaceIdRegistered,
       });
+      setProfile(res.data);
     } else {
       window.location.href = "/";
     }

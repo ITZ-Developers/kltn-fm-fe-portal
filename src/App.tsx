@@ -13,6 +13,7 @@ import { GRANT_TYPE, LOCAL_STORAGE } from "./services/constant";
 import { getRoles } from "./services/utils";
 import RedirectHome from "./components/redirect/RedirectHome";
 import LoginQrCode from "./pages/auth/LoginQrCode";
+import InternalChatPage from "./pages/chat/InternalChatPage";
 
 const App = () => {
   const [tokenData, setTokenData] = useState<any>(null);
@@ -74,6 +75,7 @@ const App = () => {
             {profile && getSidebarMenus().length > 0 ? (
               <>
                 <Route path="/" element={<RedirectHome />} />
+                <Route path="/chat" element={<InternalChatPage />} />
                 {getRouters().map(({ path, element }) => (
                   <Route key={path} path={path} element={element} />
                 ))}

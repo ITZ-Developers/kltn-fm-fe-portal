@@ -10,23 +10,45 @@ const FormCard = ({ title = "SAMPLE", children }: any) => {
   );
 };
 
-const ModalForm = ({ children, isVisible, onClose, title }: any) => {
+const ModalForm = ({
+  children,
+  isVisible,
+  onClose,
+  title,
+  blurAmount = "none",
+}: any) => {
+  const blurClass =
+    (
+      {
+        sm: "backdrop-blur-sm",
+        md: "backdrop-blur-md",
+        lg: "backdrop-blur-lg",
+        xl: "backdrop-blur-xl",
+        "2xl": "backdrop-blur-2xl",
+        none: "",
+      } as any
+    )[blurAmount] || "backdrop-blur-md";
+
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40">
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40 ${blurClass}`}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             className="bg-gray-900 rounded-lg p-8 border border-gray-800 max-w-lg w-full relative shadow-lg"
           >
-            <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-200"
-              onClick={onClose}
-            >
-              <XIcon size={20} />
-            </button>
+            {onClose && (
+              <button
+                className="absolute top-3 right-3 text-gray-400 hover:text-gray-200"
+                onClick={onClose}
+              >
+                <XIcon size={20} />
+              </button>
+            )}
             <h2 className="text-xl font-bold mb-4 text-blue-500">{title}</h2>
             {children}
           </motion.div>
@@ -44,13 +66,28 @@ const ActionSection = ({ children }: any) => {
   );
 };
 
-const BasicCardForm = ({ title = "Login", children }: any) => (
+const BasicCardForm = ({ title = "Login", children, imgSrc }: any) => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 p-4">
-    <div className="w-full max-w-sm rounded-xl bg-gray-900/95 p-8 shadow-2xl backdrop-blur-sm">
-      <h2 className="mb-6 text-center text-2xl font-semibold text-blue-500">
-        {title}
-      </h2>
-      {children}
+    <div
+      className={`w-full rounded-xl bg-gray-900/95 shadow-2xl backdrop-blur-sm flex overflow-hidden ${
+        imgSrc ? "max-w-5xl" : "max-w-md"
+      }`}
+    >
+      {imgSrc && (
+        <div className="w-1/2 hidden md:block">
+          <img
+            src={imgSrc}
+            className="h-full w-full object-contain"
+            alt="Card illustration"
+          />
+        </div>
+      )}
+      <div className={imgSrc ? "w-full md:w-1/2 p-8" : "w-full p-8"}>
+        <h2 className="mb-6 text-center text-2xl font-semibold text-blue-500">
+          {title}
+        </h2>
+        {children}
+      </div>
     </div>
   </div>
 );

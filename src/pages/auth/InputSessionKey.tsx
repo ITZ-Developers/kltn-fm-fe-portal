@@ -1,4 +1,3 @@
-import { TimerResetIcon } from "lucide-react";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import useForm from "../../hooks/useForm";
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import useModal from "../../hooks/useModal";
 import useApi from "../../hooks/useApi";
 import { decryptWithRSA } from "../../services/utils";
 import { LoadingDialog } from "../../components/page/Dialog";
+import { TimerResetIcon } from "lucide-react";
 
 const InputKeyForm = ({ isVisible, formConfig }: any) => {
   const { auth, loading } = useApi();
