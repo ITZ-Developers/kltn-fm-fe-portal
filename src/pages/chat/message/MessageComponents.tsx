@@ -206,10 +206,10 @@ const MessageActions = ({
   matched,
   myReaction,
   onReplyMessage,
-  onAddReaction,
-  onRemoveReaction,
   isSender,
   createdDate,
+  onRecallMessage,
+  isDeleted,
 }: any) => {
   const { chatMessage } = useApi();
   const [showReactionPicker, setShowReactionPicker] = useState(false);
@@ -274,8 +274,8 @@ const MessageActions = ({
       <MessageMenuButton
         id={id}
         isSender={isSender}
-        // onCopyMessage={onCopyMessage}
-        // onRecallMessage={onRecallMessage}
+        isDeleted={isDeleted}
+        onRecallMessage={onRecallMessage}
         // handleEdit={onEditMessage}
         // setIsDetailsOpen={setIsDetailsOpen}
       />
@@ -306,10 +306,10 @@ const MessageActions = ({
 const MessageMenuButton = ({
   id,
   isSender,
-  onCopyMessage,
   onRecallMessage,
   handleEdit,
   setIsDetailsOpen,
+  isDeleted,
 }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<any>(null);
@@ -330,44 +330,38 @@ const MessageMenuButton = ({
     };
   }, [isOpen]);
 
-  const actions = [
-    {
-      label: "Sao chép",
+  const actions = [];
+
+  if (isSender) {
+    actions.push({
+      label: "Chỉnh sửa",
       onClick: () => {
-        onCopyMessage(id);
+        handleEdit();
         setIsOpen(false);
       },
-      icon: CopyIcon,
+      icon: Edit2Icon,
+    });
+
+    if (!isDeleted) {
+      actions.push({
+        label: "Thu hồi",
+        onClick: () => {
+          onRecallMessage(id);
+          setIsOpen(false);
+        },
+        icon: TrashIcon,
+      });
+    }
+  }
+
+  actions.push({
+    label: "Chi tiết",
+    onClick: () => {
+      setIsDetailsOpen(true);
+      setIsOpen(false);
     },
-    ...(isSender
-      ? [
-          {
-            label: "Chỉnh sửa",
-            onClick: () => {
-              handleEdit();
-              setIsOpen(false);
-            },
-            icon: Edit2Icon,
-          },
-          {
-            label: "Thu hồi",
-            onClick: () => {
-              onRecallMessage(id);
-              setIsOpen(false);
-            },
-            icon: TrashIcon,
-          },
-        ]
-      : []),
-    {
-      label: "Chi tiết",
-      onClick: () => {
-        setIsDetailsOpen(true);
-        setIsOpen(false);
-      },
-      icon: InfoIcon,
-    },
-  ];
+    icon: InfoIcon,
+  });
 
   return (
     <div className="relative" ref={menuRef}>
@@ -392,7 +386,7 @@ const MessageMenuButton = ({
               isSender ? "bottom-0 right-5" : "bottom-0 left-5"
             } mt-1 py-1 w-40 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-50`}
           >
-            {actions.map((action, index) => {
+            {actions.map((action: any, index: any) => {
               const Icon = action.icon;
               return (
                 <div

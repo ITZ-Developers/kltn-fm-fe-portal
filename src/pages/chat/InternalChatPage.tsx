@@ -43,7 +43,12 @@ import UnauthorizedDialog from "../auth/UnauthorizedDialog";
 import InputSessionKey from "../auth/InputSessionKey";
 import NotReadyDialog from "../auth/NotReadyDialog";
 import useApi from "../../hooks/useApi";
-import { configModalForm, LoadingDialog } from "../../components/page/Dialog";
+import {
+  configDeleteDialog,
+  configModalForm,
+  ConfirmationDialog,
+  LoadingDialog,
+} from "../../components/page/Dialog";
 import RequestKey from "../auth/RequestKey";
 import useModal from "../../hooks/useModal";
 import VerifyFaceId from "../faceId/VerifyFaceId";
@@ -101,6 +106,13 @@ const InternalChatPage = () => {
     showModal: showCreateRoomForm,
     hideModal: hideCreateRoomForm,
     formConfig: createRoomFormConfig,
+  } = useModal();
+
+  const {
+    isModalVisible: deleteDialogVisible,
+    showModal: showDeleteDialog,
+    hideModal: hideDeleteDialog,
+    formConfig: deleteDialogConfig,
   } = useModal();
 
   const [conversations, setConversations] = useState<any>([]);
@@ -234,6 +246,24 @@ const InternalChatPage = () => {
     }
   };
 
+  const fetchMessageNoLoading = async (conversation: any) => {
+    if (!conversation) return;
+    const res = await chatMessageNoLoading.list({
+      chatRoomId: conversation.id,
+      isPaged: 0,
+    });
+    if (res.result) {
+      const data = res?.data?.content || [];
+      const decryptedData = data?.map((item: any) => {
+        const obj = decryptData(sessionKey, item, DECRYPT_FIELDS.MESSAGE);
+        return convertDateByFields(obj, CONVER_DATE_FIELDS.MESSAGE);
+      });
+      setMessages(decryptedData.reverse());
+    } else {
+      setMessages([]);
+    }
+  };
+
   useEffect(() => {
     if (!profile.isFaceIdRegistered) {
       setIsFaceIdVerified(true);
@@ -262,68 +292,18 @@ const InternalChatPage = () => {
         }
         await fetchChatRooms(chatRoomListNoLoading.list);
       }
-      if (SOCKET_CMD.CMD_NEW_MESSAGE === message?.cmd) {
+      if (
+        [SOCKET_CMD.CMD_NEW_MESSAGE, SOCKET_CMD.CMD_MESSAGE_UPDATED].includes(
+          message?.cmd
+        )
+      ) {
         const messageId = message?.data?.messageId;
         const chatRoomId = message?.data?.chatRoomId;
         if (messageId && chatRoomId === selectedConversation?.id) {
-          const res = await chatMessageNoLoading.get(messageId);
-          if (!res.result) {
-            return;
-          }
-          const data = res?.data;
-          const newMessage = decryptData(
-            sessionKey,
-            data,
-            DECRYPT_FIELDS.MESSAGE
-          );
-          setMessages((prev: any) => [
-            ...prev,
-            convertDateByFields(newMessage, CONVER_DATE_FIELDS.MESSAGE),
-          ]);
+          await fetchMessageNoLoading(selectedConversation);
           scrollToBottom();
         }
         await fetchChatRooms(chatRoomListNoLoading.list);
-      }
-      if (SOCKET_CMD.CMD_MESSAGE_UPDATED === message?.cmd) {
-        const messageId = message?.data?.messageId;
-        const chatRoomId = message?.data?.chatRoomId;
-        if (messageId && chatRoomId === selectedConversation?.id) {
-          const res = await chatMessageNoLoading.get(messageId);
-          if (!res.result) {
-            return;
-          }
-          const data = res?.data;
-          const newMessage = decryptData(
-            sessionKey,
-            data,
-            DECRYPT_FIELDS.MESSAGE
-          );
-          setMessages((prev: any[]) => {
-            const updatedMessage = convertDateByFields(
-              newMessage,
-              CONVER_DATE_FIELDS.MESSAGE
-            );
-            const index = prev.findIndex((msg) => msg.id === messageId);
-
-            const newMessages = [...prev];
-            if (index !== -1) {
-              newMessages[index] = updatedMessage;
-            } else {
-              newMessages.push(updatedMessage);
-            }
-            const isLatest = newMessages.every(
-              (msg) =>
-                msg.id === updatedMessage.id ||
-                msg.createdDate <= updatedMessage.createdDate
-            );
-
-            if (isLatest) {
-              fetchChatRooms(chatRoomListNoLoading.list);
-            }
-
-            return newMessages;
-          });
-        }
       }
     };
     handleProcessSocket();
@@ -490,6 +470,19 @@ const InternalChatPage = () => {
     setSearchMessages("");
   }, [panelState]);
 
+  const onDeleteMessageButtonClick = (id: any) => {
+    showDeleteDialog(
+      configDeleteDialog({
+        label: "Thu hồi tin nhắn",
+        message: "Bạn có chắc muốn thu hồi tin nhắn này",
+        deleteApi: () => chatMessageNoLoading.del(id),
+        refreshData: () => {},
+        hideModal: hideDeleteDialog,
+        setToast,
+      })
+    );
+  };
+
   return (
     <>
       <UnauthorizedDialog />
@@ -505,6 +498,10 @@ const InternalChatPage = () => {
       <CreateChatRoom
         isVisible={createRoomFormVisible}
         formConfig={createRoomFormConfig}
+      />
+      <ConfirmationDialog
+        isVisible={deleteDialogVisible}
+        formConfig={deleteDialogConfig}
       />
       <div className="flex h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-200 overflow-hidden">
         <ChatSideBar
@@ -576,7 +573,6 @@ const InternalChatPage = () => {
                               )}
                             </>
                           )}
-
                           {selectedConversation.kind ===
                             CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value &&
                             isOnline(selectedConversation.lastLogin) && (
@@ -684,6 +680,7 @@ const InternalChatPage = () => {
                               <MessageItem
                                 openModal={setSelectedFile}
                                 message={message}
+                                onRecallMessage={onDeleteMessageButtonClick}
                               />
                             </div>
                           </div>

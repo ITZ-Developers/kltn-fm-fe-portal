@@ -251,10 +251,11 @@ const configDeleteDialog = ({
   refreshData,
   hideModal,
   setToast,
+  message = "Bạn có chắc chắn muốn xóa?",
 }: any) => {
   return {
     title: label,
-    message: "Bạn có chắc chắn muốn xóa?",
+    message: message,
     color: "crimson",
     onConfirm: async () => {
       hideModal();

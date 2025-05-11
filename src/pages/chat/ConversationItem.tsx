@@ -6,7 +6,7 @@ import {
   truncateString,
 } from "../../services/utils";
 import { UserIcon, UsersIcon } from "lucide-react";
-import { CHAT_ROOM_KIND_MAP } from "../../services/constant";
+import { BASIC_MESSAGES, CHAT_ROOM_KIND_MAP } from "../../services/constant";
 import { GEMINI_BOT_CONFIG } from "../../components/config/PageConfig";
 
 const ConversationItem = ({ conversation, selected, onClick }: any) => {
@@ -70,7 +70,8 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
               />
             ) : (
               <div className="w-12 h-12 rounded-full bg-gray-700 border border-gray-600 shadow-md flex items-center justify-center">
-                {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value === conversation.kind ? (
+                {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
+                conversation.kind ? (
                   <UserIcon className="text-gray-300" />
                 ) : (
                   <UsersIcon className="text-gray-300" />
@@ -95,17 +96,31 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                 {formatMessageTime(conversation?.lastMessage?.createdDate)}
               </span>
             </div>
-            {conversation?.lastMessage?.content && (
-              <p
-                className={`text-sm truncate ${
-                  isUnread ? "text-gray-200" : "text-gray-400"
-                }`}
-              >
-                {truncateString(
-                  `${conversation?.lastMessage?.sender?.fullName}: ${conversation?.lastMessage?.content}`,
-                  30
+            {(conversation?.lastMessage?.content ||
+              conversation?.lastMessage?.isDeleted) && (
+              <>
+                {conversation.lastMessage.isDeleted ? (
+                  <p
+                    className={`text-sm italic ${
+                      isUnread ? "text-gray-200" : "text-gray-400"
+                    }`}
+                    aria-label="Tin nhắn đã bị thu hồi"
+                  >
+                    {BASIC_MESSAGES.MESSAGE_DELETED}
+                  </p>
+                ) : (
+                  <p
+                    className={`text-sm truncate ${
+                      isUnread ? "text-gray-200" : "text-gray-400"
+                    }`}
+                  >
+                    {truncateString(
+                      `${conversation?.lastMessage?.sender?.fullName}: ${conversation?.lastMessage?.content}`,
+                      30
+                    )}
+                  </p>
                 )}
-              </p>
+              </>
             )}
           </div>
           {isUnread && (
