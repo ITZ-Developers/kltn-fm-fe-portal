@@ -10,23 +10,45 @@ const FormCard = ({ title = "SAMPLE", children }: any) => {
   );
 };
 
-const ModalForm = ({ children, isVisible, onClose, title }: any) => {
+const ModalForm = ({
+  children,
+  isVisible,
+  onClose,
+  title,
+  blurAmount = "none",
+}: any) => {
+  const blurClass =
+    (
+      {
+        sm: "backdrop-blur-sm",
+        md: "backdrop-blur-md",
+        lg: "backdrop-blur-lg",
+        xl: "backdrop-blur-xl",
+        "2xl": "backdrop-blur-2xl",
+        none: "",
+      } as any
+    )[blurAmount] || "backdrop-blur-md";
+
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40">
+        <div
+          className={`fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40 ${blurClass}`}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             className="bg-gray-900 rounded-lg p-8 border border-gray-800 max-w-lg w-full relative shadow-lg"
           >
-            <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-200"
-              onClick={onClose}
-            >
-              <XIcon size={20} />
-            </button>
+            {onClose && (
+              <button
+                className="absolute top-3 right-3 text-gray-400 hover:text-gray-200"
+                onClick={onClose}
+              >
+                <XIcon size={20} />
+              </button>
+            )}
             <h2 className="text-xl font-bold mb-4 text-blue-500">{title}</h2>
             {children}
           </motion.div>

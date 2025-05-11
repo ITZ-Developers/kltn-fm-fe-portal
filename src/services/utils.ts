@@ -1,9 +1,9 @@
 import moment from "moment";
 import * as CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
-import { API_URL, PERIOD_KIND_MAP } from "./constant";
+import { API_URL, ONLINE_TIMEOUT, PERIOD_KIND_MAP } from "./constant";
 import forge from "node-forge";
-import { format, isSameDay } from "date-fns";
+import { format, isSameDay, formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 
 const extractPrivateKey = (keyString: string): string => {
@@ -457,15 +457,68 @@ const parseCustomDateString = (dateStr: string): Date => {
   return new Date(year, month - 1, day, hour, minute, second);
 };
 
-const formatMessageTime = (dateStr: string): string => {
-  const createdDate = parseCustomDateString(dateStr);
-  const now = new Date();
+const formatMessageTime = (dateStr: string) => {
+  try {
+    const createdDate = parseDate(dateStr);
+    if (!(createdDate instanceof Date)) return null;
+    const now = new Date();
 
-  if (isSameDay(createdDate, now)) {
-    return format(createdDate, "HH:mm", { locale: vi });
-  } else {
-    return format(createdDate, "dd/MM/yyyy", { locale: vi });
+    if (isSameDay(createdDate, now)) {
+      return format(createdDate, "HH:mm", { locale: vi });
+    } else {
+      return format(createdDate, "dd/MM/yyyy", { locale: vi });
+    }
+  } catch {
+    return null;
   }
+};
+
+const isOnline = (dateString: any): boolean => {
+  try {
+    const lastSeen = parseDate(dateString);
+    if (!(lastSeen instanceof Date)) return false;
+
+    const now = new Date();
+    const diffMs = now.getTime() - lastSeen.getTime();
+
+    return diffMs >= 0 && diffMs <= ONLINE_TIMEOUT;
+  } catch {
+    return false;
+  }
+};
+
+const formatDistanceToNowVN = (dateString: any) => {
+  try {
+    const date = parseDate(dateString);
+    if (!(date instanceof Date)) return null;
+    return formatDistanceToNow(date, {
+      addSuffix: true,
+      locale: vi,
+    });
+  } catch {
+    return null;
+  }
+};
+
+const convertDateByFields = (item: any, fields: string[]) => {
+  const result = { ...item };
+
+  fields.forEach((fieldPath) => {
+    const keys = fieldPath.split(".");
+    const parent = keys.slice(0, -1).reduce((obj, key) => {
+      if (!obj[key] || typeof obj[key] !== "object") {
+        obj[key] = {};
+      }
+      return obj[key];
+    }, result);
+
+    const lastKey = keys[keys.length - 1];
+    if (parent[lastKey]) {
+      parent[lastKey] = convertUtcToVn(parent[lastKey]);
+    }
+  });
+
+  return result;
 };
 
 const getMimeType = (fileName: string): string => {
@@ -486,6 +539,26 @@ const getMimeType = (fileName: string): string => {
     default:
       return "application/octet-stream";
   }
+};
+
+const generateTimestamp = () => {
+  return Date.now().toString();
+};
+
+const parseNumber = (input: string, defaultValue: number): number => {
+  try {
+    const parsed = Number(input);
+    if (isNaN(parsed)) {
+      return defaultValue;
+    }
+    return parsed;
+  } catch (error) {
+    return defaultValue;
+  }
+};
+
+const generateIdNumber = () => {
+  return parseNumber(generateTimestamp(), -99999999);
 };
 
 export {
@@ -519,4 +592,10 @@ export {
   parseCustomDateString,
   getMimeType,
   formatMessageTime,
+  isOnline,
+  formatDistanceToNowVN,
+  convertDateByFields,
+  generateTimestamp,
+  parseNumber,
+  generateIdNumber,
 };

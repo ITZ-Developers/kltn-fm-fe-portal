@@ -262,16 +262,35 @@ const KEY_KIND_MAP = {
   },
 };
 
+const CHAT_ROOM_KIND_MAP = {
+  GROUP: {
+    value: 1,
+    label: "Nhóm",
+    className: "bg-blue-900 text-blue-300",
+  },
+  DIRECT_MESSAGE: {
+    value: 2,
+    label: "Riêng",
+    className: "bg-red-900 text-red-300",
+  },
+};
+
 const ITEMS_PER_PAGE = 20;
 const TRUNCATE_LENGTH = 150;
 const FETCH_INTERVAL = 300;
-const PING_INTERVAL = 5000; // 5s
+const PING_INTERVAL = 10000; // 10s
+const ONLINE_TIMEOUT = 30000; // 30s
 const SESSION_KEY_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
 const QR_TIMEOUT = 60000; // 60s
 
 const SOCKET_CMD = {
   CMD_LOCK_DEVICE: "CMD_LOCK_DEVICE",
   CMD_LOGIN_QR_CODE: "CMD_LOGIN_QR_CODE",
+  CMD_CHAT_ROOM_CREATED: "CMD_CHAT_ROOM_CREATED",
+  CMD_CHAT_ROOM_UPDATED: "CMD_CHAT_ROOM_UPDATED",
+  CMD_CHAT_ROOM_DELETED: "CMD_CHAT_ROOM_DELETED",
+  CMD_NEW_MESSAGE: "CMD_NEW_MESSAGE",
+  CMD_MESSAGE_UPDATED: "CMD_MESSAGE_UPDATED",
 };
 
 const PERMISSION_KIND = {
@@ -292,6 +311,11 @@ const SORT_DATE = {
 const NOTIFICATION_STATE = {
   SENT: 0,
   READ: 1,
+};
+
+const CHAT_HISTORY_ROLE = {
+  USER: 1,
+  MODEL: 2,
 };
 
 const TAG_KIND = {
@@ -327,6 +351,7 @@ const BASIC_MESSAGES = {
   NO_DATA: "Không có dữ liệu",
   APPROVE: "Xét duyệt thành công",
   REJECT: "Từ chối yêu cầu thành công",
+  MESSAGE_DELETED: "Tin nhắn đã được thu hồi",
 };
 
 const BUTTON_TEXT = {
@@ -397,4 +422,7 @@ export {
   TRANSACTION_UPDATE_STATE_MAP,
   PAYMENT_PERIOD_STATE_MAP,
   QR_TIMEOUT,
+  CHAT_HISTORY_ROLE,
+  CHAT_ROOM_KIND_MAP,
+  ONLINE_TIMEOUT,
 };

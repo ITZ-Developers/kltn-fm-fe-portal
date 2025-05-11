@@ -28,6 +28,10 @@ import { notificationController } from "../controllers/notificationController.ts
 import { debitController } from "../controllers/debitController.ts";
 import { paymentPeriodController } from "../controllers/paymentPeriodController.ts";
 import { faceIdController } from "./../controllers/faceIdController";
+import { chatHistoryController } from "../controllers/chatHistoryController.ts";
+import { chatRoomController } from "../controllers/chatRoomController.ts";
+import { chatRoomMemberController } from "../controllers/chatRoomMember.ts";
+import { messageController } from "../controllers/messageController.ts";
 
 const useApi = () => {
   const { fetchApi, loading } = useFetch();
@@ -61,6 +65,10 @@ const useApi = () => {
   const notification = notificationController(fetchApi);
   const paymentPeriod = paymentPeriodController(fetchApi);
   const faceId = faceIdController(fetchApi);
+  const chatHistory = chatHistoryController(fetchApi);
+  const chatRoom = chatRoomController(fetchApi);
+  const chatRoomMember = chatRoomMemberController(fetchApi);
+  const chatMessage = messageController(fetchApi);
 
   return {
     auth,
@@ -94,6 +102,10 @@ const useApi = () => {
     debit,
     paymentPeriod,
     faceId,
+    chatHistory,
+    chatRoom,
+    chatRoomMember,
+    chatMessage,
   };
 };
 

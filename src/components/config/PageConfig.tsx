@@ -1,8 +1,14 @@
 import {
   ArrowLeftRightIcon,
+  FrownIcon,
   HeadsetIcon,
+  HeartIcon,
   KeyIcon,
+  LaughIcon,
+  SmileIcon,
+  SparklesIcon,
   SquareCheckBigIcon,
+  ThumbsUpIcon,
   UserIcon,
 } from "lucide-react";
 import {
@@ -138,6 +144,58 @@ const DECRYPT_FIELDS = {
     "tag.colorCode",
   ],
   PAYMENT_PERIOD: ["name", "totalIncome", "totalExpenditure"],
+  CHAT_ROOM: ["lastMessage.content", "lastMessage.document"],
+  CHAT_HISTORY: ["message"],
+  MESSAGE: ["content", "document"],
+};
+
+const CONVER_DATE_FIELDS = {
+  CHAT_ROOM: ["lastLogin", "lastMessage.createdDate"],
+  MESSAGE: ["createdDate"],
+  CHAT_HISTORY: ["createdDate"],
+};
+
+const GEMINI_BOT_CONFIG = {
+  id: -99999999,
+  name: "Gemini AI",
+  description: "Gemini 2.0 Flash",
+  icon: SparklesIcon,
+  kind: 3,
+};
+
+const MESSAGE_REACTION_KIND_MAP = {
+  LIKE: {
+    value: 1,
+    label: "Thích",
+    icon: ThumbsUpIcon,
+    className: "text-blue-600 dark:bg-blue-900 dark:text-blue-300",
+  },
+  HEART: {
+    value: 2,
+    label: "Yêu thương",
+    icon: HeartIcon,
+    className: "text-rose-600 dark:bg-rose-900 dark:text-rose-300",
+  },
+  CRY: {
+    value: 3,
+    label: "Buồn",
+    icon: FrownIcon,
+    className: "text-sky-600 dark:bg-sky-900 dark:text-sky-300",
+  },
+  JOY: {
+    value: 4,
+    label: "Cười mỉm",
+    icon: SmileIcon,
+    className:
+      "text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300",
+  },
+  LAUGH: {
+    value: 5,
+    label: "Haha",
+    icon: LaughIcon,
+    className:
+      "text-amber-600 dark:bg-amber-900 dark:text-amber-300",
+  },
 };
 
 const SIDEBAR_MENUS = [
@@ -188,4 +246,12 @@ const SIDEBAR_MENUS = [
   },
 ];
 
-export { PAGE_CONFIG, SIDEBAR_MENUS, SESSION_KEY_PAGES, DECRYPT_FIELDS };
+export {
+  PAGE_CONFIG,
+  SIDEBAR_MENUS,
+  SESSION_KEY_PAGES,
+  DECRYPT_FIELDS,
+  CONVER_DATE_FIELDS,
+  GEMINI_BOT_CONFIG,
+  MESSAGE_REACTION_KIND_MAP,
+};
