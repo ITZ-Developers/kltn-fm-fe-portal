@@ -11,7 +11,7 @@ import {
 } from "./MessageComponents";
 import { MESSAGE_REACTION_KIND_MAP } from "../../../components/config/PageConfig";
 
-const MessageItem = ({ message, openModal }: any) => {
+const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
   const {
     isSender,
     content,
@@ -159,13 +159,13 @@ const MessageItem = ({ message, openModal }: any) => {
                   id={id}
                   isSender={isSender}
                   isReacted={isReacted}
+                  isDeleted={isDeleted}
                   matched={matched}
                   totalReactions={totalReactions}
                   myReaction={myReaction}
                   createdDate={createdDate}
+                  onRecallMessage={onRecallMessage}
                   // onReplyMessage={onReplyMessage}
-                  // onAddReaction={onAddReaction}
-                  // onRemoveReaction={onRemoveReaction}
                   onReplyMessage={() => {}}
                 />
               </div>
