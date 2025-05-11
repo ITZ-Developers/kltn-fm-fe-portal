@@ -20,6 +20,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { FileTypeIcon } from "../FileComponents";
 import useApi from "../../../hooks/useApi";
+import { BASIC_MESSAGES } from "../../../services/constant";
 
 const ParentMessage = ({ parent, onClick }: any) => {
   return (
@@ -31,9 +32,18 @@ const ParentMessage = ({ parent, onClick }: any) => {
       <p className="text-xs font-medium text-blue-400 truncate">
         {parent.sender.fullName}
       </p>
-      <p className="text-xs text-gray-300 truncate">
-        {truncateString(parent.content, 50)}
-      </p>
+      {parent.isDeleted ? (
+        <p
+          className="text-sm italic text-gray-300"
+          aria-label="Tin nhắn đã bị thu hồi"
+        >
+          {BASIC_MESSAGES.MESSAGE_DELETED}
+        </p>
+      ) : (
+        <p className="text-xs text-gray-300 truncate">
+          {truncateString(parent.content, 50)}
+        </p>
+      )}
     </motion.div>
   );
 };
