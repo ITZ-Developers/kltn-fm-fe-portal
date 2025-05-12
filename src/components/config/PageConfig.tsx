@@ -146,12 +146,12 @@ const DECRYPT_FIELDS = {
   PAYMENT_PERIOD: ["name", "totalIncome", "totalExpenditure"],
   CHAT_ROOM: ["lastMessage.content", "lastMessage.document"],
   CHAT_HISTORY: ["message"],
-  MESSAGE: ["content", "document"],
+  MESSAGE: ["content", "document", "parent.content", "parent.document"],
 };
 
 const CONVER_DATE_FIELDS = {
   CHAT_ROOM: ["lastLogin", "lastMessage.createdDate"],
-  MESSAGE: ["createdDate"],
+  MESSAGE: ["createdDate", "parent.createdDate"],
   CHAT_HISTORY: ["createdDate"],
 };
 
@@ -168,33 +168,36 @@ const MESSAGE_REACTION_KIND_MAP = {
     value: 1,
     label: "Thích",
     icon: ThumbsUpIcon,
+    emoji: "👍",
     className: "text-blue-600 dark:bg-blue-900 dark:text-blue-300",
   },
   HEART: {
     value: 2,
     label: "Yêu thương",
     icon: HeartIcon,
+    emoji: "❤️",
     className: "text-rose-600 dark:bg-rose-900 dark:text-rose-300",
   },
   CRY: {
     value: 3,
     label: "Buồn",
     icon: FrownIcon,
+    emoji: "😭​",
     className: "text-sky-600 dark:bg-sky-900 dark:text-sky-300",
   },
   JOY: {
     value: 4,
     label: "Cười mỉm",
     icon: SmileIcon,
-    className:
-      "text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300",
+    emoji: "☺️",
+    className: "text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300",
   },
   LAUGH: {
     value: 5,
     label: "Haha",
     icon: LaughIcon,
-    className:
-      "text-amber-600 dark:bg-amber-900 dark:text-amber-300",
+    emoji: "😂​",
+    className: "text-amber-600 dark:bg-amber-900 dark:text-amber-300",
   },
 };
 
