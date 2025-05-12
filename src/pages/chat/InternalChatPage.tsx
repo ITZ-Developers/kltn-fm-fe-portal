@@ -670,9 +670,15 @@ const InternalChatPage = () => {
                                 <div className="w-10 h-10 rounded-full bg-gray-700 border border-gray-600 shadow-md flex items-center justify-center">
                                   {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
                                   selectedConversation.kind ? (
-                                    <UserIcon className="text-gray-300" />
+                                    <UserIcon
+                                      size={20}
+                                      className="text-gray-300"
+                                    />
                                   ) : (
-                                    <UsersIcon className="text-gray-300" />
+                                    <UsersIcon
+                                      size={20}
+                                      className="text-gray-300"
+                                    />
                                   )}
                                 </div>
                               )}
