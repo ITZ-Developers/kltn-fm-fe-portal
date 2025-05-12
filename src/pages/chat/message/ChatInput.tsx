@@ -158,8 +158,8 @@ const ChatInput = ({
   return (
     <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 backdrop-blur-md">
       {selectedConversation?.isBlocked ? (
-        <div className="text-center text-red-400 text-sm py-2">
-          Bạn không có quyền gửi tin nhắn trong hội thoại này
+        <div className="text-center text-red-400 py-2">
+          Chỉ trưởng nhóm mới có thể gửi tin nhắn trong cuộc trò chuyện này
         </div>
       ) : (
         <>
