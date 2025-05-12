@@ -1095,7 +1095,7 @@ const InternalChatPage = () => {
                                             />
                                             <div className="flex-1">
                                               <p className="text-sm text-gray-200 truncate">
-                                                {file.name}
+                                                {truncateString(file.name, 50)}
                                               </p>
                                               <p className="text-xs text-gray-400">
                                                 {parseCustomDateString(
