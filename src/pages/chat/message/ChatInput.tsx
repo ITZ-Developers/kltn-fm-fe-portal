@@ -298,7 +298,10 @@ const ChatInput = ({
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => deleteFile(index)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteFile(index);
+                    }}
                     className="p-1 rounded-full hover:bg-gray-600/50 text-gray-400 hover:text-white"
                     aria-label={`Xóa tệp ${file.name}`}
                   >
