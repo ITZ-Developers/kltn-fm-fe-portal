@@ -79,6 +79,17 @@ export const chatRoomController = (fetchApi: any) => {
       },
     });
 
+  const leave = (id: any) =>
+    fetchApi({
+      apiUrl: API_URL.TENANT_API,
+      endpoint: `/v1/chat-room/leave/${id}`,
+      method: METHOD.DELETE,
+      authType: AUTH_TYPE.BEARER,
+      headers: {
+        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
+      },
+    });
+
   return {
     list,
     get,
@@ -86,5 +97,6 @@ export const chatRoomController = (fetchApi: any) => {
     createDirectMessage,
     update,
     del,
+    leave,
   };
 };

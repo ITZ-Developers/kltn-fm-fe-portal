@@ -78,13 +78,13 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                 )}
               </div>
             )}
-            {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE === conversation.kind &&
+            {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value === conversation.kind &&
               isOnline(conversation.lastLogin) && (
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
               )}
           </div>
           <div className="flex-1 ml-3">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center space-x-5">
               <span
                 className={`font-medium ${
                   selected ? "text-blue-400" : "text-gray-200"
@@ -106,7 +106,10 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                     }`}
                     aria-label="Tin nhắn đã bị thu hồi"
                   >
-                    {BASIC_MESSAGES.MESSAGE_DELETED}
+                    {truncateString(
+                      `${conversation?.lastMessage?.sender?.fullName} thu hồi tin nhắn`,
+                      50
+                    )}
                   </p>
                 ) : (
                   <p
@@ -116,7 +119,7 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                   >
                     {truncateString(
                       `${conversation?.lastMessage?.sender?.fullName}: ${conversation?.lastMessage?.content}`,
-                      30
+                      50
                     )}
                   </p>
                 )}

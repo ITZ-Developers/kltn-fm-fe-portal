@@ -1,14 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  SendIcon,
   PhoneIcon,
-  PaperclipIcon,
-  SmileIcon,
   SearchIcon,
   MenuIcon,
   XIcon,
   ImageIcon,
-  VideoIcon,
   FileIcon,
   ChevronDownIcon,
   InfoIcon,
@@ -16,6 +12,9 @@ import {
   HandshakeIcon,
   BotIcon,
   UsersIcon,
+  TrashIcon,
+  PencilIcon,
+  LogOutIcon,
 } from "lucide-react";
 import {
   convertDateByFields,
@@ -54,9 +53,11 @@ import useModal from "../../hooks/useModal";
 import VerifyFaceId from "../faceId/VerifyFaceId";
 import CreateChatRoom from "./CreateChatRoom";
 import {
+  BASIC_MESSAGES,
   CHAT_HISTORY_ROLE,
   CHAT_ROOM_KIND_MAP,
   SOCKET_CMD,
+  TOAST,
 } from "../../services/constant";
 import { GridViewLoading } from "../../components/page/GridView";
 import {
@@ -65,6 +66,8 @@ import {
   GEMINI_BOT_CONFIG,
 } from "../../components/config/PageConfig";
 import ChatSideBar from "./ChatSideBar";
+import UpdateMessage from "./message/UpdateMessage";
+import ChatInput from "./message/ChatInput";
 
 const InternalChatPage = () => {
   const { isSystemNotReady, sessionKey, setToast, profile, message } =
@@ -72,15 +75,15 @@ const InternalChatPage = () => {
   const [isFaceIdVerified, setIsFaceIdVerified] = useState<boolean>(false);
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
   const [newMessage, setNewMessage] = useState<string>("");
+  const [parentMessage, setParentMessage] = useState<any>(null);
   const [searchConversations, setSearchConversations] = useState<string>("");
   const [searchMessages, setSearchMessages] = useState<string>("");
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [panelState, setPanelState] = useState<"info" | "search" | null>(null);
   const [selectedFile, setSelectedFile] = useState<any>(null);
   const [showScrollTop, setShowScrollTop] = useState<boolean>(true);
-  const [inputFocused, setInputFocused] = useState<boolean>(false);
-  const [attachmentMenuOpen, setAttachmentMenuOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [mediaActiveTab, setMediaActiveTab] = useState<string>("media");
   const [messages, setMessages] = useState<any>([]);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -116,11 +119,14 @@ const InternalChatPage = () => {
   } = useModal();
 
   const [conversations, setConversations] = useState<any>([]);
-  const { chatRoom, auth, loading } = useApi();
+  const { chatMessage, chatRoom, auth, media, loading } = useApi();
   const { chatMessage: chatMessageNoLoading, chatRoom: chatRoomListNoLoading } =
     useApi();
-  const { chatHistory: chatHistoryListNoLoading, loading: hiddenLoading } =
-    useApi();
+  const {
+    chatMessage: chatMessageHiddenLoading,
+    chatHistory: chatHistoryListNoLoading,
+    loading: hiddenLoading,
+  } = useApi();
   const {
     chatHistory: chatHistorySendMsg,
     chatMessage: sendMessage,
@@ -133,6 +139,31 @@ const InternalChatPage = () => {
     chatMessage: messageList,
     loading: loadingMessageList,
   } = useApi();
+
+  const {
+    isModalVisible: updateMessageFormVisible,
+    showModal: showUpdateMessageForm,
+    hideModal: hideUpdateMessageForm,
+    formConfig: updateMessageFormConfig,
+  } = useModal();
+
+  const onUpdateMesageButtonClick = (id: any) => {
+    showUpdateMessageForm(
+      configModalForm({
+        label: "Chỉnh sửa tin nhắn",
+        fetchApi: chatMessage.update,
+        refreshData: () => {},
+        hideModal: hideUpdateMessageForm,
+        setToast,
+        successMessage: BASIC_MESSAGES.UPDATED,
+        initForm: {
+          id,
+          content: "",
+          document: "[]",
+        },
+      })
+    );
+  };
 
   const onCreateRoomButtonClick = () => {
     showCreateRoomForm({
@@ -246,9 +277,12 @@ const InternalChatPage = () => {
     }
   };
 
-  const fetchMessageNoLoading = async (conversation: any) => {
+  const fetchMessageNoLoading = async (
+    messageListApi: any,
+    conversation: any
+  ) => {
     if (!conversation) return;
-    const res = await chatMessageNoLoading.list({
+    const res = await messageListApi.list({
       chatRoomId: conversation.id,
       isPaged: 0,
     });
@@ -300,14 +334,40 @@ const InternalChatPage = () => {
         const messageId = message?.data?.messageId;
         const chatRoomId = message?.data?.chatRoomId;
         if (messageId && chatRoomId === selectedConversation?.id) {
-          await fetchMessageNoLoading(selectedConversation);
-          scrollToBottom();
+          if (SOCKET_CMD.CMD_NEW_MESSAGE === message?.cmd) {
+            await fetchMessageNoLoading(
+              chatMessageHiddenLoading,
+              selectedConversation
+            );
+          } else {
+            await fetchMessageNoLoading(
+              chatMessageNoLoading,
+              selectedConversation
+            );
+          }
         }
         await fetchChatRooms(chatRoomListNoLoading.list);
       }
     };
     handleProcessSocket();
   }, [message]);
+
+  const getMessageById = async (id: any) => {
+    const res = await chatMessageNoLoading.get(id);
+    if (!res.result) {
+      setToast(BASIC_MESSAGES.FAILED, TOAST.ERROR);
+    }
+    const data = res?.data;
+    return decryptData(sessionKey, data, DECRYPT_FIELDS.MESSAGE);
+  };
+
+  const handleSetParentMessageToReply = async (messageId: any) => {
+    setParentMessage(await getMessageById(messageId));
+  };
+
+  const handleClickParentMessage = (messageId: any) => {
+    scrollToMessage(messageId);
+  };
 
   useEffect(() => {
     fetchChatRooms(chatRoomList.list);
@@ -316,14 +376,14 @@ const InternalChatPage = () => {
 
   const filteredConversations = conversations
     ? conversations.filter((conversation: any) => {
-        const matchesSearch = conversation.name
+        const matchesSearch = conversation?.name
           .toLowerCase()
           .includes(searchConversations.toLowerCase());
         if (activeTab === "all") {
           return matchesSearch;
         }
         if (activeTab === "unread") {
-          return matchesSearch && (conversation.totalUnreadMessages || 0) > 0;
+          return matchesSearch && (conversation?.totalUnreadMessages || 0) > 0;
         }
         return matchesSearch;
       })
@@ -337,6 +397,9 @@ const InternalChatPage = () => {
         (message?.message &&
           message.message.toLowerCase().includes(searchMessages.toLowerCase())))
   );
+
+  const [searchQuery, setSearchQuery] = useState("");
+
   const attachedFiles = messages
     .filter((message: any) => message.document)
     .flatMap((message: any) => JSON.parse(message.document || "[]"));
@@ -351,8 +414,20 @@ const InternalChatPage = () => {
     return !mimeType.startsWith("image/") && !mimeType.startsWith("video/");
   });
 
-  const handleSendMessage = async () => {
+  const filteredMediaFiles = mediaFiles.filter((file: any) =>
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const filteredOtherFiles = otherFiles.filter((file: any) =>
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const resetChatInputForm = () => {
     setNewMessage("");
+    setParentMessage(null);
+  };
+
+  const handleSendMessage = async () => {
+    resetChatInputForm();
     if (newMessage.trim() && selectedConversation?.id) {
       if (selectedConversation?.kind === GEMINI_BOT_CONFIG.kind) {
         const msgObj = {
@@ -440,13 +515,6 @@ const InternalChatPage = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -463,20 +531,53 @@ const InternalChatPage = () => {
 
   useEffect(() => {
     fetchMessagesByChatRoom(selectedConversation);
-    setNewMessage("");
+    resetChatInputForm();
   }, [selectedConversation]);
 
   useEffect(() => {
     setSearchMessages("");
+    setMediaActiveTab("media");
   }, [panelState]);
 
   const onDeleteMessageButtonClick = (id: any) => {
     showDeleteDialog(
       configDeleteDialog({
         label: "Thu hồi tin nhắn",
-        message: "Bạn có chắc muốn thu hồi tin nhắn này",
+        message: "Bạn có chắc muốn thu hồi tin nhắn này?",
         deleteApi: () => chatMessageNoLoading.del(id),
         refreshData: () => {},
+        hideModal: hideDeleteDialog,
+        setToast,
+      })
+    );
+  };
+
+  const onDeleteChatRoomClick = () => {
+    const isOwner = selectedConversation?.isOwner;
+    const isGroup =
+      selectedConversation?.kind === CHAT_ROOM_KIND_MAP.GROUP.value;
+    const label = isOwner
+      ? "Giải tán nhóm"
+      : isGroup
+      ? "Rời nhóm"
+      : "Xóa cuộc trò chuyện";
+    const message = isOwner
+      ? "Bạn có chắc muốn giải tán nhóm này?"
+      : isGroup
+      ? "Bạn có chắc muốn rời nhóm này?"
+      : "Bạn có chắc muốn xóa hội thoại này?";
+    showDeleteDialog(
+      configDeleteDialog({
+        label,
+        message,
+        deleteApi: async () => {
+          if (isGroup) {
+            await chatRoom.leave(selectedConversation?.id);
+          } else {
+            await chatRoom.del(selectedConversation?.id);
+          }
+        },
+        refreshData: () => setSelectedConversation(null),
         hideModal: hideDeleteDialog,
         setToast,
       })
@@ -494,6 +595,10 @@ const InternalChatPage = () => {
       <RequestKey
         isVisible={requestKeyFormVisible}
         formConfig={requestKeyFormConfig}
+      />
+      <UpdateMessage
+        isVisible={updateMessageFormVisible}
+        formConfig={updateMessageFormConfig}
       />
       <CreateChatRoom
         isVisible={createRoomFormVisible}
@@ -681,6 +786,9 @@ const InternalChatPage = () => {
                                 openModal={setSelectedFile}
                                 message={message}
                                 onRecallMessage={onDeleteMessageButtonClick}
+                                onEditMessage={onUpdateMesageButtonClick}
+                                onReplyMessage={handleSetParentMessageToReply}
+                                onClickParentMessage={handleClickParentMessage}
                               />
                             </div>
                           </div>
@@ -731,99 +839,25 @@ const InternalChatPage = () => {
                         </motion.button>
                       )}
                     </AnimatePresence>
-
-                    <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 backdrop-blur-md">
-                      <div className="flex items-center space-x-3">
-                        {selectedConversation.kind !==
-                          GEMINI_BOT_CONFIG.kind && (
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() =>
-                              setAttachmentMenuOpen(!attachmentMenuOpen)
-                            }
-                            className="p-2 rounded-full hover:bg-gray-700/50 transition-all text-gray-400 hover:text-white"
-                          >
-                            <PaperclipIcon size={20} />
-                          </motion.button>
-                        )}
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-2 rounded-full hover:bg-gray-700/50 transition-all text-gray-400 hover:text-white"
-                        >
-                          <SmileIcon size={20} />
-                        </motion.button>
-                        <textarea
-                          value={newMessage}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          onKeyPress={handleKeyPress}
-                          onFocus={() => setInputFocused(true)}
-                          onBlur={() => setInputFocused(false)}
-                          placeholder="Nhập tin nhắn..."
-                          className="flex-1 p-3 bg-gray-700/50 border border-gray-600/30 rounded-xl text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none transition-all"
-                          rows={inputFocused || newMessage.length > 50 ? 3 : 1}
-                        />
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={handleSendMessage}
-                          className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full text-white shadow-md hover:from-blue-600 hover:to-blue-700 transition-all"
-                        >
-                          <SendIcon size={20} />
-                        </motion.button>
-                      </div>
-
-                      <AnimatePresence>
-                        {attachmentMenuOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            className="absolute bottom-24 left-4 bg-gray-800/90 backdrop-blur-md rounded-xl p-4 shadow-lg border border-gray-700/50"
-                          >
-                            <div className="grid grid-cols-3 gap-3">
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-700/50 transition-all"
-                              >
-                                <ImageIcon
-                                  size={24}
-                                  className="text-blue-400"
-                                />
-                                <span className="text-xs text-gray-300 mt-1">
-                                  Ảnh
-                                </span>
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-700/50 transition-all"
-                              >
-                                <VideoIcon
-                                  size={24}
-                                  className="text-purple-400"
-                                />
-                                <span className="text-xs text-gray-300 mt-1">
-                                  Video
-                                </span>
-                              </motion.button>
-                              <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                className="flex flex-col items-center p-2 rounded-lg hover:bg-gray-700/50 transition-all"
-                              >
-                                <FileIcon size={24} className="text-gray-400" />
-                                <span className="text-xs text-gray-300 mt-1">
-                                  Tệp
-                                </span>
-                              </motion.button>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                    <ChatInput
+                      selectedConversation={selectedConversation}
+                      newMessage={newMessage}
+                      setNewMessage={setNewMessage}
+                      setMessages={setMessages}
+                      scrollToBottom={scrollToBottom}
+                      fetchChatHistoryListNoLoading={
+                        fetchChatHistoryListNoLoading
+                      }
+                      parentMessage={parentMessage}
+                      setParentMessage={setParentMessage}
+                      chatHistorySendMsgApi={chatHistorySendMsg}
+                      sendMessageApi={sendMessage}
+                      mediaApi={media}
+                      loadingSendMessage={loadingSendMessage}
+                      onClickParentMessage={handleClickParentMessage}
+                      openModal={setSelectedFile}
+                      resetChatInputForm={resetChatInputForm}
+                    />
                   </>
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center space-y-2 bg-gray-900/50 backdrop-blur-md">
@@ -855,14 +889,40 @@ const InternalChatPage = () => {
                           <h2 className="text-lg font-semibold text-white">
                             Thông tin hội thoại
                           </h2>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setPanelState(null)}
-                            className="p-2 rounded-full hover:bg-gray-700/50 transition-all text-gray-400 hover:text-white"
-                          >
-                            <XIcon size={20} />
-                          </motion.button>
+                          <div className="flex flex-row space-x-1">
+                            {selectedConversation.kind ===
+                              CHAT_ROOM_KIND_MAP.GROUP.value && (
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={() => {}}
+                                className="p-2 rounded-full hover:bg-blue-700/50 transition-all text-blue-400 hover:text-blue-300"
+                              >
+                                <PencilIcon size={20} />
+                              </motion.button>
+                            )}
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={onDeleteChatRoomClick}
+                              className="p-2 rounded-full hover:bg-red-700/50 transition-all text-red-400 hover:text-red-300"
+                            >
+                              {selectedConversation.kind ===
+                              CHAT_ROOM_KIND_MAP.GROUP.value ? (
+                                <LogOutIcon size={20} />
+                              ) : (
+                                <TrashIcon size={20} />
+                              )}
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                              onClick={() => setPanelState(null)}
+                              className="p-2 rounded-full hover:bg-gray-700/50 transition-all text-gray-400 hover:text-white"
+                            >
+                              <XIcon size={20} />
+                            </motion.button>
+                          </div>
                         </div>
                         <div className="flex-1 p-4 overflow-y-auto">
                           <div className="flex flex-col items-center mb-6">
@@ -875,18 +935,16 @@ const InternalChatPage = () => {
                                   className="w-16 h-16 rounded-full mb-2 border border-gray-600"
                                 />
                               ) : (
-                                <>
-                                  <div className="w-16 h-16 rounded-full bg-gray-700 border border-gray-600 shadow-md flex items-center justify-center">
-                                    {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
-                                    selectedConversation.kind ? (
-                                      <UserIcon className="text-gray-300" />
-                                    ) : (
-                                      <UsersIcon className="text-gray-300" />
-                                    )}
-                                  </div>
-                                </>
+                                <div className="w-16 h-16 rounded-full bg-gray-700 border border-gray-600 shadow-md flex items-center justify-center">
+                                  {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
+                                  selectedConversation.kind ? (
+                                    <UserIcon className="text-gray-300" />
+                                  ) : (
+                                    <UsersIcon className="text-gray-300" />
+                                  )}
+                                </div>
                               )}
-                              {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE ===
+                              {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
                                 selectedConversation.kind &&
                                 isOnline(selectedConversation.lastLogin) && (
                                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-800"></div>
@@ -907,86 +965,166 @@ const InternalChatPage = () => {
                                       )}`
                                     : ""}
                                 </>
-                              ) : selectedConversation.kind ===
-                                CHAT_ROOM_KIND_MAP.GROUP.value ? (
-                                <>{`${selectedConversation.totalMembers} thành viên`}</>
                               ) : (
-                                <>{GEMINI_BOT_CONFIG.description}</>
+                                <>{`${selectedConversation.totalMembers} thành viên`}</>
                               )}
                             </p>
                           </div>
 
                           <div className="mb-6">
-                            <h3 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                              <ImageIcon
-                                size={16}
-                                className="mr-1 text-blue-400"
+                            <div className="relative mb-4">
+                              <SearchIcon
+                                size={18}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                               />
-                              Ảnh/Video
-                            </h3>
-                            {mediaFiles.length > 0 ? (
-                              <div className="grid grid-cols-3 gap-2">
-                                {mediaFiles.map((file: any, idx: number) => (
-                                  <DocumentItem
-                                    key={idx}
-                                    file={file}
-                                    openModal={setSelectedFile}
-                                  />
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-gray-400 text-sm text-center">
-                                Không có ảnh hoặc video
-                              </p>
-                            )}
-                          </div>
+                              <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Tìm kiếm tệp..."
+                                className="w-full pl-10 pr-10 py-2 bg-gray-700/50 border border-gray-600/30 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                                aria-label="Tìm kiếm tệp"
+                              />
+                              {searchQuery && (
+                                <motion.button
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  exit={{ opacity: 0, scale: 0.8 }}
+                                  transition={{ duration: 0.15 }}
+                                  onClick={() => setSearchQuery("")}
+                                  className="absolute right-3 top-3 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 transition-colors duration-200"
+                                  aria-label="Xóa nội dung tìm kiếm"
+                                >
+                                  <XIcon size={16} />
+                                </motion.button>
+                              )}
+                            </div>
 
-                          <div>
-                            <h3 className="text-sm font-semibold text-gray-200 mb-2 flex items-center">
-                              <FileIcon
-                                size={16}
-                                className="mr-1 text-gray-400"
-                              />
-                              Tệp
-                            </h3>
-                            {otherFiles.length > 0 ? (
-                              <div className="space-y-2">
-                                {otherFiles.map((file: any, idx: number) => (
-                                  <motion.div
-                                    key={idx}
-                                    whileHover={{ scale: 1.02 }}
-                                    onClick={() => setSelectedFile(file)}
-                                    className="flex items-center space-x-2 bg-gray-700/50 backdrop-blur-sm p-3 rounded-lg hover:bg-gray-600/70 cursor-pointer border border-gray-600/30 transition-all"
-                                  >
-                                    <FileTypeIcon
-                                      mimeType={getMimeType(file.name)}
-                                    />
-                                    <div className="flex-1">
-                                      <p className="text-sm text-gray-200 truncate">
-                                        {file.name}
-                                      </p>
-                                      <p className="text-xs text-gray-400">
-                                        {formatDistanceToNow(
-                                          parseCustomDateString(
-                                            messages.find((msg: any) =>
-                                              msg.document?.includes(file.name)
-                                            )?.createdDate || ""
-                                          ),
-                                          {
-                                            addSuffix: true,
-                                            locale: vi,
-                                          }
-                                        )}
-                                      </p>
+                            <div className="flex border-b border-gray-700/50 mb-4">
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setMediaActiveTab("media")}
+                                className={`flex-1 py-2 px-4 text-sm font-medium transition-all ${
+                                  mediaActiveTab === "media"
+                                    ? "border-b-2 border-blue-500 text-white"
+                                    : "text-gray-400 hover:text-gray-200"
+                                }`}
+                                aria-selected={mediaActiveTab === "media"}
+                                role="tab"
+                              >
+                                <div className="flex items-center justify-center">
+                                  <ImageIcon
+                                    size={16}
+                                    className="mr-1 text-blue-400"
+                                  />
+                                  Ảnh/Video
+                                </div>
+                              </motion.button>
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setMediaActiveTab("files")}
+                                className={`flex-1 py-2 px-4 text-sm font-medium transition-all ${
+                                  mediaActiveTab === "files"
+                                    ? "border-b-2 border-blue-500 text-white"
+                                    : "text-gray-400 hover:text-gray-200"
+                                }`}
+                                aria-selected={mediaActiveTab === "files"}
+                                role="tab"
+                              >
+                                <div className="flex items-center justify-center">
+                                  <FileIcon
+                                    size={16}
+                                    className="mr-1 text-gray-400"
+                                  />
+                                  Tệp
+                                </div>
+                              </motion.button>
+                            </div>
+
+                            <AnimatePresence mode="wait">
+                              {mediaActiveTab === "media" ? (
+                                <motion.div
+                                  key="media"
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  {filteredMediaFiles.length > 0 ? (
+                                    <div className="grid grid-cols-3 gap-2">
+                                      {filteredMediaFiles.map(
+                                        (file: any, idx: number) => (
+                                          <DocumentItem
+                                            key={idx}
+                                            file={file}
+                                            openModal={setSelectedFile}
+                                          />
+                                        )
+                                      )}
                                     </div>
-                                  </motion.div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-gray-400 text-sm text-center">
-                                Không có tệp
-                              </p>
-                            )}
+                                  ) : (
+                                    <p className="text-gray-400 text-sm text-center">
+                                      Không tìm thấy ảnh hoặc video
+                                    </p>
+                                  )}
+                                </motion.div>
+                              ) : (
+                                <motion.div
+                                  key="files"
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  {filteredOtherFiles.length > 0 ? (
+                                    <div className="space-y-2">
+                                      {filteredOtherFiles.map(
+                                        (file: any, idx: number) => (
+                                          <motion.div
+                                            key={idx}
+                                            whileHover={{ scale: 1.02 }}
+                                            onClick={() =>
+                                              setSelectedFile(file)
+                                            }
+                                            className="flex items-center space-x-2 bg-gray-700/50 backdrop-blur-sm p-3 rounded-lg hover:bg-gray-600/70 cursor-pointer border border-gray-600/30 transition-all"
+                                          >
+                                            <FileTypeIcon
+                                              mimeType={getMimeType(file.name)}
+                                            />
+                                            <div className="flex-1">
+                                              <p className="text-sm text-gray-200 truncate">
+                                                {file.name}
+                                              </p>
+                                              <p className="text-xs text-gray-400">
+                                                {parseCustomDateString(
+                                                  messages.find((msg: any) =>
+                                                    msg.document?.includes(
+                                                      file.name
+                                                    )
+                                                  )?.createdDate
+                                                ).toLocaleString("vi-VN", {
+                                                  day: "2-digit",
+                                                  month: "2-digit",
+                                                  year: "numeric",
+                                                  hour: "2-digit",
+                                                  minute: "2-digit",
+                                                })}
+                                              </p>
+                                            </div>
+                                          </motion.div>
+                                        )
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <p className="text-gray-400 text-sm text-center">
+                                      Không tìm thấy tệp
+                                    </p>
+                                  )}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                         </div>
                       </>

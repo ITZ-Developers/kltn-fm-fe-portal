@@ -26,7 +26,7 @@ const ParentMessage = ({ parent, onClick }: any) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      onClick={onClick}
+      onClick={() => onClick(parent.id)}
       className="p-2 mb-2 bg-gray-800/50 rounded-lg border-l-4 border-blue-300/50 cursor-pointer hover:bg-gray-800/70 transition-all"
     >
       <p className="text-xs font-medium text-blue-400 truncate">
@@ -79,17 +79,14 @@ const ReactionPicker = ({
               ? onRemoveReaction()
               : onAddReaction(reaction.value)
           }
-          className={`p-1 rounded-full ${
+          className={`px-1 py-0.5 rounded-full ${
             currentReaction === reaction.value
-              ? "bg-yellow-300"
+              ? "bg-blue-700"
               : "hover:bg-gray-700/50"
           } transition-all`}
           aria-label={reaction.label}
         >
-          <reaction.icon
-            size={20}
-            className={`rounded-xl ${reaction.className}`}
-          />
+          <span className="text-current">{reaction.emoji}</span>
         </motion.button>
       ))}
     </motion.div>
@@ -140,7 +137,7 @@ const SeenAvatars = ({ seenMembers, totalSeenMembers }: any) => {
 };
 
 const MessageTime = ({ createdDate }: any) => (
-  <span className="text-xs text-gray-400/70">
+  <span className="text-xs text-gray-300/70 mt-1.5">
     {parseCustomDateString(createdDate).toLocaleTimeString("vi-VN", {
       hour: "2-digit",
       minute: "2-digit",
@@ -190,10 +187,8 @@ const ReactionCount = ({
 
   return (
     <div className="flex items-center mt-1.5 space-x-1">
-      <div
-        className={`w-5 h-5 rounded-full flex items-center justify-center ${kind.className}`}
-      >
-        <kind.icon size={14} className="text-current" />
+      <div className={`w-5 h-5 rounded-full flex items-center justify-center`}>
+        <div className="text-current">{kind.emoji}</div>
       </div>
       <span className="text-xs text-gray-400">{totalReactions}</span>
     </div>
@@ -207,9 +202,9 @@ const MessageActions = ({
   myReaction,
   onReplyMessage,
   isSender,
-  createdDate,
   onRecallMessage,
   isDeleted,
+  onEditMessage,
 }: any) => {
   const { chatMessage } = useApi();
   const [showReactionPicker, setShowReactionPicker] = useState(false);
@@ -228,10 +223,6 @@ const MessageActions = ({
     );
   };
 
-  const TimeLabel = () => {
-    return <MessageTime createdDate={createdDate} />;
-  };
-
   const ReactionButton = () => {
     return (
       <div
@@ -245,7 +236,7 @@ const MessageActions = ({
           aria-label="Thả phản ứng"
         >
           {isReacted && matched ? (
-            <matched.icon size={16} className="text-yellow-300" />
+            <span className="text-current">{matched.emoji}</span>
           ) : (
             <ThumbsUpIcon size={16} />
           )}
@@ -276,7 +267,7 @@ const MessageActions = ({
         isSender={isSender}
         isDeleted={isDeleted}
         onRecallMessage={onRecallMessage}
-        // handleEdit={onEditMessage}
+        handleEdit={onEditMessage}
         // setIsDetailsOpen={setIsDetailsOpen}
       />
     );
@@ -289,11 +280,9 @@ const MessageActions = ({
           <ReplyButton />
           <ReactionButton />
           <MenuButton />
-          <TimeLabel />
         </>
       ) : (
         <>
-          <TimeLabel />
           <MenuButton />
           <ReactionButton />
           <ReplyButton />
@@ -330,20 +319,18 @@ const MessageMenuButton = ({
     };
   }, [isOpen]);
 
-  const actions = [];
-
-  if (isSender) {
-    actions.push({
-      label: "Chỉnh sửa",
-      onClick: () => {
-        handleEdit();
-        setIsOpen(false);
-      },
-      icon: Edit2Icon,
-    });
-
-    if (!isDeleted) {
-      actions.push({
+  const handleShowActions = () => {
+    const actionsToShow = [];
+    if (isSender && !isDeleted) {
+      actionsToShow.push({
+        label: "Chỉnh sửa",
+        onClick: () => {
+          handleEdit(id);
+          setIsOpen(false);
+        },
+        icon: Edit2Icon,
+      });
+      actionsToShow.push({
         label: "Thu hồi",
         onClick: () => {
           onRecallMessage(id);
@@ -352,16 +339,19 @@ const MessageMenuButton = ({
         icon: TrashIcon,
       });
     }
-  }
 
-  actions.push({
-    label: "Chi tiết",
-    onClick: () => {
-      setIsDetailsOpen(true);
-      setIsOpen(false);
-    },
-    icon: InfoIcon,
-  });
+    actionsToShow.push({
+      label: "Chi tiết",
+      onClick: () => {
+        setIsDetailsOpen(true);
+        setIsOpen(false);
+      },
+      icon: InfoIcon,
+    });
+    return actionsToShow;
+  };
+
+  const actions = handleShowActions();
 
   return (
     <div className="relative" ref={menuRef}>

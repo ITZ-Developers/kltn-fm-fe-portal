@@ -6,7 +6,11 @@ import {
   VideoIcon,
   XIcon,
 } from "lucide-react";
-import { getMediaImage, getMimeType } from "../../services/utils";
+import {
+  getMediaImage,
+  getMimeType,
+  truncateString,
+} from "../../services/utils";
 import { motion } from "framer-motion";
 
 const FileTypeIcon = ({ mimeType }: { mimeType: string }) => {
@@ -46,7 +50,7 @@ const DocumentItem = ({ file, openModal }: any) => {
         )}
       </div>
       <span className="text-xs text-gray-300 truncate w-full text-center group-hover:text-white transition-colors">
-        {file.name}
+        {truncateString(file.name, 20)}
       </span>
     </motion.div>
   );

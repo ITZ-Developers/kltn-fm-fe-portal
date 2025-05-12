@@ -5,13 +5,21 @@ import {
   AttachedFiles,
   Avatar,
   MessageActions,
+  MessageTime,
   ParentMessage,
   ReactionCount,
   SeenAvatars,
 } from "./MessageComponents";
 import { MESSAGE_REACTION_KIND_MAP } from "../../../components/config/PageConfig";
 
-const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
+const MessageItem = ({
+  message,
+  openModal,
+  onRecallMessage,
+  onEditMessage,
+  onReplyMessage,
+  onClickParentMessage,
+}: any) => {
   const {
     isSender,
     content,
@@ -50,6 +58,20 @@ const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
         />
         <div className="mb-8" />
       </div>
+    );
+  };
+
+  const RenderMessageTime = () => {
+    return <MessageTime createdDate={createdDate} />;
+  };
+
+  const RenderReactionCout = () => {
+    return (
+      <ReactionCount
+        totalReactions={totalReactions}
+        messageReactions={messageReactions}
+        MESSAGE_REACTION_KIND_MAP={MESSAGE_REACTION_KIND_MAP}
+      />
     );
   };
 
@@ -115,7 +137,10 @@ const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
               }`}
             >
               {isChildren && parent && (
-                <ParentMessage parent={parent} onClick={() => {}} />
+                <ParentMessage
+                  parent={parent}
+                  onClick={onClickParentMessage}
+                />
               )}
               {isDeleted ? (
                 <p
@@ -128,7 +153,7 @@ const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
                 <p className="text-sm whitespace-pre-wrap">
                   {content}
                   {isUpdated && (
-                    <span className="text-xs italic text-gray-400 ml-1">
+                    <span className="text-xs italic text-gray-300 ml-1">
                       (đã chỉnh sửa)
                     </span>
                   )}
@@ -137,16 +162,18 @@ const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
               {document && files.length > 0 && (
                 <AttachedFiles files={files} openModal={openModal} />
               )}
-              <div
-                className={`flex flex-row ${
-                  isSender ? "justify-start" : "justify-end"
-                }`}
-              >
-                <ReactionCount
-                  totalReactions={totalReactions}
-                  messageReactions={messageReactions}
-                  MESSAGE_REACTION_KIND_MAP={MESSAGE_REACTION_KIND_MAP}
-                />
+              <div className={`flex flex-row justify-between space-x-5`}>
+                {isSender ? (
+                  <>
+                    <RenderMessageTime />
+                    <RenderReactionCout />
+                  </>
+                ) : (
+                  <>
+                    <RenderReactionCout />
+                    <RenderMessageTime />
+                  </>
+                )}
               </div>
             </div>
             <div
@@ -163,10 +190,9 @@ const MessageItem = ({ message, openModal, onRecallMessage }: any) => {
                   matched={matched}
                   totalReactions={totalReactions}
                   myReaction={myReaction}
-                  createdDate={createdDate}
                   onRecallMessage={onRecallMessage}
-                  // onReplyMessage={onReplyMessage}
-                  onReplyMessage={() => {}}
+                  onEditMessage={onEditMessage}
+                  onReplyMessage={onReplyMessage}
                 />
               </div>
             </div>
