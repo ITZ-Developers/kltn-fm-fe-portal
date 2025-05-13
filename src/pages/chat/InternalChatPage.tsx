@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   PhoneIcon,
   SearchIcon,
@@ -19,20 +19,16 @@ import {
 import {
   convertDateByFields,
   decryptData,
-  encryptAES,
   formatDistanceToNowVN,
-  generateIdNumber,
-  getCurrentDate,
   getMediaImage,
   getMimeType,
+  getNestedValue,
   isOnline,
   parseCustomDateString,
   truncateString,
   truncateToDDMMYYYY,
 } from "../../services/utils";
 import chatImg from "../../assets/chat.png";
-import { formatDistanceToNow, set } from "date-fns";
-import { vi } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import "../../styles/Sidebar.css";
 import { DateDivider, MessageItem } from "./message/MessageItem";
@@ -55,7 +51,9 @@ import CreateChatRoom from "./CreateChatRoom";
 import {
   BASIC_MESSAGES,
   CHAT_HISTORY_ROLE,
+  CHAT_ROOM_DEFAULT_SETTINGS,
   CHAT_ROOM_KIND_MAP,
+  SETTING_KEYS,
   SOCKET_CMD,
   TOAST,
 } from "../../services/constant";
@@ -68,6 +66,10 @@ import {
 import ChatSideBar from "./ChatSideBar";
 import UpdateMessage from "./message/UpdateMessage";
 import ChatInput from "./message/ChatInput";
+import MemberReactions from "./message/MemberReactions";
+import CreateChatRoomMember from "./CreateChatRoomMember";
+import ChatRoomMembers from "./message/ChatRoomMembers";
+import UpdateChatRoom from "./UpdateChatRoom";
 
 const InternalChatPage = () => {
   const { isSystemNotReady, sessionKey, setToast, profile, message } =
@@ -81,7 +83,7 @@ const InternalChatPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [panelState, setPanelState] = useState<"info" | "search" | null>(null);
   const [selectedFile, setSelectedFile] = useState<any>(null);
-  const [showScrollTop, setShowScrollTop] = useState<boolean>(true);
+  const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("all");
   const [mediaActiveTab, setMediaActiveTab] = useState<string>("media");
   const [messages, setMessages] = useState<any>([]);
@@ -112,14 +114,36 @@ const InternalChatPage = () => {
   } = useModal();
 
   const {
+    isModalVisible: updateRoomFormVisible,
+    showModal: showUpdateRoomForm,
+    hideModal: hideUpdateRoomForm,
+    formConfig: updateRoomFormConfig,
+  } = useModal();
+
+  const {
     isModalVisible: deleteDialogVisible,
     showModal: showDeleteDialog,
     hideModal: hideDeleteDialog,
     formConfig: deleteDialogConfig,
   } = useModal();
 
+  const {
+    isModalVisible: inviteMembersFormVisible,
+    showModal: showInviteMembersForm,
+    hideModal: hideInviteMembersForm,
+    formConfig: inviteMembersFormConfig,
+  } = useModal();
+
+  const {
+    isModalVisible: viewMembersFormVisible,
+    showModal: showViewMembersForm,
+    hideModal: hideViewMembersForm,
+    formConfig: viewMembersFormConfig,
+  } = useModal();
+
   const [conversations, setConversations] = useState<any>([]);
-  const { chatMessage, chatRoom, auth, media, loading } = useApi();
+  const { chatRoomMember, chatMessage, chatRoom, auth, media, loading } =
+    useApi();
   const { chatMessage: chatMessageNoLoading, chatRoom: chatRoomListNoLoading } =
     useApi();
   const {
@@ -139,13 +163,26 @@ const InternalChatPage = () => {
     chatMessage: messageList,
     loading: loadingMessageList,
   } = useApi();
-
   const {
     isModalVisible: updateMessageFormVisible,
     showModal: showUpdateMessageForm,
     hideModal: hideUpdateMessageForm,
     formConfig: updateMessageFormConfig,
   } = useModal();
+  const {
+    isModalVisible: reactionCountFormVisible,
+    showModal: showReactionCountForm,
+    hideModal: hideReactionCountForm,
+    formConfig: reactionCountFormConfig,
+  } = useModal();
+
+  const onReactionCountClick = (messageReactions: any) => {
+    showReactionCountForm({
+      title: "Thành viên đã thả cảm xúc",
+      hideModal: hideReactionCountForm,
+      messageReactions,
+    });
+  };
 
   const onUpdateMesageButtonClick = (id: any) => {
     showUpdateMessageForm(
@@ -171,6 +208,69 @@ const InternalChatPage = () => {
       onButtonClick: () => {
         hideCreateRoomForm();
       },
+    });
+  };
+
+  const onUpdateRoomButtonClick = () => {
+    showUpdateRoomForm({
+      settings: groupSettings,
+      ...configModalForm({
+        label: "Cập nhật thông tin hội thoại",
+        fetchApi: chatRoom.update,
+        refreshData: () => {},
+        hideModal: hideUpdateRoomForm,
+        setToast,
+        successMessage: BASIC_MESSAGES.UPDATED,
+        initForm: {
+          id: selectedConversation?.id,
+          avatar: "",
+          name: "",
+          allow_send_messages: true,
+          allow_update_chat_room: true,
+          allow_invite_members: true,
+        },
+      }),
+    });
+  };
+
+  const onInviteMembersButtonClick = () => {
+    showInviteMembersForm({
+      title: "Thêm thành viên",
+      hideModal: hideInviteMembersForm,
+      onButtonClick: async (form: any) => {
+        hideInviteMembersForm();
+        const res = await chatRoomMember.create(form);
+        if (res.result) {
+          hideViewMembersForm();
+          setToast(BASIC_MESSAGES.CREATED, TOAST.SUCCESS);
+        } else {
+          setToast(res.message, TOAST.ERROR);
+        }
+      },
+      initForm: {
+        chatRoomId: selectedConversation?.id,
+        memberIds: [],
+      },
+    });
+  };
+
+  const onViewMembersClick = async () => {
+    const res = await chatRoomMember.list({
+      isPaged: 0,
+      chatRoomId: selectedConversation?.id,
+    });
+    if (!res.result) {
+      setToast(res.message, TOAST.ERROR);
+      return;
+    }
+    const members = res?.data?.content || [];
+    showViewMembersForm({
+      title: "Danh sách thành viên",
+      hideModal: hideViewMembersForm,
+      members,
+      settings: getGroupSettings(),
+      onRemoveMember: onRemoveMemberClick,
+      onInviteMember: onInviteMembersButtonClick,
     });
   };
 
@@ -209,7 +309,14 @@ const InternalChatPage = () => {
         GEMINI_BOT_CONFIG,
         ...data?.map((item: any) => {
           const obj = decryptData(sessionKey, item, DECRYPT_FIELDS.CHAT_ROOM);
-          return convertDateByFields(obj, CONVER_DATE_FIELDS.CHAT_ROOM);
+          const converted = convertDateByFields(
+            obj,
+            CONVER_DATE_FIELDS.CHAT_ROOM
+          );
+          return {
+            ...converted,
+            isOnline: isOnline(converted.lastLogin),
+          };
         }),
       ]);
     } else {
@@ -316,13 +423,21 @@ const InternalChatPage = () => {
 
   useEffect(() => {
     const handleProcessSocket = async () => {
-      if (SOCKET_CMD.CMD_CHAT_ROOM_CREATED === message?.cmd) {
-        await fetchChatRooms(chatRoomListNoLoading.list);
-      }
-      if (SOCKET_CMD.CMD_CHAT_ROOM_DELETED === message?.cmd) {
+      if (
+        [
+          SOCKET_CMD.CMD_CHAT_ROOM_CREATED,
+          SOCKET_CMD.CMD_CHAT_ROOM_UPDATED,
+          SOCKET_CMD.CMD_CHAT_ROOM_DELETED,
+        ].includes(message?.cmd)
+      ) {
         const chatRoomId = message?.data?.chatRoomId;
         if (selectedConversation?.id === chatRoomId) {
-          setSelectedConversation(null);
+          if (SOCKET_CMD.CMD_CHAT_ROOM_UPDATED === message?.cmd) {
+            await handleSelectConversation(chatRoomId);
+          }
+          if (SOCKET_CMD.CMD_CHAT_ROOM_DELETED === message?.cmd) {
+            setSelectedConversation(null);
+          }
         }
         await fetchChatRooms(chatRoomListNoLoading.list);
       }
@@ -426,38 +541,6 @@ const InternalChatPage = () => {
     setParentMessage(null);
   };
 
-  const handleSendMessage = async () => {
-    resetChatInputForm();
-    if (newMessage.trim() && selectedConversation?.id) {
-      if (selectedConversation?.kind === GEMINI_BOT_CONFIG.kind) {
-        const msgObj = {
-          id: generateIdNumber(),
-          role: CHAT_HISTORY_ROLE.USER,
-          message: newMessage,
-          createdDate: getCurrentDate(),
-        };
-        setMessages((prev: any) => [...prev, msgObj]);
-        setTimeout(async () => {
-          scrollToBottom();
-        }, 800);
-        const res = await chatHistorySendMsg.create({
-          message: encryptAES(newMessage, sessionKey),
-        });
-        if (!res.result) {
-          return;
-        }
-        await fetchChatHistoryListNoLoading();
-      } else {
-        await sendMessage.create({
-          chatRoomId: selectedConversation?.id,
-          content: encryptAES(newMessage, sessionKey),
-          document: null,
-          parentId: null,
-        });
-      }
-    }
-  };
-
   const onRefreshButtonClick = async () => {
     await fetchChatRooms(chatRoomList.list);
   };
@@ -470,10 +553,10 @@ const InternalChatPage = () => {
       if (!res.result) {
         return;
       }
-      const obj = decryptData(sessionKey, res.data, DECRYPT_FIELDS.CHAT_ROOM);
-      setSelectedConversation(
-        convertDateByFields(obj, CONVER_DATE_FIELDS.CHAT_ROOM)
-      );
+      const obj1 = decryptData(sessionKey, res.data, DECRYPT_FIELDS.CHAT_ROOM);
+      const obj2 = convertDateByFields(obj1, CONVER_DATE_FIELDS.CHAT_ROOM);
+      obj2.isOnline = isOnline(obj2.lastLogin);
+      setSelectedConversation(obj2);
     }
 
     if (window.innerWidth < 1024) {
@@ -552,10 +635,20 @@ const InternalChatPage = () => {
     );
   };
 
+  const onRemoveMemberClick = (id: any) => {
+    showDeleteDialog(
+      configDeleteDialog({
+        label: "Xóa thành viên",
+        message: "Bạn có chắc muốn xóa thành viên này khỏi nhóm?",
+        deleteApi: () => chatRoomMember.del(id),
+        refreshData: () => hideViewMembersForm(),
+        hideModal: hideDeleteDialog,
+        setToast,
+      })
+    );
+  };
+
   const onDeleteChatRoomClick = () => {
-    const isOwner = selectedConversation?.isOwner;
-    const isGroup =
-      selectedConversation?.kind === CHAT_ROOM_KIND_MAP.GROUP.value;
     const label = isOwner
       ? "Giải tán nhóm"
       : isGroup
@@ -584,6 +677,33 @@ const InternalChatPage = () => {
     );
   };
 
+  const getGroupSettings = () => {
+    let settings;
+    if (isGroup && isOwner) {
+      settings = CHAT_ROOM_DEFAULT_SETTINGS;
+    } else {
+      try {
+        settings = selectedConversation?.settings
+          ? JSON.parse(selectedConversation.settings)
+          : CHAT_ROOM_DEFAULT_SETTINGS;
+      } catch {
+        settings = CHAT_ROOM_DEFAULT_SETTINGS;
+      }
+    }
+    settings.isOwner = isOwner;
+    return settings;
+  };
+
+  const isOwner = selectedConversation?.isOwner;
+  const isGroup = selectedConversation?.kind === CHAT_ROOM_KIND_MAP.GROUP.value;
+  const isDirectMessage =
+    selectedConversation?.kind === CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value;
+  const groupSettings = getGroupSettings();
+  const allowEditGroup = getNestedValue(
+    groupSettings,
+    SETTING_KEYS.ALLOW_UPDATE_CHAT_ROOM
+  );
+
   return (
     <>
       <UnauthorizedDialog />
@@ -591,6 +711,22 @@ const InternalChatPage = () => {
       <VerifyFaceId
         isVisible={verifyFaceIdVisible}
         formConfig={verifyFaceIdFormConfig}
+      />
+      <ConfirmationDialog
+        isVisible={deleteDialogVisible}
+        formConfig={deleteDialogConfig}
+      />
+      <CreateChatRoomMember
+        isVisible={inviteMembersFormVisible}
+        formConfig={inviteMembersFormConfig}
+      />
+      <ChatRoomMembers
+        isVisible={viewMembersFormVisible}
+        formConfig={viewMembersFormConfig}
+      />
+      <MemberReactions
+        isVisible={reactionCountFormVisible}
+        formConfig={reactionCountFormConfig}
       />
       <RequestKey
         isVisible={requestKeyFormVisible}
@@ -604,9 +740,9 @@ const InternalChatPage = () => {
         isVisible={createRoomFormVisible}
         formConfig={createRoomFormConfig}
       />
-      <ConfirmationDialog
-        isVisible={deleteDialogVisible}
-        formConfig={deleteDialogConfig}
+      <UpdateChatRoom
+        isVisible={updateRoomFormVisible}
+        formConfig={updateRoomFormConfig}
       />
       <div className="flex h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-gray-200 overflow-hidden">
         <ChatSideBar
@@ -668,8 +804,7 @@ const InternalChatPage = () => {
                                 />
                               ) : (
                                 <div className="w-10 h-10 rounded-full bg-gray-700 border border-gray-600 shadow-md flex items-center justify-center">
-                                  {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
-                                  selectedConversation.kind ? (
+                                  {isDirectMessage ? (
                                     <UserIcon
                                       size={20}
                                       className="text-gray-300"
@@ -684,21 +819,25 @@ const InternalChatPage = () => {
                               )}
                             </>
                           )}
-                          {selectedConversation.kind ===
-                            CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value &&
-                            isOnline(selectedConversation.lastLogin) && (
-                              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
-                            )}
+                          {isDirectMessage && selectedConversation.isOnline && (
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                          )}
                         </div>
                         <div>
                           <h2 className="text-lg font-semibold text-white">
                             {selectedConversation.name}
                           </h2>
-                          <p className="text-sm text-gray-400">
+                          <p
+                            onClick={isGroup ? onViewMembersClick : undefined}
+                            className={`text-sm text-gray-400 ${
+                              isGroup &&
+                              "hover:text-gray-300 cursor-pointer transition-colors duration-200"
+                            }`}
+                          >
                             {selectedConversation.kind ===
                             CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ? (
                               <>
-                                {isOnline(selectedConversation.lastLogin)
+                                {selectedConversation.isOnline
                                   ? "Đang hoạt động"
                                   : selectedConversation.lastLogin
                                   ? `Truy cập ${formatDistanceToNowVN(
@@ -706,8 +845,7 @@ const InternalChatPage = () => {
                                     )}`
                                   : ""}
                               </>
-                            ) : selectedConversation.kind ===
-                              CHAT_ROOM_KIND_MAP.GROUP.value ? (
+                            ) : isGroup ? (
                               <>{`${selectedConversation.totalMembers} thành viên`}</>
                             ) : (
                               <>{GEMINI_BOT_CONFIG.description}</>
@@ -716,8 +854,7 @@ const InternalChatPage = () => {
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        {selectedConversation.kind ===
-                          CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value && (
+                        {isDirectMessage && (
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
@@ -789,6 +926,8 @@ const InternalChatPage = () => {
                               }
                             >
                               <MessageItem
+                                settings={groupSettings}
+                                onReactionCountClick={onReactionCountClick}
                                 openModal={setSelectedFile}
                                 message={message}
                                 onRecallMessage={onDeleteMessageButtonClick}
@@ -846,6 +985,7 @@ const InternalChatPage = () => {
                       )}
                     </AnimatePresence>
                     <ChatInput
+                      settings={groupSettings}
                       selectedConversation={selectedConversation}
                       newMessage={newMessage}
                       setNewMessage={setNewMessage}
@@ -896,12 +1036,11 @@ const InternalChatPage = () => {
                             Thông tin hội thoại
                           </h2>
                           <div className="flex flex-row space-x-1">
-                            {selectedConversation.kind ===
-                              CHAT_ROOM_KIND_MAP.GROUP.value && (
+                            {isGroup && allowEditGroup && (
                               <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
-                                onClick={() => {}}
+                                onClick={onUpdateRoomButtonClick}
                                 className="p-2 rounded-full hover:bg-blue-700/50 transition-all text-blue-400 hover:text-blue-300"
                               >
                                 <PencilIcon size={20} />
@@ -913,8 +1052,7 @@ const InternalChatPage = () => {
                               onClick={onDeleteChatRoomClick}
                               className="p-2 rounded-full hover:bg-red-700/50 transition-all text-red-400 hover:text-red-300"
                             >
-                              {selectedConversation.kind ===
-                              CHAT_ROOM_KIND_MAP.GROUP.value ? (
+                              {isGroup ? (
                                 <LogOutIcon size={20} />
                               ) : (
                                 <TrashIcon size={20} />
@@ -942,28 +1080,31 @@ const InternalChatPage = () => {
                                 />
                               ) : (
                                 <div className="w-16 h-16 rounded-full bg-gray-700 border border-gray-600 shadow-md flex items-center justify-center">
-                                  {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
-                                  selectedConversation.kind ? (
+                                  {isDirectMessage ? (
                                     <UserIcon className="text-gray-300" />
                                   ) : (
                                     <UsersIcon className="text-gray-300" />
                                   )}
                                 </div>
                               )}
-                              {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ===
-                                selectedConversation.kind &&
-                                isOnline(selectedConversation.lastLogin) && (
+                              {isDirectMessage &&
+                                selectedConversation.isOnline && (
                                   <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-800"></div>
                                 )}
                             </div>
                             <h3 className="text-lg font-medium text-white">
                               {selectedConversation.name}
                             </h3>
-                            <p className="text-sm text-gray-400">
-                              {selectedConversation.kind ===
-                              CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value ? (
+                            <p
+                              onClick={isGroup ? onViewMembersClick : undefined}
+                              className={`text-sm text-gray-400 ${
+                                isGroup &&
+                                "hover:text-gray-300 cursor-pointer transition-colors duration-200"
+                              }`}
+                            >
+                              {isDirectMessage ? (
                                 <>
-                                  {isOnline(selectedConversation.lastLogin)
+                                  {selectedConversation.isOnline
                                     ? "Đang hoạt động"
                                     : selectedConversation.lastLogin
                                     ? `Truy cập ${formatDistanceToNowVN(

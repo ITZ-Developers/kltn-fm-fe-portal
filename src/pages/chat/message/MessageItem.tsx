@@ -19,6 +19,8 @@ const MessageItem = ({
   onEditMessage,
   onReplyMessage,
   onClickParentMessage,
+  onReactionCountClick,
+  settings,
 }: any) => {
   const {
     isSender,
@@ -68,9 +70,9 @@ const MessageItem = ({
   const RenderReactionCout = () => {
     return (
       <ReactionCount
+        onClick={() => onReactionCountClick(messageReactions)}
         totalReactions={totalReactions}
         messageReactions={messageReactions}
-        MESSAGE_REACTION_KIND_MAP={MESSAGE_REACTION_KIND_MAP}
       />
     );
   };
@@ -137,10 +139,7 @@ const MessageItem = ({
               }`}
             >
               {isChildren && parent && (
-                <ParentMessage
-                  parent={parent}
-                  onClick={onClickParentMessage}
-                />
+                <ParentMessage parent={parent} onClick={onClickParentMessage} />
               )}
               {isDeleted ? (
                 <p
@@ -193,6 +192,7 @@ const MessageItem = ({
                   onRecallMessage={onRecallMessage}
                   onEditMessage={onEditMessage}
                   onReplyMessage={onReplyMessage}
+                  settings={settings}
                 />
               </div>
             </div>

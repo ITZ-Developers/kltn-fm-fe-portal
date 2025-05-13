@@ -33,17 +33,6 @@ export const chatRoomMemberController = (fetchApi: any) => {
       },
     });
 
-  const leave = (chatRoomId: any) =>
-    fetchApi({
-      apiUrl: API_URL.TENANT_API,
-      endpoint: `/v1/chat-room-member/leave/${chatRoomId}`,
-      method: METHOD.DELETE,
-      authType: AUTH_TYPE.BEARER,
-      headers: {
-        [API_HEADER.X_TENANT]: tenantInfo?.tenantId,
-      },
-    });
-
   const del = (id: any) =>
     fetchApi({
       apiUrl: API_URL.TENANT_API,
@@ -59,6 +48,5 @@ export const chatRoomMemberController = (fetchApi: any) => {
     list,
     del,
     create,
-    leave,
   };
 };

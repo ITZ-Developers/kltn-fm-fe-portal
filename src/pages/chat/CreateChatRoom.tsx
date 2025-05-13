@@ -67,7 +67,18 @@ const CreateChatRoom = ({ isVisible, formConfig }: any) => {
       if (form.kind === CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value) {
         res = await chatRoom.createDirectMessage(form);
       } else {
-        res = await chatRoom.createGroup(form);
+        res = await chatRoom.createGroup({
+          avatar: form.avatar,
+          name: form.name,
+          memberIds: form.memberIds,
+          settings: JSON.stringify({
+            member_permissions: {
+              allow_send_messages: form.allow_send_messages,
+              allow_update_chat_room: form.allow_update_chat_room,
+              allow_invite_members: form.allow_invite_members,
+            },
+          }),
+        });
       }
       if (res.result) {
         setToast(res.message, TOAST.SUCCESS);
@@ -130,7 +141,6 @@ const CreateChatRoom = ({ isVisible, formConfig }: any) => {
             labelKey="fullName"
             queryParams={{
               ignoreCurrentUser: 1,
-              isPaged: 0,
             }}
             value={form?.memberIds}
             onChange={(value: any) => handleChange("memberIds", value)}

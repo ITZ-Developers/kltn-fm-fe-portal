@@ -3,14 +3,13 @@ import { MESSAGE_REACTION_KIND_MAP } from "../../../components/config/PageConfig
 import {
   getMediaImage,
   getMimeType,
+  getNestedValue,
   parseCustomDateString,
   truncateString,
 } from "../../../services/utils";
 import {
   ChevronRightIcon,
-  CopyIcon,
   Edit2Icon,
-  InfoIcon,
   MoreHorizontalIcon,
   ReplyIcon,
   ThumbsUpIcon,
@@ -20,7 +19,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { FileTypeIcon } from "../FileComponents";
 import useApi from "../../../hooks/useApi";
-import { BASIC_MESSAGES } from "../../../services/constant";
+import { BASIC_MESSAGES, SETTING_KEYS } from "../../../services/constant";
 
 const ParentMessage = ({ parent, onClick }: any) => {
   return (
@@ -94,7 +93,7 @@ const ReactionPicker = ({
 };
 
 const SeenAvatars = ({ seenMembers, totalSeenMembers }: any) => {
-  const maxAvatars = 3;
+  const maxAvatars = 5;
   const displayedMembers = seenMembers?.slice(0, maxAvatars);
   const remainingCount = totalSeenMembers - maxAvatars;
 
@@ -162,11 +161,7 @@ const AttachedFiles = ({ files, openModal }: any) => (
   </div>
 );
 
-const ReactionCount = ({
-  totalReactions,
-  messageReactions,
-  MESSAGE_REACTION_KIND_MAP,
-}: any) => {
+const ReactionCount = ({ totalReactions, messageReactions, onClick }: any) => {
   if (totalReactions <= 0) return null;
 
   const lastReaction = [...messageReactions]
@@ -188,7 +183,9 @@ const ReactionCount = ({
   return (
     <div className="flex items-center mt-1.5 space-x-1">
       <div className={`w-5 h-5 rounded-full flex items-center justify-center`}>
-        <div className="text-current">{kind.emoji}</div>
+        <div onClick={onClick} className="text-current hover:cursor-pointer">
+          {kind.emoji}
+        </div>
       </div>
       <span className="text-xs text-gray-400">{totalReactions}</span>
     </div>
@@ -205,11 +202,17 @@ const MessageActions = ({
   onRecallMessage,
   isDeleted,
   onEditMessage,
+  settings,
 }: any) => {
+  const allowSendMessage = getNestedValue(
+    settings,
+    SETTING_KEYS.ALLOW_SEND_MESSAGES
+  );
   const { chatMessage } = useApi();
   const [showReactionPicker, setShowReactionPicker] = useState(false);
 
   const ReplyButton = () => {
+    if (!allowSendMessage) return null;
     return (
       <motion.button
         whileHover={{ scale: 1.1 }}
@@ -268,7 +271,6 @@ const MessageActions = ({
         isDeleted={isDeleted}
         onRecallMessage={onRecallMessage}
         handleEdit={onEditMessage}
-        // setIsDetailsOpen={setIsDetailsOpen}
       />
     );
   };
@@ -297,7 +299,6 @@ const MessageMenuButton = ({
   isSender,
   onRecallMessage,
   handleEdit,
-  setIsDetailsOpen,
   isDeleted,
 }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -339,19 +340,12 @@ const MessageMenuButton = ({
         icon: TrashIcon,
       });
     }
-
-    actionsToShow.push({
-      label: "Chi tiết",
-      onClick: () => {
-        setIsDetailsOpen(true);
-        setIsOpen(false);
-      },
-      icon: InfoIcon,
-    });
     return actionsToShow;
   };
 
   const actions = handleShowActions();
+
+  if (!actions.length) return null;
 
   return (
     <div className="relative" ref={menuRef}>

@@ -16,6 +16,7 @@ const ModalForm = ({
   onClose,
   title,
   blurAmount = "none",
+  zIndex = "40",
 }: any) => {
   const blurClass =
     (
@@ -33,7 +34,7 @@ const ModalForm = ({
     <AnimatePresence>
       {isVisible && (
         <div
-          className={`fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40 ${blurClass}`}
+          className={`fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-${zIndex} ${blurClass}`}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}

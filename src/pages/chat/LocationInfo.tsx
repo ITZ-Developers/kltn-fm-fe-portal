@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
-import { getMediaImage } from "../../services/utils";
+import { getMediaImage, truncateString } from "../../services/utils";
 import { KeyRoundIcon, MousePointer2Icon, XIcon } from "lucide-react";
 
 const LocationInfo = ({ onBannerClick, onCloseSideBar, onRequestKey }: any) => {
@@ -31,7 +31,7 @@ const LocationInfo = ({ onBannerClick, onCloseSideBar, onRequestKey }: any) => {
           </div>
           <div>
             <h1 className="text-lg font-bold text-white whitespace-nowrap">
-              {tenantInfo?.name || "Chat App"}
+              {truncateString(tenantInfo?.name, 30) || "Chat App"}
             </h1>
             <p className="text-xs text-gray-400">Trò chuyện nội bộ</p>
           </div>
