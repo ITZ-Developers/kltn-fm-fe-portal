@@ -108,7 +108,7 @@ const UpdateChatRoom = ({ isVisible, formConfig }: any) => {
   if (!isVisible) return null;
   return (
     <ModalForm
-      zIndex="50"
+      zIndex={50}
       isVisible={isVisible}
       onClose={formConfig.hideModal}
       title={formConfig.title}

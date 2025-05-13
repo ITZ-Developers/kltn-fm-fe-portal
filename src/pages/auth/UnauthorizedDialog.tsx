@@ -35,7 +35,11 @@ const UnauthorizedDialog = () => {
   }, [isUnauthorized]);
 
   return (
-    <ConfirmationDialog isVisible={isModalVisible} formConfig={formConfig} />
+    <ConfirmationDialog
+      zIndex={1100}
+      isVisible={isModalVisible}
+      formConfig={formConfig}
+    />
   );
 };
 

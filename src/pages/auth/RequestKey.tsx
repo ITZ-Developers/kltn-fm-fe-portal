@@ -41,6 +41,7 @@ const RequestKey = ({ isVisible, formConfig }: any) => {
   if (!isVisible) return null;
   return (
     <ModalForm
+      zIndex={980}
       isVisible={isVisible}
       onClose={formConfig.hideModal}
       title={formConfig.title}

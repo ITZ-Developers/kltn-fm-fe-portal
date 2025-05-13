@@ -33,6 +33,7 @@ const VerifyFaceId = ({ isVisible, formConfig }: any) => {
     <>
       <LoadingDialog isVisible={loading} />
       <ModalForm
+        zIndex={990}
         isVisible={isVisible}
         onClose={() => navigate(-1)}
         title={BUTTON_TEXT.VERIFY_FACEID}

@@ -1,10 +1,20 @@
 import { BASIC_MESSAGES, BUTTON_TEXT, TOAST } from "../../services/constant";
 import { CancelButton, SubmitButton } from "../form/Button";
 
-const ModalForm = ({ children, isVisible, color, title, message }: any) => {
+const ModalForm = ({
+  children,
+  isVisible,
+  color,
+  title,
+  message,
+  zIndex = 50,
+}: any) => {
   if (!isVisible) return null;
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div
+      style={{ zIndex }}
+      className={`fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center`}
+    >
       <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
         <h2 className="text-xl font-bold mb-2 text-gray-200" style={{ color }}>
           {title}
@@ -28,9 +38,11 @@ const ConfirmationDialog = ({
     confirmText: "Accept",
     onCancel: () => {},
   },
+  zIndex = 50,
 }: any) => {
   return (
     <ModalForm
+      zIndex={zIndex}
       isVisible={isVisible}
       title={formConfig.title}
       message={formConfig.message}
@@ -92,6 +104,7 @@ const LoadingDialog = ({
 }: any) => {
   return (
     <ModalForm
+      zIndex={1000}
       isVisible={isVisible}
       color={color}
       title={title}
