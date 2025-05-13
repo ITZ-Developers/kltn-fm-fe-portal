@@ -2,11 +2,10 @@ import { motion } from "framer-motion";
 import {
   formatMessageTime,
   getMediaImage,
-  isOnline,
   truncateString,
 } from "../../services/utils";
 import { UserIcon, UsersIcon } from "lucide-react";
-import { BASIC_MESSAGES, CHAT_ROOM_KIND_MAP } from "../../services/constant";
+import { CHAT_ROOM_KIND_MAP } from "../../services/constant";
 import { GEMINI_BOT_CONFIG } from "../../components/config/PageConfig";
 
 const ConversationItem = ({ conversation, selected, onClick }: any) => {
@@ -79,7 +78,7 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
               </div>
             )}
             {CHAT_ROOM_KIND_MAP.DIRECT_MESSAGE.value === conversation.kind &&
-              isOnline(conversation.lastLogin) && (
+              conversation.isOnline && (
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800"></div>
               )}
           </div>
@@ -108,7 +107,7 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                   >
                     {truncateString(
                       `${conversation?.lastMessage?.sender?.fullName} thu hồi tin nhắn`,
-                      50
+                      30
                     )}
                   </p>
                 ) : (
@@ -119,7 +118,7 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                   >
                     {truncateString(
                       `${conversation?.lastMessage?.sender?.fullName}: ${conversation?.lastMessage?.content}`,
-                      50
+                      30
                     )}
                   </p>
                 )}

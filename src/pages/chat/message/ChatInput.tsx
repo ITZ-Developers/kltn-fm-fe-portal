@@ -15,11 +15,13 @@ import {
   generateIdNumber,
   getCurrentDate,
   getMimeType,
+  getNestedValue,
   truncateString,
 } from "../../../services/utils";
 import {
   BASIC_MESSAGES,
   CHAT_HISTORY_ROLE,
+  SETTING_KEYS,
   TOAST,
 } from "../../../services/constant";
 import { GEMINI_BOT_CONFIG } from "../../../components/config/PageConfig";
@@ -42,7 +44,12 @@ const ChatInput = ({
   loadingSendMessage,
   onClickParentMessage,
   openModal,
+  settings,
 }: any) => {
+  const allowSendMessage = getNestedValue(
+    settings,
+    SETTING_KEYS.ALLOW_SEND_MESSAGES
+  );
   const { setToast, sessionKey } = useGlobalContext();
   const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -115,7 +122,7 @@ const ChatInput = ({
       setToast("Vui lòng nhập tin nhắn", TOAST.ERROR);
       return;
     }
-    if (loadingSendMessage || selectedConversation?.isBlocked) {
+    if (loadingSendMessage || !allowSendMessage) {
       return;
     }
     if (selectedConversation?.kind === GEMINI_BOT_CONFIG.kind) {
@@ -157,7 +164,7 @@ const ChatInput = ({
 
   return (
     <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 backdrop-blur-md">
-      {selectedConversation?.isBlocked ? (
+      {!allowSendMessage ? (
         <div className="text-center text-red-400 py-2">
           Chỉ trưởng nhóm mới có thể gửi tin nhắn trong cuộc trò chuyện này
         </div>

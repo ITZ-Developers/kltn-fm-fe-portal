@@ -173,7 +173,7 @@ const MESSAGE_REACTION_KIND_MAP = {
   },
   HEART: {
     value: 2,
-    label: "Yêu thương",
+    label: "Yêu thích",
     icon: HeartIcon,
     emoji: "❤️",
     className: "text-rose-600 dark:bg-rose-900 dark:text-rose-300",
@@ -187,7 +187,7 @@ const MESSAGE_REACTION_KIND_MAP = {
   },
   JOY: {
     value: 4,
-    label: "Cười mỉm",
+    label: "Hạnh phúc",
     icon: SmileIcon,
     emoji: "☺️",
     className: "text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300",

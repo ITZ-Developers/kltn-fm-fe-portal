@@ -384,6 +384,21 @@ const BUTTON_TEXT = {
   DELETE_FACEID: "Xóa FaceID",
 };
 
+const CHAT_ROOM_DEFAULT_SETTINGS = {
+  member_permissions: {
+    allow_send_messages: true,
+    allow_update_chat_room: true,
+    allow_invite_members: true,
+  },
+};
+
+const SETTING_KEYS = {
+  MEMBER_PERMISSIONS: "member_permissions",
+  ALLOW_SEND_MESSAGES: "member_permissions.allow_send_messages",
+  ALLOW_UPDATE_CHAT_ROOM: "member_permissions.allow_update_chat_room",
+  ALLOW_INVITE_MEMBERS: "member_permissions.allow_invite_members",
+};
+
 export {
   VALID_PATTERN,
   ALIGNMENT,
@@ -425,4 +440,6 @@ export {
   CHAT_HISTORY_ROLE,
   CHAT_ROOM_KIND_MAP,
   ONLINE_TIMEOUT,
+  CHAT_ROOM_DEFAULT_SETTINGS,
+  SETTING_KEYS,
 };

@@ -5,6 +5,10 @@ import { API_URL, ONLINE_TIMEOUT, PERIOD_KIND_MAP } from "./constant";
 import forge from "node-forge";
 import { format, isSameDay, formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
+import {
+  CONVER_DATE_FIELDS,
+  DECRYPT_FIELDS,
+} from "../components/config/PageConfig";
 
 const extractPrivateKey = (keyString: string): string => {
   const beginMarker = "-----BEGIN PRIVATE KEY-----";

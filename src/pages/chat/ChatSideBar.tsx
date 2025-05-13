@@ -37,7 +37,7 @@ const ChatSideBar = ({
         initial={{ x: -400 }}
         animate={{ x: isSidebarOpen ? 0 : -400 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className={`fixed inset-y-0 left-0 w-100 bg-gray-800/70 backdrop-blur-md border-r border-gray-700/50 flex flex-col z-20 lg:static ${
+        className={`fixed inset-y-0 left-0 w-[340px] bg-gray-800/70 backdrop-blur-md border-r border-gray-700/50 flex flex-col z-20 lg:static ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
