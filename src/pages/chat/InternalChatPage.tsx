@@ -713,8 +713,13 @@ const InternalChatPage = () => {
         formConfig={verifyFaceIdFormConfig}
       />
       <ConfirmationDialog
+        zIndex={980}
         isVisible={deleteDialogVisible}
         formConfig={deleteDialogConfig}
+      />
+      <RequestKey
+        isVisible={requestKeyFormVisible}
+        formConfig={requestKeyFormConfig}
       />
       <CreateChatRoomMember
         isVisible={inviteMembersFormVisible}
@@ -727,10 +732,6 @@ const InternalChatPage = () => {
       <MemberReactions
         isVisible={reactionCountFormVisible}
         formConfig={reactionCountFormConfig}
-      />
-      <RequestKey
-        isVisible={requestKeyFormVisible}
-        formConfig={requestKeyFormConfig}
       />
       <UpdateMessage
         isVisible={updateMessageFormVisible}
