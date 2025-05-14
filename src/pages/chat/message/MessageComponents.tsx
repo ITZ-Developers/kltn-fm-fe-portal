@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { MESSAGE_REACTION_KIND_MAP } from "../../../components/config/PageConfig";
 import {
+  formatMessageTime,
   getMediaImage,
   getMimeType,
   getNestedValue,
@@ -137,10 +138,7 @@ const SeenAvatars = ({ seenMembers, totalSeenMembers }: any) => {
 
 const MessageTime = ({ createdDate }: any) => (
   <span className="text-xs text-gray-300/70 mt-1.5">
-    {parseCustomDateString(createdDate).toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}
+    {formatMessageTime(createdDate)}
   </span>
 );
 
