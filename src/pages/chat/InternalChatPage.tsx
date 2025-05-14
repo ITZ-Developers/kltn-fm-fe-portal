@@ -70,6 +70,7 @@ import MemberReactions from "./message/MemberReactions";
 import CreateChatRoomMember from "./CreateChatRoomMember";
 import ChatRoomMembers from "./message/ChatRoomMembers";
 import UpdateChatRoom from "./UpdateChatRoom";
+import VideoChatModal from "./video/VideoChatModal";
 
 const InternalChatPage = () => {
   const { isSystemNotReady, sessionKey, setToast, profile, message } =
@@ -87,6 +88,7 @@ const InternalChatPage = () => {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [mediaActiveTab, setMediaActiveTab] = useState<string>("media");
   const [messages, setMessages] = useState<any>([]);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -721,6 +723,12 @@ const InternalChatPage = () => {
         isVisible={requestKeyFormVisible}
         formConfig={requestKeyFormConfig}
       />
+      {isVideoModalOpen && (
+        <VideoChatModal
+          conversation={selectedConversation}
+          closeModal={() => setIsVideoModalOpen(false)}
+        />
+      )}
       <CreateChatRoomMember
         isVisible={inviteMembersFormVisible}
         formConfig={inviteMembersFormConfig}
@@ -857,6 +865,7 @@ const InternalChatPage = () => {
                       <div className="flex space-x-2">
                         {isDirectMessage && (
                           <motion.button
+                            onClick={() => setIsVideoModalOpen(true)}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             className="p-2 rounded-full hover:bg-gray-700/50 transition-all text-gray-400 hover:text-white"
