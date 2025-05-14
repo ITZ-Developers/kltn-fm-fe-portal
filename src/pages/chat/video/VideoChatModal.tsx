@@ -9,7 +9,12 @@ import {
 import VideoRoom from "./VideoRoom";
 import { useGlobalContext } from "../../../components/config/GlobalProvider";
 
-const VideoChatModal = ({ conversation, closeModal }: any) => {
+interface VideoChatModalProps {
+  conversation: any;
+  closeModal: () => void;
+}
+
+const VideoChatModal = ({ conversation, closeModal }: VideoChatModalProps) => {
   const { setToast } = useGlobalContext();
   const [currentRoom, setCurrentRoom] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -17,6 +22,7 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
   const [isAudioEnabled, setIsAudioEnabled] = useState<boolean>(true);
   const [connectionState, setConnectionState] = useState<string>("new");
   const [showWaiting, setShowWaiting] = useState<boolean>(false);
+  const [connecting, setConnecting] = useState<boolean>(false);
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<HTMLVideoElement>(null);
@@ -56,6 +62,7 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
   }, [conversation]);
 
   const handleCreated = async () => {
+    setConnecting(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia(
         STREAM_CONSTRAINTS
@@ -68,10 +75,13 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
       setShowWaiting(true);
     } catch (error) {
       setToast("Failed to access camera/microphone", TOAST.ERROR);
+    } finally {
+      setConnecting(false);
     }
   };
 
   const handleJoined = async () => {
+    setConnecting(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia(
         STREAM_CONSTRAINTS
@@ -84,6 +94,8 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
       setShowWaiting(true);
     } catch (error) {
       setToast("Failed to access camera/microphone", TOAST.ERROR);
+    } finally {
+      setConnecting(false);
     }
   };
 
@@ -192,7 +204,7 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
     }
     isCallerRef.current = true;
     setShowWaiting(true);
-    setToast("The other participant has left the room", TOAST.INFO);
+    setToast(`${conversation?.name} đã ngắt kết nối`, TOAST.INFO);
   };
 
   const handleSetCaller = (callerId: string) => {
@@ -200,7 +212,7 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
   };
 
   const handleFull = () => {
-    setToast("Room is full", TOAST.WARN);
+    setToast("Phòng đã đầy", TOAST.WARN);
     closeModal();
   };
 
@@ -273,18 +285,12 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
   return (
     <div
       style={{ zIndex: 50 }}
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 backdrop-blur-lg flex items-center justify-center p-4"
     >
-      <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl">
-        <button
-          onClick={handleLeaveRoom}
-          className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-        >
-          <i className="fas fa-times text-xl"></i>
-        </button>
+      <div className="relative bg-gray-900 rounded-xl shadow-2xl w-full max-w-5xl overflow-hidden border border-gray-800">
         {isConnected && (
           <VideoRoom
-            currentRoom={currentRoom}
+            conversation={conversation}
             connectionState={connectionState}
             showWaiting={showWaiting}
             isVideoEnabled={isVideoEnabled}
@@ -293,6 +299,7 @@ const VideoChatModal = ({ conversation, closeModal }: any) => {
             remoteVideoRef={remoteVideoRef}
             toggleTrack={toggleTrack}
             handleLeaveRoom={handleLeaveRoom}
+            connecting={connecting}
           />
         )}
       </div>
