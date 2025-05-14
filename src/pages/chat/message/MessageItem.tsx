@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { parseCustomDateString } from "../../../services/utils";
+import { formatMessageTime } from "../../../services/utils";
 import { BASIC_MESSAGES, CHAT_HISTORY_ROLE } from "../../../services/constant";
 import {
   AttachedFiles,
@@ -101,13 +101,7 @@ const MessageItem = ({
               } flex items-center  mt-2 space-x-1`}
             >
               <p className="text-xs text-gray-300/70">
-                {parseCustomDateString(createdDate).toLocaleTimeString(
-                  "vi-VN",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                )}
+                {formatMessageTime(createdDate)}
               </p>
             </div>
           </div>

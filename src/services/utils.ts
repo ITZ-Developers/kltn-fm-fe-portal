@@ -3,12 +3,15 @@ import * as CryptoJS from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 import { API_URL, ONLINE_TIMEOUT, PERIOD_KIND_MAP } from "./constant";
 import forge from "node-forge";
-import { format, isSameDay, formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
 import {
-  CONVER_DATE_FIELDS,
-  DECRYPT_FIELDS,
-} from "../components/config/PageConfig";
+  format,
+  isSameDay,
+  isSameWeek,
+  isSameMonth,
+  isSameYear,
+  formatDistanceToNow,
+} from "date-fns";
+import { vi } from "date-fns/locale";
 
 const extractPrivateKey = (keyString: string): string => {
   const beginMarker = "-----BEGIN PRIVATE KEY-----";
@@ -469,9 +472,17 @@ const formatMessageTime = (dateStr: string) => {
 
     if (isSameDay(createdDate, now)) {
       return format(createdDate, "HH:mm", { locale: vi });
-    } else {
-      return format(createdDate, "dd/MM/yyyy", { locale: vi });
     }
+
+    if (isSameWeek(createdDate, now, { weekStartsOn: 1 })) {
+      return format(createdDate, "HH:mm EEEE", { locale: vi });
+    }
+
+    if (isSameYear(createdDate, now)) {
+      return format(createdDate, "HH:mm dd/MM", { locale: vi });
+    }
+
+    return format(createdDate, "HH:mm dd/MM/yyyy", { locale: vi });
   } catch {
     return null;
   }
