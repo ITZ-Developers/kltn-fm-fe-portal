@@ -56,6 +56,7 @@ const API_URL = {
   TENANT_API: "https://finance-tenant.onrender.com",
   MEDIA_API: "https://finance-cache.onrender.com",
   SOCKET_URL: "wss://finance-socket.onrender.com/ws",
+  CHAT_VIDEO_URL: "finance-media.onrender.com",
 };
 
 const API_HEADER = {
@@ -334,6 +335,7 @@ const TOAST = {
   SUCCESS: "success",
   ERROR: "error",
   WARN: "warning",
+  INFO: "info",
 };
 
 const BASIC_MESSAGES = {
@@ -399,6 +401,22 @@ const SETTING_KEYS = {
   ALLOW_INVITE_MEMBERS: "member_permissions.allow_invite_members",
 };
 
+const ICE_SERVERS = {
+  iceServers: [
+    { urls: `stun:${API_URL.CHAT_VIDEO_URL}:3478` },
+    {
+      urls: `turn:${API_URL.CHAT_VIDEO_URL}:3478`,
+      username: "username",
+      credential: "password",
+    },
+  ],
+};
+
+const STREAM_CONSTRAINTS = {
+  audio: true,
+  video: true,
+};
+
 export {
   VALID_PATTERN,
   ALIGNMENT,
@@ -442,4 +460,6 @@ export {
   ONLINE_TIMEOUT,
   CHAT_ROOM_DEFAULT_SETTINGS,
   SETTING_KEYS,
+  ICE_SERVERS,
+  STREAM_CONSTRAINTS,
 };
