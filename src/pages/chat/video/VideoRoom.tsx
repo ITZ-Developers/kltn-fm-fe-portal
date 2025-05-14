@@ -1,12 +1,13 @@
 import { useRef, useEffect } from "react";
 import {
-  Video,
   VideoOff,
-  Mic,
-  MicOff,
-  PhoneOff,
-  Loader,
   UserIcon,
+  VideoIcon,
+  VideoOffIcon,
+  LoaderIcon,
+  MicIcon,
+  MicOffIcon,
+  PhoneOffIcon,
 } from "lucide-react";
 import { getMediaImage } from "../../../services/utils";
 
@@ -127,12 +128,10 @@ const VideoRoom = ({
           {connecting && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900/70 text-white">
               <div className="flex flex-col items-center gap-4">
-                <Loader className="animate-spin h-12 w-12 text-blue-500" />
-                <p className="text-lg font-medium">
-                  Establishing connection...
-                </p>
+                <LoaderIcon className="animate-spin h-12 w-12 text-blue-500" />
+                <p className="text-lg font-medium">Đang thiết lập kết nối...</p>
                 <p className="text-gray-400 text-sm">
-                  Setting up your video call
+                  Chuẩn bị cho cuộc gọi video của bạn
                 </p>
               </div>
             </div>
@@ -143,10 +142,12 @@ const VideoRoom = ({
             !connecting && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900/70 text-white">
                 <div className="flex flex-col items-center gap-4">
-                  <Video className="h-16 w-16 text-gray-500" />
-                  <p className="text-lg font-medium">No remote video</p>
+                  <VideoIcon className="h-16 w-16 text-gray-500" />
+                  <p className="text-lg font-medium">
+                    Không có video trực tuyến
+                  </p>
                   <p className="text-gray-400 text-sm">
-                    Waiting for the other participant's video
+                    {`Đang đợi kết nối video của ${conversation?.name}`}
                   </p>
                 </div>
               </div>
@@ -179,9 +180,9 @@ const VideoRoom = ({
             }`}
           >
             {isAudioEnabled ? (
-              <Mic className="h-4 w-4 text-green-400" />
+              <MicIcon className="h-4 w-4 text-green-400" />
             ) : (
-              <MicOff className="h-4 w-4 text-red-400" />
+              <MicOffIcon className="h-4 w-4 text-red-400" />
             )}
           </div>
           <div className="absolute bottom-2 left-2 bg-gray-900 bg-opacity-70 px-2 py-1 rounded text-xs font-medium text-gray-200">
@@ -201,7 +202,11 @@ const VideoRoom = ({
             }`}
             aria-label={isVideoEnabled ? "Turn off camera" : "Turn on camera"}
           >
-            {isVideoEnabled ? <Video size={20} /> : <VideoOff size={20} />}
+            {isVideoEnabled ? (
+              <VideoIcon size={20} />
+            ) : (
+              <VideoOffIcon size={20} />
+            )}
           </button>
 
           <button
@@ -215,7 +220,7 @@ const VideoRoom = ({
               isAudioEnabled ? "Mute microphone" : "Unmute microphone"
             }
           >
-            {isAudioEnabled ? <Mic size={20} /> : <MicOff size={20} />}
+            {isAudioEnabled ? <MicIcon size={20} /> : <MicOffIcon size={20} />}
           </button>
 
           <button
@@ -223,7 +228,7 @@ const VideoRoom = ({
             className="w-12 h-12 flex items-center justify-center rounded-full bg-red-600 hover:bg-red-700 text-white shadow-md transition-all duration-200"
             aria-label="End call"
           >
-            <PhoneOff size={20} />
+            <PhoneOffIcon size={20} />
           </button>
         </div>
       </div>
