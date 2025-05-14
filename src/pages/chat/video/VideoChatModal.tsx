@@ -285,7 +285,7 @@ const VideoChatModal = ({ conversation, closeModal }: VideoChatModalProps) => {
   return (
     <div
       style={{ zIndex: 50 }}
-      className="fixed inset-0 bg-black/80 backdrop-blur-lg flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
     >
       <div className="relative bg-gray-900 rounded-xl shadow-2xl w-full max-w-5xl overflow-hidden border border-gray-800">
         {isConnected && (
