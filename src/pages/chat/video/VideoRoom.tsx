@@ -90,13 +90,13 @@ const VideoRoom = ({
         </div>
       </div>
 
-      <div className="relative flex-grow bg-gray-950 overflow-hidden max-w-100 h-[calc(100vh-8rem)] max-h-[600px]">
-        <div className="w-full h-full">
+      <div className="relative flex-grow bg-gray-950 overflow-hidden">
+        <div className="w-full h-full justify-center items-center flex">
           <video
             ref={remoteVideoRef}
             autoPlay
             playsInline
-            className="w-full h-full object-cover"
+            className="w-full h-[calc(100vh-8rem)] max-h-[600px] object-cover"
           />
 
           {showWaiting && (
