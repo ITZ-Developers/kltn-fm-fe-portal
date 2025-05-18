@@ -41,6 +41,7 @@ const CreateChatRoomMember = ({ isVisible, formConfig }: any) => {
       isVisible={isVisible}
       onClose={formConfig.hideModal}
       title={formConfig.title}
+      zIndex={60}
       children={
         <>
           <div className="flex flex-col space-y-4">
