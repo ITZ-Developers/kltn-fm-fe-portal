@@ -161,7 +161,6 @@ const InternalChatPage = () => {
   const { chatRoom: chatRoomList, loading: loadingChatRoomList } = useApi();
   const {
     chatHistory: chatHistoryList,
-    chatRoom: chatRoomMessageList,
     chatMessage: messageList,
     loading: loadingMessageList,
   } = useApi();
@@ -435,7 +434,9 @@ const InternalChatPage = () => {
         const chatRoomId = message?.data?.chatRoomId;
         if (selectedConversation?.id === chatRoomId) {
           if (SOCKET_CMD.CMD_CHAT_ROOM_UPDATED === message?.cmd) {
-            await handleSelectConversation(chatRoomId);
+            setSelectedConversation(
+              await handleGetConversationInfo(chatRoomId)
+            );
           }
           if (SOCKET_CMD.CMD_CHAT_ROOM_DELETED === message?.cmd) {
             setSelectedConversation(null);
@@ -547,23 +548,30 @@ const InternalChatPage = () => {
     await fetchChatRooms(chatRoomList.list);
   };
 
-  const handleSelectConversation = async (conversationId: any) => {
-    if (conversationId === GEMINI_BOT_CONFIG.id) {
-      setSelectedConversation(GEMINI_BOT_CONFIG);
-    } else {
-      const res = await chatRoomMessageList.get(conversationId);
-      if (!res.result) {
-        return;
-      }
-      const obj1 = decryptData(sessionKey, res.data, DECRYPT_FIELDS.CHAT_ROOM);
-      const obj2 = convertDateByFields(obj1, CONVER_DATE_FIELDS.CHAT_ROOM);
-      obj2.isOnline = isOnline(obj2.lastLogin);
-      setSelectedConversation(obj2);
+  const handleGetConversationInfo = async (conversationId: any) => {
+    const res = await chatRoomListNoLoading.get(conversationId);
+    if (!res.result) {
+      return null;
     }
+    const obj1 = decryptData(sessionKey, res.data, DECRYPT_FIELDS.CHAT_ROOM);
+    const obj2 = convertDateByFields(obj1, CONVER_DATE_FIELDS.CHAT_ROOM);
+    obj2.isOnline = isOnline(obj2.lastLogin);
+    return obj2;
+  };
 
+  const handleSelectConversation = async (conversationId: any) => {
+    let conversation = null;
+    if (conversationId === GEMINI_BOT_CONFIG.id) {
+      conversation = GEMINI_BOT_CONFIG;
+    } else {
+      conversation = await handleGetConversationInfo(conversationId);
+    }
     if (window.innerWidth < 1024) {
       setIsSidebarOpen(false);
     }
+    setSelectedConversation(conversation);
+    fetchMessagesByChatRoom(conversation);
+    resetChatInputForm();
     setPanelState(null);
   };
 
@@ -613,11 +621,6 @@ const InternalChatPage = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    fetchMessagesByChatRoom(selectedConversation);
-    resetChatInputForm();
-  }, [selectedConversation]);
 
   useEffect(() => {
     setSearchMessages("");
