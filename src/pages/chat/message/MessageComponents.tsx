@@ -25,7 +25,6 @@ import { BASIC_MESSAGES, SETTING_KEYS } from "../../../services/constant";
 const ParentMessage = ({ parent, onClick }: any) => {
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
       onClick={() => onClick(parent.id)}
       className="p-2 mb-2 bg-gray-800/50 rounded-lg border-l-4 border-blue-300/50 cursor-pointer hover:bg-gray-800/70 transition-all"
     >
@@ -41,7 +40,11 @@ const ParentMessage = ({ parent, onClick }: any) => {
         </p>
       ) : (
         <p className="text-xs text-gray-300 truncate">
-          {truncateString(parent.content, 50)}
+          {parent.document
+            ? "Đã gửi tệp đính kèm"
+            : parent.content
+            ? truncateString(parent.content, 50)
+            : "Đã gửi một tin nhắn"}
         </p>
       )}
     </motion.div>

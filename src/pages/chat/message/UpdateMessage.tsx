@@ -14,16 +14,11 @@ import { DECRYPT_FIELDS } from "../../../components/config/PageConfig";
 const UpdateMessage = ({ isVisible, formConfig }: any) => {
   const { setToast, sessionKey } = useGlobalContext();
   const { chatMessage, loading } = useApi();
-  const validate = (form: any) => {
-    const newErrors: any = {};
-    if (!form.content.trim()) {
-      newErrors.content = "Nội dung không hợp lệ";
-    }
-    return newErrors;
-  };
 
-  const { form, errors, setForm, resetForm, handleChange, isValidForm } =
-    useForm(formConfig.initForm, validate);
+  const { form, errors, setForm, resetForm, handleChange } = useForm(
+    formConfig.initForm,
+    () => {}
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,8 +28,8 @@ const UpdateMessage = ({ isVisible, formConfig }: any) => {
         const data = decryptData(sessionKey, res.data, DECRYPT_FIELDS.MESSAGE);
         setForm({
           id: data.id,
-          content: data.content,
-          document: data.document,
+          content: data.content || "",
+          document: data.document || "[]",
         });
       } else {
         formConfig?.hideModal();
@@ -51,15 +46,22 @@ const UpdateMessage = ({ isVisible, formConfig }: any) => {
   }, [isVisible]);
 
   const handleSubmit = async () => {
-    if (isValidForm()) {
-      await formConfig.onButtonClick({
-        id: form.id,
-        content: encryptAES(form.content, sessionKey),
-        document: encryptAES(form.document, sessionKey),
-      });
-    } else {
-      setToast(BASIC_MESSAGES.INVALID_FORM, TOAST.ERROR);
+    const content = form?.content.trim()
+      ? encryptAES(form.content, sessionKey)
+      : null;
+    const document =
+      form?.document && form?.document != "[]"
+        ? encryptAES(form.document, sessionKey)
+        : null;
+    if (!content && !document) {
+      setToast("Vui lòng nhập tin nhắn hoặc gửi tệp", TOAST.ERROR);
+      return;
     }
+    await formConfig.onButtonClick({
+      id: form.id,
+      content,
+      document,
+    });
   };
 
   if (!isVisible) return null;
@@ -75,7 +77,6 @@ const UpdateMessage = ({ isVisible, formConfig }: any) => {
             <div className="flex flex-col space-y-4">
               <TextAreaField
                 title="Nội dung"
-                isRequired={true}
                 placeholder="Nhập nội dung"
                 value={form?.content}
                 onChangeText={(value: any) => handleChange("content", value)}
