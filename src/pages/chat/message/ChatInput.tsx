@@ -118,14 +118,14 @@ const ChatInput = ({
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim()) {
-      setToast("Vui lòng nhập tin nhắn", TOAST.ERROR);
-      return;
-    }
     if (loadingSendMessage || !allowSendMessage) {
       return;
     }
     if (selectedConversation?.kind === GEMINI_BOT_CONFIG.kind) {
+      if (!newMessage.trim()) {
+        setToast("Vui lòng nhập tin nhắn", TOAST.ERROR);
+        return;
+      }
       const msgObj = {
         id: generateIdNumber(),
         role: CHAT_HISTORY_ROLE.USER,
@@ -143,6 +143,10 @@ const ChatInput = ({
       }
       await fetchChatHistoryListNoLoading();
     } else {
+      if (!newMessage.trim() && uploadedFiles?.length == 0) {
+        setToast("Vui lòng nhập tin nhắn hoặc gửi tệp", TOAST.ERROR);
+        return;
+      }
       const document = uploadedFiles?.length
         ? JSON.stringify(
             uploadedFiles.map((file) => ({
@@ -153,7 +157,7 @@ const ChatInput = ({
         : null;
       await sendMessageApi.create({
         chatRoomId: selectedConversation?.id,
-        content: encryptAES(newMessage, sessionKey),
+        content: newMessage ? encryptAES(newMessage, sessionKey) : null,
         document: document ? encryptAES(document, sessionKey) : null,
         parentMessageId: parentMessage?.id || null,
       });
