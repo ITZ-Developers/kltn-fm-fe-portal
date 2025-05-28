@@ -9,6 +9,7 @@ import { CHAT_ROOM_KIND_MAP } from "../../services/constant";
 import { GEMINI_BOT_CONFIG } from "../../components/config/PageConfig";
 
 const ConversationItem = ({ conversation, selected, onClick }: any) => {
+  const lastMessage = conversation?.lastMessage;
   const isBot = conversation?.kind === GEMINI_BOT_CONFIG.kind;
   const isUnread = conversation?.totalUnreadMessages > 0;
   return (
@@ -92,13 +93,12 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                 {conversation.name}
               </span>
               <span className="text-xs text-gray-400">
-                {formatMessageTime(conversation?.lastMessage?.createdDate)}
+                {formatMessageTime(lastMessage?.createdDate)}
               </span>
             </div>
-            {(conversation?.lastMessage?.content ||
-              conversation?.lastMessage?.isDeleted) && (
+            {(lastMessage || lastMessage?.isDeleted) && (
               <>
-                {conversation.lastMessage.isDeleted ? (
+                {lastMessage?.isDeleted ? (
                   <p
                     className={`text-sm italic ${
                       isUnread ? "text-gray-200" : "text-gray-400"
@@ -106,7 +106,7 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                     aria-label="Tin nhắn đã bị thu hồi"
                   >
                     {truncateString(
-                      `${conversation?.lastMessage?.sender?.fullName} thu hồi tin nhắn`,
+                      `${lastMessage?.sender?.fullName} thu hồi tin nhắn`,
                       30
                     )}
                   </p>
@@ -116,10 +116,14 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                       isUnread ? "text-gray-200" : "text-gray-400"
                     }`}
                   >
-                    {truncateString(
-                      `${conversation?.lastMessage?.sender?.fullName}: ${conversation?.lastMessage?.content}`,
-                      30
-                    )}
+                    {lastMessage?.document
+                      ? `${lastMessage?.sender?.fullName} đã gửi tệp đính kèm`
+                      : lastMessage?.content
+                      ? truncateString(
+                          `${lastMessage?.sender?.fullName}: ${lastMessage?.content}`,
+                          30
+                        )
+                      : `${lastMessage?.sender?.fullName} đã gửi một tin nhắn`}
                   </p>
                 )}
               </>
