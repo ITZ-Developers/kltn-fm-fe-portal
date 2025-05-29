@@ -38,8 +38,6 @@ const MessageReactionsList = ({ messageReactions }: any) => {
     );
   }
 
-  console.log(groupedReactions);
-
   return (
     <div className="space-y-4">
       {groupedReactions.map(({ kind, reactions, count, reactionInfo }: any) => (

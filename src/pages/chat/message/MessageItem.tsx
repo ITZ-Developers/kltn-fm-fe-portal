@@ -21,6 +21,7 @@ const MessageItem = ({
   onClickParentMessage,
   onReactionCountClick,
   settings,
+  showAvatar,
 }: any) => {
   const {
     isSender,
@@ -49,16 +50,35 @@ const MessageItem = ({
   const matched = Object.values(MESSAGE_REACTION_KIND_MAP).find(
     (item) => item.value === myReaction
   );
-
   const RenderSeenAvatars = () => {
     return (
       <div className="flex flex-col mx-1">
+        <div
+          className={`flex ${isSender ? "justify-end" : "justify-start"} mt-1`}
+        >
+          <div className="flex flex-1 space-x-1">
+            <MessageActions
+              id={id}
+              isSender={isSender}
+              isReacted={isReacted}
+              isDeleted={isDeleted}
+              matched={matched}
+              totalReactions={totalReactions}
+              myReaction={myReaction}
+              onRecallMessage={onRecallMessage}
+              onEditMessage={onEditMessage}
+              onReplyMessage={onReplyMessage}
+              settings={settings}
+            />
+          </div>
+        </div>
         <div className="flex flex-1" />
-        <SeenAvatars
-          seenMembers={seenMembers}
-          totalSeenMembers={totalSeenMembers}
-        />
-        <div className="mb-8" />
+        <div className={`flex ${isSender ? "justify-end" : "justify-start"}`}>
+          <SeenAvatars
+            seenMembers={seenMembers}
+            totalSeenMembers={totalSeenMembers}
+          />
+        </div>
       </div>
     );
   };
@@ -87,7 +107,7 @@ const MessageItem = ({
           data-message-id={message.id}
           className={`flex ${
             isUser ? "justify-end" : "justify-start"
-          } mb-4 transition-all duration-300`}
+          } mb-4 transition-all duration-300 mx-2`}
         >
           <div
             className={`max-w-[80%] sm:max-w-[60%] md:max-w-[50%] p-4 rounded-xl shadow-md ${
@@ -113,12 +133,14 @@ const MessageItem = ({
           transition={{ duration: 0.25 }}
           className={`flex ${
             isSender ? "justify-end" : "justify-start"
-          } mb-4 group`}
+          } mb-4 group mx-2`}
         >
-          {!isSender ? (
+          {!isSender && showAvatar ? (
             <div className="mr-2 self-end">
               <Avatar sender={sender} />
             </div>
+          ) : !isSender ? (
+            <div className="mr-2 self-end w-8" />
           ) : (
             <RenderSeenAvatars />
           )}
@@ -143,7 +165,7 @@ const MessageItem = ({
                   {BASIC_MESSAGES.MESSAGE_DELETED}
                 </p>
               ) : (
-                <p className="text-sm whitespace-pre-wrap">
+                <p className="text-sm whitespace-pre-wrap truncate">
                   {content}
                   {isUpdated && (
                     <span className="text-xs italic text-gray-300 ml-1">
@@ -169,34 +191,15 @@ const MessageItem = ({
                 )}
               </div>
             </div>
-            <div
-              className={`flex items-center mt-1 ${
-                isSender ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div className="flex items-center space-x-1">
-                <MessageActions
-                  id={id}
-                  isSender={isSender}
-                  isReacted={isReacted}
-                  isDeleted={isDeleted}
-                  matched={matched}
-                  totalReactions={totalReactions}
-                  myReaction={myReaction}
-                  onRecallMessage={onRecallMessage}
-                  onEditMessage={onEditMessage}
-                  onReplyMessage={onReplyMessage}
-                  settings={settings}
-                />
-              </div>
-            </div>
           </div>
-          {!isSender ? (
-            <RenderSeenAvatars />
-          ) : (
+          {isSender && showAvatar ? ( // Chỉ hiển thị avatar nếu showAvatar là true
             <div className="ml-2 self-end">
               <Avatar sender={sender} />
             </div>
+          ) : isSender ? (
+            <div className="ml-2 self-end w-8" /> // Placeholder để giữ khoảng cách
+          ) : (
+            <RenderSeenAvatars />
           )}
         </motion.div>
       )}

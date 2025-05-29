@@ -71,6 +71,7 @@ import CreateChatRoomMember from "./CreateChatRoomMember";
 import ChatRoomMembers from "./message/ChatRoomMembers";
 import UpdateChatRoom from "./UpdateChatRoom";
 import VideoChatModal from "./video/VideoChatModal";
+import { Virtuoso } from "react-virtuoso";
 
 const InternalChatPage = () => {
   const { isSystemNotReady, sessionKey, setToast, profile, message } =
@@ -90,9 +91,8 @@ const InternalChatPage = () => {
   const [messages, setMessages] = useState<any>([]);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messageRefs = useRef<any[]>([]);
+  const virtuosoRef = useRef<any>(null);
 
   const {
     isModalVisible: verifyFaceIdVisible,
@@ -581,15 +581,24 @@ const InternalChatPage = () => {
     }
   }, [loadingMessageList, hiddenLoading]);
 
-  const scrollToMessage = (messageId: any) => {
-    const messageIndex = messages.findIndex((msg: any) => msg.id == messageId);
-    const messageElement = messageRefs.current[messageIndex];
-    if (messageElement) {
-      messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
-      messageElement.classList.add("bg-blue-500/20");
-      setTimeout(() => {
-        messageElement.classList.remove("bg-blue-500/20");
-      }, 1000);
+  const scrollToMessage = (messageId: string) => {
+    const messageIndex = messages.findIndex((msg: any) => msg.id === messageId);
+    if (messageIndex !== -1 && virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: messageIndex,
+        align: "center",
+        behavior: "smooth",
+      });
+      const messageElement = messageRefs.current[messageIndex];
+      if (messageElement) {
+        messageElement.classList.add("bg-blue-500/20");
+        setTimeout(() => {
+          messageElement.classList.remove("bg-blue-500/20");
+        }, 2000);
+      }
+      if (messageIndex === messages.length) {
+        scrollToBottom();
+      }
     }
     if (panelState === "search") {
       setPanelState(null);
@@ -597,14 +606,13 @@ const InternalChatPage = () => {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const handleScroll = () => {
-    if (messagesContainerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } =
-        messagesContainerRef.current;
-      setShowScrollTop(scrollTop < scrollHeight - clientHeight - 200);
+    if (virtuosoRef.current) {
+      setTimeout(() => {
+        virtuosoRef.current.scrollTo({
+          top: Number.MAX_SAFE_INTEGER,
+          behavior: "smooth",
+        });
+      }, 800);
     }
   };
 
@@ -624,6 +632,7 @@ const InternalChatPage = () => {
 
   useEffect(() => {
     setSearchMessages("");
+    setSearchQuery("");
     setMediaActiveTab("media");
   }, [panelState]);
 
@@ -708,6 +717,53 @@ const InternalChatPage = () => {
     groupSettings,
     SETTING_KEYS.ALLOW_UPDATE_CHAT_ROOM
   );
+
+  const isNotSameDay = (date1: any, date2: any) => {
+    return (
+      parseCustomDateString(date1).toDateString() !==
+      parseCustomDateString(date2).toDateString()
+    );
+  };
+
+  const renderItem = (index: number) => {
+    const isBot = selectedConversation.kind == GEMINI_BOT_CONFIG.kind;
+    const previousMessage = index > 0 ? messages[index - 1] : null;
+    const message = messages[index];
+    const nextMessage =
+      index < messages.length - 1 ? messages[index + 1] : null;
+
+    const showDateDivider =
+      index === 0 ||
+      !previousMessage ||
+      isNotSameDay(message.createdDate, previousMessage.createdDate);
+
+    const showAvatar =
+      !isBot &&
+      (!nextMessage ||
+        (nextMessage &&
+          (nextMessage.sender.id !== message.sender.id ||
+            isNotSameDay(message.createdDate, nextMessage.createdDate))));
+    return (
+      <div>
+        {showDateDivider && (
+          <DateDivider date={truncateToDDMMYYYY(message.createdDate)} />
+        )}
+        <div ref={(el) => (messageRefs.current[index] = el)}>
+          <MessageItem
+            showAvatar={showAvatar}
+            settings={groupSettings}
+            onReactionCountClick={onReactionCountClick}
+            openModal={setSelectedFile}
+            message={message}
+            onRecallMessage={onDeleteMessageButtonClick}
+            onEditMessage={onUpdateMesageButtonClick}
+            onReplyMessage={() => handleSetParentMessageToReply(message.id)}
+            onClickParentMessage={handleClickParentMessage}
+          />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -910,47 +966,22 @@ const InternalChatPage = () => {
                       </div>
                     </div>
 
-                    <div
-                      ref={messagesContainerRef}
-                      onScroll={handleScroll}
-                      className="flex-1 p-4 overflow-y-auto bg-gray-900/50 backdrop-blur-md"
-                    >
+                    <div className="flex-1 py-2 overflow-y-auto bg-gray-900/50 backdrop-blur-md">
                       {loadingMessageList ? (
                         <div className="flex-1">
                           <GridViewLoading loading={loadingMessageList} />
                         </div>
                       ) : messages.length > 0 ? (
-                        messages.map((message: any, index: any) => (
-                          <div key={message.id}>
-                            {(index === 0 ||
-                              parseCustomDateString(
-                                messages[index - 1].createdDate
-                              ).toDateString() !==
-                                parseCustomDateString(
-                                  message.createdDate
-                                ).toDateString()) && (
-                              <DateDivider
-                                date={truncateToDDMMYYYY(message.createdDate)}
-                              />
-                            )}
-                            <div
-                              ref={(el: any) =>
-                                (messageRefs.current[index] = el)
-                              }
-                            >
-                              <MessageItem
-                                settings={groupSettings}
-                                onReactionCountClick={onReactionCountClick}
-                                openModal={setSelectedFile}
-                                message={message}
-                                onRecallMessage={onDeleteMessageButtonClick}
-                                onEditMessage={onUpdateMesageButtonClick}
-                                onReplyMessage={handleSetParentMessageToReply}
-                                onClickParentMessage={handleClickParentMessage}
-                              />
-                            </div>
-                          </div>
-                        ))
+                        <Virtuoso
+                          ref={virtuosoRef}
+                          style={{ height: "100%" }}
+                          totalCount={messages.length}
+                          itemContent={renderItem}
+                          atBottomStateChange={(atBottom) => {
+                            setShowScrollTop(!atBottom);
+                          }}
+                          initialTopMostItemIndex={messages.length - 1}
+                        />
                       ) : (
                         <div className="flex flex-col items-center justify-center p-6 mt-10">
                           {selectedConversation.kind ===
@@ -979,7 +1010,6 @@ const InternalChatPage = () => {
                           )}
                         </div>
                       )}
-                      <div ref={messagesEndRef} />
                     </div>
 
                     <AnimatePresence>
@@ -991,7 +1021,7 @@ const InternalChatPage = () => {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={scrollToBottom}
-                          className="absolute bottom-20 right-4 p-2 bg-gray-700 backdrop-blur-md rounded-full text-white shadow-lg"
+                          className="absolute bottom-24 right-4 p-2 bg-gray-700 backdrop-blur-md rounded-full text-white shadow-lg"
                         >
                           <ChevronDownIcon size={20} />
                         </motion.button>
