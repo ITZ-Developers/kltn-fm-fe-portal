@@ -96,7 +96,7 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                 {formatMessageTime(lastMessage?.createdDate)}
               </span>
             </div>
-            {(lastMessage || lastMessage?.isDeleted) && (
+            {lastMessage?.sender?.fullName && (
               <>
                 {lastMessage?.isDeleted ? (
                   <p

@@ -219,7 +219,7 @@ const MessageActions = ({
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => onReplyMessage(id)}
-        className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700/50 transition-all"
+        className="text-gray-400 hover:text-white p-0.5 rounded-full hover:bg-gray-700/50 transition-all"
         aria-label="Trả lời tin nhắn"
       >
         <ReplyIcon size={16} />
@@ -236,7 +236,7 @@ const MessageActions = ({
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700/50 transition-all"
+          className="text-gray-400 hover:text-white p-0.5 rounded-full hover:bg-gray-700/50 transition-all"
           aria-label="Thả phản ứng"
         >
           {isReacted && matched ? (
@@ -354,7 +354,7 @@ const MessageMenuButton = ({
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700/50 transition-all"
+        className="text-gray-400 hover:text-white p-0.5 rounded-full hover:bg-gray-700/50 transition-all"
         aria-label="Tùy chọn tin nhắn"
       >
         <MoreHorizontalIcon size={16} />
