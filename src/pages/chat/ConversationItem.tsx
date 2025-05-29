@@ -20,9 +20,8 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            whileHover={{ scale: 1.01 }}
             onClick={onClick}
-            className={`relative flex items-center p-4 rounded-xl cursor-pointer transition-all duration-300 ${
+            className={`relative flex items-center p-4 rounded-xl cursor-pointer transition-all duration-300 m-2 ${
               selected
                 ? "bg-blue-500/10 border border-blue-500/20"
                 : "hover:bg-gray-700/50"
@@ -54,9 +53,8 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          whileHover={{ scale: 1.01 }}
           onClick={onClick}
-          className={`relative flex items-center p-4 rounded-xl cursor-pointer transition-all duration-300 ${
+          className={`relative flex items-center p-4 rounded-xl cursor-pointer transition-all duration-300 m-2 ${
             selected
               ? "bg-blue-500/10 border border-blue-500/20"
               : "hover:bg-gray-700/50"
