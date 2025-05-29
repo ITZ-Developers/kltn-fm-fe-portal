@@ -612,7 +612,7 @@ const InternalChatPage = () => {
           top: Number.MAX_SAFE_INTEGER,
           behavior: "smooth",
         });
-      }, 800);
+      }, 500);
     }
   };
 
