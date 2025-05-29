@@ -607,12 +607,17 @@ const InternalChatPage = () => {
 
   const scrollToBottom = () => {
     if (virtuosoRef.current) {
+      virtuosoRef.current.scrollToIndex({
+        index: messages.length - 1,
+        align: "end",
+        behavior: "smooth",
+      });
       setTimeout(() => {
         virtuosoRef.current.scrollTo({
           top: Number.MAX_SAFE_INTEGER,
           behavior: "smooth",
         });
-      }, 500);
+      }, 300);
     }
   };
 
@@ -744,7 +749,7 @@ const InternalChatPage = () => {
           (nextMessage.sender.id !== message.sender.id ||
             isNotSameDay(message.createdDate, nextMessage.createdDate))));
     return (
-      <div>
+      <div className="flex flex-col">
         {showDateDivider && (
           <DateDivider date={truncateToDDMMYYYY(message.createdDate)} />
         )}
@@ -974,6 +979,7 @@ const InternalChatPage = () => {
                       ) : messages.length > 0 ? (
                         <Virtuoso
                           ref={virtuosoRef}
+                          data={messages}
                           style={{ height: "100%" }}
                           totalCount={messages.length}
                           itemContent={renderItem}
