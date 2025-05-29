@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { formatMessageTime } from "../../../services/utils";
+import { formatMessageTime, truncateString } from "../../../services/utils";
 import { BASIC_MESSAGES, CHAT_HISTORY_ROLE } from "../../../services/constant";
 import {
   AttachedFiles,
@@ -131,9 +131,9 @@ const MessageItem = ({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className={`flex ${
-            isSender ? "justify-end" : "justify-start"
-          } mb-6 group mx-2`}
+          className={`flex ${isSender ? "justify-end" : "justify-start"} ${
+            showAvatar ? "mb-6" : "mb-2"
+          } group mx-2`}
         >
           {!isSender && showAvatar ? (
             <div className="mr-2 self-end">
@@ -148,12 +148,21 @@ const MessageItem = ({
             <div
               className={`max-w-xs sm:max-w-md md:max-w-lg p-3 rounded-2xl shadow-md ${
                 isSender
-                  ? "bg-blue-600/90 text-white rounded-br-sm"
-                  : "bg-gray-700 text-gray-200 rounded-bl-sm"
+                  ? `bg-blue-600/90 text-white ${
+                      !showAvatar ? "rounded" : "rounded-br-sm"
+                    }`
+                  : `bg-gray-700 text-gray-200 ${
+                      !showAvatar ? "rounded" : "rounded-bl-sm"
+                    }`
               } border ${
                 isSender ? "border-blue-500/30" : "border-gray-700/30"
               }`}
             >
+              {showAvatar && (
+                <p className="text-sm font-semibold text-blue-200 mb-1 truncate">
+                  {truncateString(sender.fullName, 30)}
+                </p>
+              )}
               {isChildren && parent && (
                 <ParentMessage parent={parent} onClick={onClickParentMessage} />
               )}
@@ -192,12 +201,12 @@ const MessageItem = ({
               </div>
             </div>
           </div>
-          {isSender && showAvatar ? ( // Chỉ hiển thị avatar nếu showAvatar là true
+          {isSender && showAvatar ? (
             <div className="ml-2 self-end">
               <Avatar sender={sender} />
             </div>
           ) : isSender ? (
-            <div className="ml-2 self-end w-8" /> // Placeholder để giữ khoảng cách
+            <div className="ml-2 self-end w-8" />
           ) : (
             <RenderSeenAvatars />
           )}
