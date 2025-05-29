@@ -25,6 +25,7 @@ const App = () => {
     getRouters,
     setAuthorities,
     setIsCustomer,
+    isCustomer,
   } = useGlobalContext();
   const { auth, loading } = useApi();
 
@@ -75,7 +76,9 @@ const App = () => {
             {profile && getSidebarMenus().length > 0 ? (
               <>
                 <Route path="/" element={<RedirectHome />} />
-                <Route path="/chat" element={<InternalChatPage />} />
+                {!isCustomer && (
+                  <Route path="/chat" element={<InternalChatPage />} />
+                )}
                 {getRouters().map(({ path, element }) => (
                   <Route key={path} path={path} element={element} />
                 ))}
