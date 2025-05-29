@@ -133,7 +133,7 @@ const MessageItem = ({
           transition={{ duration: 0.25 }}
           className={`flex ${
             isSender ? "justify-end" : "justify-start"
-          } mb-4 group mx-2`}
+          } mb-6 group mx-2`}
         >
           {!isSender && showAvatar ? (
             <div className="mr-2 self-end">
