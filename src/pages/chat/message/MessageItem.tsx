@@ -107,7 +107,7 @@ const MessageItem = ({
           data-message-id={message.id}
           className={`flex ${
             isUser ? "justify-end" : "justify-start"
-          } mb-4 transition-all duration-300 mx-2`}
+          } mb-6 group transition-all duration-300 mx-2`}
         >
           <div
             className={`max-w-[80%] sm:max-w-[60%] md:max-w-[50%] p-4 rounded-xl shadow-md ${

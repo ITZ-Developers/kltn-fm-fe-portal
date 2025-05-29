@@ -12,6 +12,8 @@ import ConversationItem from "./ConversationItem";
 import LocationInfo from "./LocationInfo";
 import { useGlobalContext } from "../../components/config/GlobalProvider";
 import { GridViewLoading } from "../../components/page/GridView";
+import { useEffect, useRef } from "react";
+import { Virtuoso } from "react-virtuoso";
 
 const ChatSideBar = ({
   isSidebarOpen,
@@ -30,6 +32,35 @@ const ChatSideBar = ({
 }: any) => {
   const { isSystemNotReady, sessionKey } = useGlobalContext();
   const navigate = useNavigate();
+
+  const virtuosoRef = useRef<any>(null);
+
+  const renderConversationItem = (index: any) => {
+    const conversation = filteredConversations[index];
+    return (
+      <ConversationItem
+        key={conversation.id}
+        conversation={conversation}
+        selected={selectedConversation?.id === conversation.id}
+        onClick={() => handleSelectConversation(conversation.id)}
+      />
+    );
+  };
+
+  useEffect(() => {
+    if (selectedConversation && virtuosoRef.current) {
+      const selectedIndex = filteredConversations.findIndex(
+        (conv: any) => conv.id === selectedConversation.id
+      );
+      if (selectedIndex !== -1) {
+        virtuosoRef.current.scrollToIndex({
+          index: selectedIndex,
+          align: "center",
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [selectedConversation]);
 
   return (
     <AnimatePresence>
@@ -122,16 +153,18 @@ const ChatSideBar = ({
                 <GridViewLoading loading={loadingChatRoomList} />
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto px-4 space-y-2">
+              <div className="flex-1 px-2 space-y-2">
                 {filteredConversations.length > 0 ? (
-                  filteredConversations.map((conversation: any) => (
-                    <ConversationItem
-                      key={conversation.id}
-                      conversation={conversation}
-                      selected={selectedConversation?.id === conversation.id}
-                      onClick={() => handleSelectConversation(conversation.id)}
-                    />
-                  ))
+                  <Virtuoso
+                    ref={virtuosoRef}
+                    style={{ height: "100%" }}
+                    totalCount={filteredConversations.length}
+                    itemContent={renderConversationItem}
+                    computeItemKey={(index) =>
+                      filteredConversations[index]?.id || index
+                    }
+                    className="virtuoso-conversations"
+                  />
                 ) : (
                   <p className="p-4 text-gray-400 text-center">
                     Không tìm thấy cuộc trò chuyện
