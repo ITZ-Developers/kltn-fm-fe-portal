@@ -40,7 +40,7 @@ const MIME_TYPES = {
 };
 
 const VALID_PATTERN = {
-  NAME: /^[\p{L}][\p{L} ]*[\p{L}]$/u,
+  NAME: /^[\p{L}\p{N}\p{P}\p{S} ]+$/u,
   EMAIL: /^(?!.*[.]{2,})[a-zA-Z0-9.%]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
   PHONE: /^0[35789][0-9]{8}$/,
   USERNAME: /^(?=.{3,20}$)(?!.*[_.]{2})[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$/,
