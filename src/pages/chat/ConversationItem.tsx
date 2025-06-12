@@ -115,13 +115,19 @@ const ConversationItem = ({ conversation, selected, onClick }: any) => {
                     }`}
                   >
                     {lastMessage?.document
-                      ? `${lastMessage?.sender?.fullName} đã gửi tệp đính kèm`
+                      ? truncateString(
+                          `${lastMessage?.sender?.fullName} gửi tệp đính kèm`,
+                          30
+                        )
                       : lastMessage?.content
                       ? truncateString(
                           `${lastMessage?.sender?.fullName}: ${lastMessage?.content}`,
                           30
                         )
-                      : `${lastMessage?.sender?.fullName} đã gửi một tin nhắn`}
+                      : truncateString(
+                          `${lastMessage?.sender?.fullName} gửi một tin nhắn`,
+                          30
+                        )}
                   </p>
                 )}
               </>
