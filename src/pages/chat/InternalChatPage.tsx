@@ -1034,6 +1034,7 @@ const InternalChatPage = () => {
                       )}
                     </AnimatePresence>
                     <ChatInput
+                      loadingMessageList={loadingMessageList}
                       settings={groupSettings}
                       selectedConversation={selectedConversation}
                       newMessage={newMessage}

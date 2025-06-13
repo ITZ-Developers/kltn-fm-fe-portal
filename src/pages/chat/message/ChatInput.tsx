@@ -11,6 +11,7 @@ import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { ParentMessage } from "./MessageComponents";
 import {
+  decryptData,
   encryptAES,
   generateIdNumber,
   getCurrentDate,
@@ -24,11 +25,15 @@ import {
   SETTING_KEYS,
   TOAST,
 } from "../../../services/constant";
-import { GEMINI_BOT_CONFIG } from "../../../components/config/PageConfig";
+import {
+  DECRYPT_FIELDS,
+  GEMINI_BOT_CONFIG,
+} from "../../../components/config/PageConfig";
 import { useGlobalContext } from "../../../components/config/GlobalProvider";
 import { FileTypeIcon } from "../FileComponents";
 
 const ChatInput = ({
+  loadingMessageList,
   selectedConversation,
   newMessage,
   setNewMessage,
@@ -118,7 +123,7 @@ const ChatInput = ({
   };
 
   const handleSendMessage = async () => {
-    if (loadingSendMessage || !allowSendMessage) {
+    if (isLoading || !allowSendMessage) {
       return;
     }
     if (selectedConversation?.kind === GEMINI_BOT_CONFIG.kind) {
@@ -133,7 +138,6 @@ const ChatInput = ({
         createdDate: getCurrentDate(),
       };
       setMessages((prev: any) => [...prev, msgObj]);
-      resetChatInputForm();
       setTimeout(() => scrollToBottom(), 800);
       const res = await chatHistorySendMsgApi.create({
         message: encryptAES(newMessage, sessionKey),
@@ -155,16 +159,22 @@ const ChatInput = ({
             }))
           )
         : null;
-      await sendMessageApi.create({
+      const res = await sendMessageApi.create({
         chatRoomId: selectedConversation?.id,
         content: newMessage ? encryptAES(newMessage, sessionKey) : null,
         document: document ? encryptAES(document, sessionKey) : null,
         parentMessageId: parentMessage?.id || null,
       });
+      setMessages((prev: any) => [
+        ...prev,
+        decryptData(sessionKey, res?.data, DECRYPT_FIELDS.MESSAGE),
+      ]);
     }
     resetChatInputForm();
     setUploadedFiles([]);
   };
+
+  const isLoading = loadingMessageList || loadingSendMessage;
 
   return (
     <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 backdrop-blur-md">
@@ -199,11 +209,11 @@ const ChatInput = ({
                   whileTap={{ scale: 0.9 }}
                   onClick={() => fileInputRef.current?.click()}
                   className={`p-2 rounded-full hover:bg-gray-700/50 transition-all ${
-                    loadingSendMessage
+                    isLoading
                       ? "opacity-50 cursor-not-allowed"
                       : "text-gray-400 hover:text-white"
                   }`}
-                  disabled={loadingSendMessage}
+                  disabled={isLoading}
                   aria-label="Đính kèm tệp"
                 >
                   <PaperclipIcon size={20} />
@@ -214,7 +224,7 @@ const ChatInput = ({
                   ref={fileInputRef}
                   className="hidden"
                   onChange={handleFileUpload}
-                  disabled={loadingSendMessage}
+                  disabled={isLoading}
                 />
               </>
             )}
@@ -224,11 +234,11 @@ const ChatInput = ({
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowEmojiPicker((prev) => !prev)}
                 className={`p-2 rounded-full hover:bg-gray-700/50 transition-all ${
-                  loadingSendMessage
+                  isLoading
                     ? "opacity-50 cursor-not-allowed"
                     : "text-gray-400 hover:text-white"
                 }`}
-                disabled={loadingSendMessage}
+                disabled={isLoading}
                 aria-label="Chọn biểu cảm"
               >
                 <SmileIcon size={20} />
@@ -265,24 +275,24 @@ const ChatInput = ({
               onBlur={() => setInputFocused(false)}
               placeholder="Nhập tin nhắn..."
               className={`flex-1 p-3 bg-gray-700/50 border border-gray-600/30 rounded-xl text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none transition-all ${
-                loadingSendMessage ? "opacity-50 cursor-not-allowed" : ""
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
               rows={inputFocused || newMessage.length > 50 ? 3 : 1}
-              disabled={loadingSendMessage}
+              disabled={isLoading}
             />
             <motion.button
-              whileHover={{ scale: loadingSendMessage ? 1 : 1.1 }}
-              whileTap={{ scale: loadingSendMessage ? 1 : 0.9 }}
+              whileHover={{ scale: isLoading ? 1 : 1.1 }}
+              whileTap={{ scale: isLoading ? 1 : 0.9 }}
               onClick={handleSendMessage}
               className={`p-3 rounded-full shadow-md transition-all ${
-                loadingSendMessage
+                isLoading
                   ? "bg-gray-600/50 cursor-not-allowed"
                   : "bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
               }`}
-              disabled={loadingSendMessage}
-              aria-label={loadingSendMessage ? "Đang gửi..." : "Gửi tin nhắn"}
+              disabled={isLoading}
+              aria-label={isLoading ? "Đang xử lý..." : "Gửi tin nhắn"}
             >
-              {loadingSendMessage ? (
+              {isLoading ? (
                 <Loader2Icon size={20} className="animate-spin" />
               ) : (
                 <SendIcon size={20} />
