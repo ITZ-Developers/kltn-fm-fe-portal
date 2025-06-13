@@ -422,6 +422,23 @@ const InternalChatPage = () => {
     }
   }, [isFaceIdVerified]);
 
+  const applySeenToLastMessages = (messages: any[]) => {
+    const seenTracker: Record<string, boolean> = {};
+    const result = [...messages].reverse().map((msg) => {
+      const filteredSeen = (msg.seenMembers || []).filter((member: any) => {
+        if (seenTracker[member.id]) return false;
+        seenTracker[member.id] = true;
+        return true;
+      });
+      return {
+        ...msg,
+        seenMembers: filteredSeen,
+        totalSeenMembers: filteredSeen.length,
+      };
+    });
+    return result.reverse();
+  };
+
   useEffect(() => {
     const handleProcessSocket = async () => {
       if (
@@ -452,17 +469,27 @@ const InternalChatPage = () => {
         const messageId = message?.data?.messageId;
         const chatRoomId = message?.data?.chatRoomId;
         if (messageId && chatRoomId === selectedConversation?.id) {
-          if (SOCKET_CMD.CMD_NEW_MESSAGE === message?.cmd) {
-            await fetchMessageNoLoading(
-              chatMessageHiddenLoading,
-              selectedConversation
-            );
-          } else {
-            await fetchMessageNoLoading(
-              chatMessageNoLoading,
-              selectedConversation
-            );
-          }
+          const res =
+            SOCKET_CMD.CMD_NEW_MESSAGE === message?.cmd
+              ? await chatMessageHiddenLoading.get(messageId)
+              : await chatMessageNoLoading.get(messageId);
+          const obj = decryptData(
+            sessionKey,
+            res?.data,
+            DECRYPT_FIELDS.MESSAGE
+          );
+          setMessages((prev: any[]) => {
+            const index = prev.findIndex((msg) => msg.id === obj.id);
+            let updated;
+
+            if (index !== -1) {
+              updated = [...prev];
+              updated[index] = obj;
+            } else {
+              updated = [...prev, obj];
+            }
+            return applySeenToLastMessages(updated);
+          });
         }
         await fetchChatRooms(chatRoomListNoLoading.list);
       }
